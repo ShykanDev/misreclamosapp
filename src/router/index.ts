@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from '@ionic/vue-router';
 import { RouteRecordRaw } from 'vue-router';
-import TabsPage from '../views/TabsPage.vue'
+import TabsPage from '../views/LoginTabsPage.vue'
+import LoginTabsPage from '../views/LoginTabsPage.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -9,13 +10,13 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: '/tabs/',
-    component: TabsPage,
-    children: [
-      {
+    component: LoginTabsPage, //Parent of the tabs (Who envolve the children tabs ONE)
+    children: [ //Array that contains the children tabs 
+      { // Default Redirection if route is ''
         path: '',
         redirect: '/tabs/tab1'
       },
-      {
+      { //Tab that contains 2 properties path and component (Every ONE page should contain at least these 2 properties)
         path: 'tab1',
         component: () => import('@/views/Tab1Page.vue')
       },

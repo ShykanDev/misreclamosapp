@@ -6,7 +6,7 @@ import LoginTabsPage from '../views/LoginTabsPage.vue';
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    redirect: '/tabs/tab1'
+    redirect: '/tabs/initial'
   },
   {
     path: '/tabs/',
@@ -27,6 +27,10 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: 'tab3',
         component: () => import('@/views/Tab3Page.vue')
+      },
+      {
+        path: 'initial',
+        component: () => import('@/views/InitialPage.vue')
       }
     ]
   }

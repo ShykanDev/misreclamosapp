@@ -18,18 +18,45 @@
         <!-- Input Fields -->
         <article class="flex flex-col gap-4 p-2">
           <!--<input class="p-2 !py-3 rounded-lg border border-gray-50 outline-none bg-gray-200/50" type="text" placeholder="Correo electrónico"> -->
-          <ion-input aria-label="Custom input" label="Correo electrónico" labelPlacement="floating" fill="outline" placeholder="Custom input" class="custom" 
+          <ion-input aria-label="Correo electrónico" label="Correo electrónico" labelPlacement="floating" fill="outline" placeholder="correo@ejemplo.com" class="custom" 
             :counter="true" :maxlength="40" v-model="email"></ion-input>
-          <ion-input aria-label="Custom input" label="Contraseña" labelPlacement="floating" fill="outline" placeholder="Custom input" class="custom" 
+          <ion-input aria-label="contraseña" label="Contraseña" labelPlacement="floating" fill="outline" placeholder="*******" class="custom" 
             :counter="true" :maxlength="20" v-model="password"></ion-input>
         </article>
         <!-- Button -->
-        <ion-button @click="handleLogin" class="font-semibold w-11/12 !mx-auto login" expand="block" >Iniciar sesión</ion-button>
-        <p class="text-center">¿No tiene cuenta? <ion-button fill="clear"  color="primary">Registrarse</ion-button></p>
+        <ion-button @click="handleLogin" class="font-semibold w-11/12 !mx-auto login" expand="block" style="text-transform: none;" >Iniciar sesión</ion-button>
+        <p class="text-center text-slate-500">¿No tiene cuenta?</p>
+        <ion-button fill="outline"  color="primary" class="w-11/12 !mx-auto register" style="text-transform: none;">Registrarse</ion-button>
 
         <div class="flex justify-between">
           <p class="!text-sm text-left underline ml-2 text-gray-500">¿Olvidó su contraseña?</p>
         </div>
+
+        <ion-modal ref="modal" trigger="open-modal" >
+      <ion-header>
+        <ion-toolbar>
+          <ion-buttons slot="start">
+            <ion-button >Cancel</ion-button>
+          </ion-buttons>
+          <ion-title>Welcome</ion-title>
+          <ion-buttons slot="end">
+            <ion-button :strong="true">Confirm</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <ion-item>
+          <ion-input
+            label="Enter your name"
+            label-placement="stacked"
+            ref="input"
+            type="text"
+            placeholder="Your name"
+          ></ion-input>
+        </ion-item>
+      </ion-content>
+    </ion-modal>
+
 
       </div>  
     </ion-content>
@@ -37,18 +64,20 @@
 </template>
 
 <script setup lang="ts">
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonBackButton, IonInput, IonButton } from '@ionic/vue';
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonBackButton, IonInput, IonButton, IonButtons } from '@ionic/vue';
+import { IonModal } from '@ionic/vue';
+import {OverlayEventDetail} from '@ionic/core/components';
 import { ref } from 'vue';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
 import { useLogginStore } from '@/stores/loggin';
 import { Notyf } from 'notyf';
-
+import 'notyf/notyf.min.css';
 
 const notyf = new Notyf({
   duration: 5000,
   position: {
     x: 'center',
-    y: 'bottom',
+    y: 'top',
   },
 dismissible: true,
   })
@@ -70,6 +99,8 @@ const validateValues = () => {
   }
   return true
 }
+
+
 
   const handleLogin = () => {
   if (validateValues()) {
@@ -98,7 +129,7 @@ const validateValues = () => {
       })
   } else {
     console.log('Formulario inválido')
-    notyf.error('Formulario inválido')
+    notyf.error('Verifique los campos')
   }
 }
 
@@ -107,9 +138,10 @@ const validateValues = () => {
 <style>
 ion-input.custom {
   --color: #525252;
+  --background: #F1F2F4;
   --placeholder-color: #5c5c5c;
   --placeholder-opacity: 0.8;
-  --border-radius: 30px !important;
+  --border-radius: 10px !important;
   --border-width: 1px;
   --border-style: solid;
   --border-color: #ddd;
@@ -121,5 +153,10 @@ ion-input.custom {
 }
 ion-button.login {
   --border-radius: 10px;
+  --background:#1146b0;
+}
+ion-button.register {
+  --border-radius: 10px;
+  --background:#1146b0;
 }
 </style>

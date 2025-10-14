@@ -15,9 +15,9 @@
             </div>
             <!--Dots-->
             <article class="flex gap-1 justify-center mt-3">
-                <div class="w-2 h-2 rounded-full" @click="goToPage(0)" :class="selectedScrollSnap === 0 ? 'bg-blue-800 transition-all duration-500 ease-in-out w-7' : 'bg-gray-300'"></div>
-                <div class="w-2 h-2 rounded-full" @click="goToPage(1)" :class="selectedScrollSnap === 1 ? 'bg-blue-800 transition-all duration-500 ease-in-out w-9' : 'bg-gray-300'"></div>
-                <div class="w-2 h-2 rounded-full" @click="goToPage(2)" :class="selectedScrollSnap === 2 ? 'bg-blue-800 transition-all duration-500 ease-in-out w-9' : 'bg-gray-300'"></div>
+                <div class="w-2 h-2 rounded-full cursor-pointer" @click="goToPage(0)" :class="selectedScrollSnap === 0 ? 'bg-blue-800 transition-all duration-200 ease-in-out w-7' : 'bg-gray-300'"></div>
+                <div class="w-2 h-2 rounded-full cursor-pointer" @click="goToPage(1)" :class="selectedScrollSnap === 1 ? 'bg-blue-800 transition-all duration-200 ease-in-out w-9' : 'bg-gray-300'"></div>
+                <div class="w-2 h-2 rounded-full cursor-pointer" @click="goToPage(2)" :class="selectedScrollSnap === 2 ? 'bg-blue-800 transition-all duration-200 ease-in-out w-9' : 'bg-gray-300'"></div>
             </article>
         </ion-content>
     </ion-page>

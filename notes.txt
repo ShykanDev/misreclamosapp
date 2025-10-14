@@ -1,0 +1,1 @@
+Add Popup To Show an alert when user has not verified his email [X]

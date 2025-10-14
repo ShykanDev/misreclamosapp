@@ -20,7 +20,11 @@
     "@ionic/vue": "^8.0.0",
     "@ionic/vue-router": "^8.0.0",
     "embla-carousel-vue": "^8.6.0",
+    "firebase": "^12.4.0",
     "ionicons": "^7.0.0",
+    "notyf": "^3.10.0",
+    "pinia": "^3.0.3",
+    "pinia-plugin-persistedstate": "^4.5.0",
     "vue": "^3.3.0",
     "vue-router": "^4.2.0"
   },

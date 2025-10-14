@@ -19,12 +19,12 @@
         <article class="flex flex-col gap-4 p-2">
           <!--<input class="p-2 !py-3 rounded-lg border border-gray-50 outline-none bg-gray-200/50" type="text" placeholder="Correo electrónico"> -->
           <ion-input aria-label="Custom input" label="Correo electrónico" labelPlacement="floating" fill="outline" placeholder="Custom input" class="custom" 
-            :counter="true" :maxlength="20"></ion-input>
+            :counter="true" :maxlength="40" v-model="email"></ion-input>
           <ion-input aria-label="Custom input" label="Contraseña" labelPlacement="floating" fill="outline" placeholder="Custom input" class="custom" 
-            :counter="true" :maxlength="20"></ion-input>
+            :counter="true" :maxlength="20" v-model="password"></ion-input>
         </article>
         <!-- Button -->
-        <button class="w-11/12 !mx-auto text-white bg-blue-900 !p-3.5 font-semibold !rounded-lg">Iniciar sesión</button>
+        <ion-button @click="handleLogin" class="font-semibold w-11/12 !mx-auto login" expand="block" >Iniciar sesión</ion-button>
         <p class="text-center">¿No tiene cuenta? <ion-button fill="clear"  color="primary">Registrarse</ion-button></p>
 
         <div class="flex justify-between">
@@ -37,7 +37,70 @@
 </template>
 
 <script setup lang="ts">
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonBackButton, IonInput } from '@ionic/vue';
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonBackButton, IonInput, IonButton } from '@ionic/vue';
+import { ref } from 'vue';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
+import { useLogginStore } from '@/stores/loggin';
+import { Notyf } from 'notyf';
+
+
+const notyf = new Notyf({
+  duration: 5000,
+  position: {
+    x: 'center',
+    y: 'bottom',
+  },
+dismissible: true,
+  })
+
+// Firebase auth
+const auth = getAuth()
+
+// User input values
+const email = ref('');
+const password = ref('');
+
+//Ui value that contains boolean if user email is verified (if true then a popup will be shown)
+const showVerifyEmail = ref(false)
+const isUserEmailVerified = ref(false)
+// Validate values to validate if user and password are not empty 
+const validateValues = () => {
+  if (email.value === '' || password.value === '') {
+    return false
+  }
+  return true
+}
+
+  const handleLogin = () => {
+  if (validateValues()) {
+    signInWithEmailAndPassword(auth, email.value, password.value)
+      .then((userCredential) => {
+        console.log('userCredential.user.emailVerified =>', userCredential.user.emailVerified)
+        if (!userCredential.user.emailVerified) {
+          showVerifyEmail.value = true
+          console.log('Email no verificado')
+          return
+        }
+        const user = userCredential.user
+        isUserEmailVerified.value = user.emailVerified
+        useLogginStore().setUserEmailVerified(user.emailVerified)
+        useLogginStore().setUserLoggedIn(true)
+        notyf.success(`Le damos la bienvenida ${user.displayName}`)
+        console.log(userCredential)
+        email.value = ''
+        password.value = ''
+        alert('[Dev] User Logged In')
+      })
+      .catch((error) => {
+        const errorCode = error.code
+        notyf.error(`Error al iniciar sesión, error: ${errorCode}`)
+        console.log(`ErrorCode: ${errorCode}`)
+      })
+  } else {
+    console.log('Formulario inválido')
+    notyf.error('Formulario inválido')
+  }
+}
 
 </script>
 
@@ -55,5 +118,8 @@ ion-input.custom {
   --outline-width: 0;
   --outline-style: none;
   --outline-color: transparent;
+}
+ion-button.login {
+  --border-radius: 10px;
 }
 </style>

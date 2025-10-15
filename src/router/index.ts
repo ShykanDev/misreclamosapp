@@ -14,24 +14,20 @@ const routes: Array<RouteRecordRaw> = [
     children: [ //Array that contains the children tabs 
       { // Default Redirection if route is ''
         path: '',
-        redirect: '/tabs/tab1'
+        redirect: '/tabs/login'
       },
       { //Tab that contains 2 properties path and component (Every ONE page should contain at least these 2 properties)
-        path: 'tab1',
-        component: () => import('@/views/Tab1Page.vue')
+        path: 'login',
+        component: () => import('@/views/LoginTab.vue')
       },
       {
-        path: 'tab2',
-        component: () => import('@/views/Tab2Page.vue')
-      },
-      {
-        path: 'tab3',
-        component: () => import('@/views/Tab3Page.vue')
+        path: 'register',
+        component: () => import('@/views/RegisterTab.vue')
       },
       {
         path: 'initial',
         component: () => import('@/views/InitialPage.vue')
-      }
+      },
     ]
   }
 ]

@@ -2,14 +2,7 @@
   <ion-content class="flex flex-col justify-evenly items-center p-6 rounded-2xl shadow-lg md:ionpb">
     <div class="min-h-full">
 
-    <!-- Image -->
-    <div class="flex justify-center items-center mb-8">
-      <img
-        src="../../assets/improvements.jpg"
-        alt="Comunidad de personas conectadas compartiendo experiencias"
-        class="object-contain w-full sm:w-4xl md:w-2xl lg:w-2xl"
-      >
-    </div>
+   
 
     <!-- Title -->
     <h2 class="mb-4 !text-3xl font-medium text-center text-blue-900">
@@ -29,15 +22,23 @@
       <div class="flex">
 
     <!-- Button Login (CTA) -->
-    <ion-button router-link="/tabs/tab1" class="w-11/12 !mx-auto text-white !p-3.5 font-semibold !rounded-lg loggin" shape="round" fill="solid" style="text-transform:none">Iniciar sesión</ion-button>
-    <ion-button router-link="/tabs/tab1" class="w-11/12 !mx-auto text-blue-600 !p-3.5 font-semibold !rounded-lg register" shape="round" fill="outline" style="text-transform:none">Registrarse</ion-button>
+    <ion-button router-link="/tabs/login" class="w-11/12 !mx-auto text-white !p-3.5 font-semibold !rounded-lg loggin" shape="round" fill="solid" style="text-transform:none">Iniciar sesión</ion-button>
+    <ion-button router-link="/tabs/register" class="w-11/12 !mx-auto text-blue-600 !p-3.5 font-semibold !rounded-lg register" shape="round" fill="outline" style="text-transform:none">Registrarse</ion-button>
       </div>
 
 
-    <!-- Button Skip (CTA) -->
-    <ion-button router-link="/tabs/tab1" class="w-11/12 !mx-auto !p-3.5 font-semibold !rounded-sm skip"  fill="clear">Omitir por ahora</ion-button>
-    </article>
 
+    </article>
+     <!-- Image -->
+    <div class="flex justify-center items-center mb-8">
+      <img
+        src="../../assets/improvements.jpg"
+        alt="Comunidad de personas conectadas compartiendo experiencias"
+        class="object-contain w-full sm:w-4xl md:w-2xl lg:w-2xl"
+      >
+    </div>
+    <!-- Button Skip (CTA) -->
+    <ion-button router-link="/tabs/tab1" class="w-12/12 !mx-auto !p-3.5 font-semibold !rounded-sm skip"  fill="clear">Omitir por ahora</ion-button>
   </div>
 
   </ion-content>

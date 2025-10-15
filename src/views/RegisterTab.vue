@@ -2,11 +2,14 @@
   <ion-page>
     <ion-header class="ion-no-border">
       <ion-toolbar >
+        <ion-buttons slot="start">
+          <ion-back-button class="text-blue-700" defaultHref="/tabs/initial"></ion-back-button>
+        </ion-buttons>
         <ion-title class="text-center text-blue-800">Registrarse</ion-title>
       </ion-toolbar>
     </ion-header>
-    <ion-content class="">
-  <!-- Overlay de carga -->
+    <ion-content>
+  <!-- Loading Overlay -->
   <ion-loading
     v-model="isLoading"
     message="Cargando..."
@@ -89,7 +92,7 @@
           <p
             :class="{
               'text-red-500': passswordRequirements.length,
-              'text-green-500': !passswordRequirements.length && form.password.length >= 9,
+              'text-emerald-600': !passswordRequirements.length && form.password.length >= 9,
             }"
           >
             *Su contraseña debe tener mínimo 9 caracteres
@@ -97,7 +100,7 @@
           <p
             :class="{
               'text-red-500': passswordRequirements.uppercase,
-              'text-green-500': !passswordRequirements.uppercase && form.password.match(/[A-Z]/),
+              'text-emerald-600': !passswordRequirements.uppercase && form.password.match(/[A-Z]/),
             }"
           >
             *Su contraseña debe tener al menos una mayúscula
@@ -105,7 +108,7 @@
           <p
             :class="{
               'text-red-500': form.password !== form.confirmPassword,
-              'text-green-500': form.password === form.confirmPassword && form.password.length >= 9,
+              'text-emerald-600': form.password === form.confirmPassword && form.password.length >= 9,
             }"
           >
             *Su contraseña debe coincidir
@@ -129,6 +132,7 @@
         </ion-button>
       </form>
 
+  <ion-loading class="custom-loading" :isOpen="isLoading" message="Registrando..." spinner="circles" ></ion-loading>
       <!-- Enlace a Login -->
       <div class="mt-6 text-center">
         <ion-text @click="openModal()" class="block mb-1.5 cursor-pointer">
@@ -136,21 +140,44 @@
         </ion-text>
         <ion-text class="text-gray-500">
           ¿Ya tiene cuenta?
-          <ion-router-link routerLink="/login" class="font-medium text-blue-600 hover:text-blue-700">
+          <router-link to="/tabs/login" class="font-medium text-blue-600 hover:text-blue-700">
             Inicia sesión
-          </ion-router-link>
+          </router-link>
         </ion-text>
       </div>
     </ion-card>
   </div>
+
+  <!--Success Modal-->
+  <ion-modal :is-open="success" @didDismiss="success = false" backdropDismiss="false">
+    <ion-header class="ion-no-border">
+      <ion-toolbar>
+        <ion-buttons slot="end">
+          <ion-button @click="success = false" style="text-transform: none;" class="acceptModal font-inter">Aceptar</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+     <ion-content class="relative ion-padding" :fullscreen="true">
+        <h3 class="text-center text-blue-800 font-inter">¡Su cuenta ha sido creada con exito!</h3>
+         <DotLottieVue style="width:90%; margin: 0 auto;" autoplay loop src="https://lottie.host/64a8ea7b-2a04-4d33-bebe-cf0bb2fd9777/7Yx5lQcDap.json" />
+
+        <p class="text-center text-black font-poppins">Por favor, revise su correo electrónico para verificar su cuenta. (Si no lo encuentra, verifique la carpeta de spam).</p>
+        <div class="flex justify-center">
+          <ion-button @click="success = false" style="text-transform: none;" class="mt-6 font-bold acceptModal font-inter">Ir a la pantalla de inicio</ion-button>
+        </div>
+        <p class="absolute bottom-4 left-1/2 text-center -translate-x-1/2 text-slate-700 font-poppins">Gracias por usar nuestra aplicación.</p>
+      </ion-content>
+  </ion-modal>
+
 </ion-content>
 
 </ion-page>
 </template>
 
 <script lang="ts" setup>
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle, IonLabel, IonInput, IonButton, IonText, IonLoading } from '@ionic/vue';
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonBackButton, IonButtons, IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle, IonInput, IonButton, IonText, IonLoading, loadingController, IonModal } from '@ionic/vue';
 import { reactive, ref } from 'vue'
+import { DotLottieVue } from '@lottiefiles/dotlottie-vue'
 import {
   createUserWithEmailAndPassword,
   getAuth,
@@ -194,7 +221,6 @@ const auth = getAuth()
 const userName = ref('Alejandro')
 const success = ref(false)
 
-const emmits = defineEmits(['callToggle'])
 
 const validatePasswordQuality = () => {
   if (form.value.password.length < 9) {
@@ -256,13 +282,30 @@ const handleSubmit = async () => {
 
 const showReset = ref(false)
 
-const closeModal = () => {
-  showReset.value = false
-}
 
 const openModal = () => {
   showReset.value = true
 }
+
+const showLoading = async () => {
+    const loading = await loadingController.create({
+      message: 'Dismissing after 3 seconds...',
+      duration: 1000,
+      spinner: 'lines-sharp-small',
+      cssClass: 'custom-loading',
+    });
+
+    loading.present();
+  };
+
+
+  const closeModal = () => {
+    showReset.value = false
+  }
+
+  const closeSuccess = () => {
+    success.value = false
+  }
 </script>
 
 <style scoped>
@@ -289,5 +332,18 @@ ion-button.register{
   --background:#1146b0;
   --padding-top: 1rem;
   --padding-bottom: 1rem;
+}
+ion-loading.custom-loading{
+  --background: #ffffff ;
+  --color: #0049bf ;
+  --border-radius: 20px;
+  color: #232323;
+}
+ion-button.acceptModal{
+  --border-radius: 10px;
+  --background:#1146b0;
+  --padding-top: 1rem;
+  --padding-bottom: 1rem;
+  --color:white;
 }
 </style>

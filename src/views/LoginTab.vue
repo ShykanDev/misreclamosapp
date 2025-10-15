@@ -1,16 +1,14 @@
 <template>
   <ion-page>
     <ion-header class="ion-no-border">
-      <ion-toolbar class="relative">
         <ion-toolbar class="flex justify-between items-center px-4">
           <ion-buttons slot="start">
-            <ion-back-button color="primary" defaultHref="/tabs/tab2"></ion-back-button>
+            <ion-back-button color="primary" defaultHref="/tabs/initial"></ion-back-button>
           </ion-buttons>
           <ion-title
             class="absolute left-1/2 w-full text-center text-blue-800 -translate-x-1/2 -translate-y-1/2">Iniciar
             sesión</ion-title>
         </ion-toolbar>
-      </ion-toolbar>
     </ion-header>
     <ion-content :fullscreen="true">
       <div class="flex flex-col gap-4">
@@ -26,7 +24,7 @@
         <!-- Button -->
         <ion-button @click="handleLogin" class="font-semibold w-11/12 !mx-auto login" expand="block" style="text-transform: none;" >Iniciar sesión</ion-button>
         <p class="text-center text-slate-500">¿No tiene cuenta?</p>
-        <ion-button fill="outline"  color="primary" class="w-11/12 !mx-auto register" style="text-transform: none;">Registrarse</ion-button>
+        <ion-button router-link="/tabs/register" fill="outline"  color="primary" class="w-11/12 !mx-auto register" style="text-transform: none;">Registrarse</ion-button>
 
         <div class="flex justify-between">
           <p class="!text-sm text-left underline ml-2 text-gray-500">¿Olvidó su contraseña?</p>
@@ -45,7 +43,7 @@
         </ion-toolbar>
       </ion-header>
       <ion-content class="ion-padding">
-        <ion-item>
+        
           <ion-input
             label="Enter your name"
             label-placement="stacked"
@@ -53,7 +51,7 @@
             type="text"
             placeholder="Your name"
           ></ion-input>
-        </ion-item>
+        
       </ion-content>
     </ion-modal>
 

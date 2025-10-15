@@ -1,9 +1,11 @@
 <template>
     <ion-page>
         <ion-header class="ion-no-border">
-            <ion-title class="text-center">
-                <span class="font-medium text-center text-blue-900">MisReclamos.com</span>
-            </ion-title>
+            <ion-toolbar>
+                <ion-title class="text-center">
+                    <span class="font-medium text-center text-blue-900">MisReclamos.com</span>
+                </ion-title>
+            </ion-toolbar>
         </ion-header>
         <ion-content>
             <div class="embla" ref="emblaRef">
@@ -15,9 +17,9 @@
             </div>
             <!--Dots-->
             <article class="flex gap-1 justify-center mt-3">
-                <div class="w-2 h-2 rounded-full cursor-pointer" @click="goToPage(0)" :class="selectedScrollSnap === 0 ? 'bg-blue-800 transition-all duration-200 ease-in-out w-7' : 'bg-gray-300'"></div>
-                <div class="w-2 h-2 rounded-full cursor-pointer" @click="goToPage(1)" :class="selectedScrollSnap === 1 ? 'bg-blue-800 transition-all duration-200 ease-in-out w-9' : 'bg-gray-300'"></div>
-                <div class="w-2 h-2 rounded-full cursor-pointer" @click="goToPage(2)" :class="selectedScrollSnap === 2 ? 'bg-blue-800 transition-all duration-200 ease-in-out w-9' : 'bg-gray-300'"></div>
+                <div class="w-2 h-2 rounded-full cursor-pointer" @click="goToPage(0)" :class="selectedScrollSnap === 0 ? 'bg-blue-800 transition-all duration-500 ease-out w-9' : 'bg-gray-300'"></div>
+                <div class="w-2 h-2 rounded-full cursor-pointer" @click="goToPage(1)" :class="selectedScrollSnap === 1 ? 'bg-blue-800 transition-all duration-500 ease-out w-9' : 'bg-gray-300'"></div>
+                <div class="w-2 h-2 rounded-full cursor-pointer" @click="goToPage(2)" :class="selectedScrollSnap === 2 ? 'bg-blue-800 transition-all duration-500 ease-out w-9' : 'bg-gray-300'"></div>
             </article>
         </ion-content>
     </ion-page>
@@ -27,9 +29,9 @@
 import PageOne from '@/components/Initial/PageOne.vue';
 import PageTree from '@/components/Initial/PageTree.vue';
 import PageTwo from '@/components/Initial/PageTwo.vue';
-import { IonPage, IonHeader, IonTitle, IonContent } from '@ionic/vue';
+import { IonPage, IonHeader, IonTitle, IonContent, IonToolbar, onIonViewDidEnter, onIonViewDidLeave,  } from '@ionic/vue';
 import emblaCarouselVue from 'embla-carousel-vue'
-import { onMounted, onUnmounted, ref } from 'vue';
+import { ref } from 'vue';
 
 const [emblaRef, emblaApi] = emblaCarouselVue({loop:false})
 
@@ -44,7 +46,7 @@ const goToPage = (index: number) => {
   emblaApi.value.scrollTo(index)
 }
 
-onMounted(() => {
+onIonViewDidEnter(() => {
   if (!emblaApi.value) return
   // Escucha el evento cuando cambie de slide
   emblaApi.value.on('select', onSelect)
@@ -52,7 +54,7 @@ onMounted(() => {
   onSelect()
 })
 
-onUnmounted(() => {
+onIonViewDidLeave(() => {
   emblaApi.value?.off('select', onSelect)
 })
 </script>

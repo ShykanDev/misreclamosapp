@@ -29,34 +29,38 @@
 import PageOne from '@/components/Initial/PageOne.vue';
 import PageTree from '@/components/Initial/PageTree.vue';
 import PageTwo from '@/components/Initial/PageTwo.vue';
-import { IonPage, IonHeader, IonTitle, IonContent, IonToolbar, onIonViewDidEnter, onIonViewDidLeave,  } from '@ionic/vue';
+import { IonPage, IonHeader, IonTitle, IonContent, IonToolbar, onIonViewDidEnter, onIonViewDidLeave} from '@ionic/vue';
 import emblaCarouselVue from 'embla-carousel-vue'
-import { ref } from 'vue';
+import { nextTick, onMounted, ref } from 'vue';
+const [emblaRef, emblaApi] = emblaCarouselVue({ loop: false }); // Desestructuración correcta
+const selectedScrollSnap = ref(0);
 
-const [emblaRef, emblaApi] = emblaCarouselVue({loop:false})
-
-const selectedScrollSnap = ref(0)
 const onSelect = () => {
-  if (!emblaApi.value) return
-  selectedScrollSnap.value = emblaApi.value.selectedScrollSnap()
-}
+  if (!emblaApi.value) return;
+  selectedScrollSnap.value = emblaApi.value.selectedScrollSnap();
+};
 
 const goToPage = (index: number) => {
-  if (!emblaApi.value) return
-  emblaApi.value.scrollTo(index)
-}
+  if (!emblaApi.value) return;
+  emblaApi.value.scrollTo(index);
+};
 
-onIonViewDidEnter(() => {
-  if (!emblaApi.value) return
-  // Escucha el evento cuando cambie de slide
-  emblaApi.value.on('select', onSelect)
-  // Actualiza al inicializar
-  onSelect()
-})
+// Inicializa el carousel cuando la vista está activa
+onIonViewDidEnter(async () => {
+  await nextTick(); // Espera a que el DOM esté listo
+  if (!emblaApi.value) return;
 
+  // Reinicia el carousel
+  emblaApi.value.reInit();
+  emblaApi.value.on('select', onSelect);
+  onSelect();
+});
+
+// Limpia los listeners al salir de la vista
 onIonViewDidLeave(() => {
-  emblaApi.value?.off('select', onSelect)
-})
+  if (!emblaApi.value) return;
+  emblaApi.value.off('select', onSelect);
+});
 </script>
 
 <style scoped>

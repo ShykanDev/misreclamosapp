@@ -54,7 +54,12 @@
         
       </ion-content>
     </ion-modal>
-
+  <!-- Loading Overlay -->
+  <ion-loading
+    v-model="isLoading"
+    message="Cargando..."
+    spinner="circles"
+  ></ion-loading>
 
       </div>  
     </ion-content>
@@ -90,6 +95,7 @@ const password = ref('');
 //Ui value that contains boolean if user email is verified (if true then a popup will be shown)
 const showVerifyEmail = ref(false)
 const isUserEmailVerified = ref(false)
+const isLoading = ref(false)
 // Validate values to validate if user and password are not empty 
 const validateValues = () => {
   if (email.value === '' || password.value === '') {
@@ -102,6 +108,7 @@ const validateValues = () => {
 
   const handleLogin = () => {
   if (validateValues()) {
+    isLoading.value = true
     signInWithEmailAndPassword(auth, email.value, password.value)
       .then((userCredential) => {
         console.log('userCredential.user.emailVerified =>', userCredential.user.emailVerified)
@@ -118,12 +125,13 @@ const validateValues = () => {
         console.log(userCredential)
         email.value = ''
         password.value = ''
-        alert('[Dev] User Logged In')
       })
       .catch((error) => {
         const errorCode = error.code
         notyf.error(`Error al iniciar sesión, error: ${errorCode}`)
         console.log(`ErrorCode: ${errorCode}`)
+      }).finally(() => {
+        isLoading.value = false
       })
   } else {
     console.log('Formulario inválido')

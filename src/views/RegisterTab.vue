@@ -223,7 +223,7 @@ const isLoading = ref(false)
 const auth = getAuth()
 
 const userName = ref('Alejandro')
-const success = ref(true)
+const success = ref(false)
 
 
 const validatePasswordQuality = () => {
@@ -352,5 +352,8 @@ ion-button.acceptModal{
 }
 ion-card{
   --background:#FDF8F8;
+}
+ion-toolbarl{
+  --background:#ffe0e2;
 }
 </style>

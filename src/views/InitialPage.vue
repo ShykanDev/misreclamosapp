@@ -8,19 +8,25 @@
             </ion-toolbar>
         </ion-header>
         <ion-content>
-            <div class="embla" ref="emblaRef">
-                <div class=" embla__container h-[85dvh]">
-                   <PageOne class="embla__slide" />
-                    <PageTwo class="embla__slide" />
-                    <PageTree class="embla__slide" />
-                </div>
-            </div>
-            <!--Dots-->
-            <article class="flex gap-1 justify-center mt-3">
-                <div class="w-2 h-2 rounded-full cursor-pointer" @click="goToPage(0)" :class="selectedScrollSnap === 0 ? 'bg-blue-800 transition-all duration-500 ease-out w-9' : 'bg-gray-300'"></div>
-                <div class="w-2 h-2 rounded-full cursor-pointer" @click="goToPage(1)" :class="selectedScrollSnap === 1 ? 'bg-blue-800 transition-all duration-500 ease-out w-9' : 'bg-gray-300'"></div>
-                <div class="w-2 h-2 rounded-full cursor-pointer" @click="goToPage(2)" :class="selectedScrollSnap === 2 ? 'bg-blue-800 transition-all duration-500 ease-out w-9' : 'bg-gray-300'"></div>
-            </article>
+
+            <!-- Slider main container -->
+<div class="swiper">
+  <!-- Additional required wrapper -->
+  <div class="swiper-wrapper">
+    <!-- Slides -->
+    <div class="swiper-slide"><PageOne></PageOne></div>
+    <div class="swiper-slide"><PageTwo></PageTwo></div>
+    <div class="swiper-slide"><PageTree></PageTree></div>
+    ...
+  </div>
+  <!-- If we need pagination -->
+  <div class="swiper-pagination"></div>
+
+
+  <!-- If we need scrollbar -->
+  <div class="swiper-scrollbar"></div>
+</div>
+
         </ion-content>
     </ion-page>
 </template>
@@ -29,51 +35,41 @@
 import PageOne from '@/components/Initial/PageOne.vue';
 import PageTree from '@/components/Initial/PageTree.vue';
 import PageTwo from '@/components/Initial/PageTwo.vue';
-import { IonPage, IonHeader, IonTitle, IonContent, IonToolbar, onIonViewDidEnter, onIonViewDidLeave} from '@ionic/vue';
-import emblaCarouselVue from 'embla-carousel-vue'
-import { nextTick, onMounted, ref } from 'vue';
-const [emblaRef, emblaApi] = emblaCarouselVue({ loop: false }); // Desestructuración correcta
-const selectedScrollSnap = ref(0);
+import { IonPage, IonHeader, IonTitle, IonContent, IonToolbar, onIonViewDidEnter } from '@ionic/vue';
+// import Swiper JS
+import Swiper from 'swiper';
+// import Swiper styles
+import 'swiper/css';
+import { Navigation, Pagination } from 'swiper/modules';
+// import Swiper and modules styles
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
 
-const onSelect = () => {
-  if (!emblaApi.value) return;
-  selectedScrollSnap.value = emblaApi.value.selectedScrollSnap();
-};
 
-const goToPage = (index: number) => {
-  if (!emblaApi.value) return;
-  emblaApi.value.scrollTo(index);
-};
 
-// Inicializa el carousel cuando la vista está activa
-onIonViewDidEnter(async () => {
-  await nextTick(); // Espera a que el DOM esté listo
-  if (!emblaApi.value) return;
-
-  // Reinicia el carousel
-  emblaApi.value.reInit();
-  emblaApi.value.on('select', onSelect);
-  onSelect();
-});
-
-// Limpia los listeners al salir de la vista
-onIonViewDidLeave(() => {
-  if (!emblaApi.value) return;
-  //emblaApi.value.off('select', onSelect);
+onIonViewDidEnter(() => {
+  const swiper = new Swiper('.swiper', {
+    direction: 'horizontal',
+    loop: false,
+    modules: [Navigation, Pagination], // Asegúrate de incluir los módulos
+    pagination: {
+      el: '.swiper-pagination',
+    },
+    navigation: {
+      nextEl: '.swiper-button-next',
+      prevEl: '.swiper-button-prev',
+    },
+    scrollbar: {
+      el: '.swiper-scrollbar',
+    },
+  });
 });
 </script>
 
 <style scoped>
-.embla {
-    overflow: hidden;
-}
-
-.embla__container {
-    display: flex;
-}
-
-.embla__slide {
-    flex: 0 0 100%;
-    min-width: 0;
+.swiper {
+  width: 100%; 
+  height: 100%;
 }
 </style>

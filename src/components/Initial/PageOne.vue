@@ -2,11 +2,12 @@
 <ion-content class="flex flex-col gap-4 items-center p-6 rounded-2xl shadow-lg ion-padding" >
   <!-- Image-->
   <div class="flex justify-center items-center mb-8">
+
     <img
-      src="../../assets/redMad100.png"
-      alt="Personas leyendo comentarios sobre productos"
-      class="object-contain w-full sm:w-4xl md:w-2xl lg:w-2xl"
-    >
+          src="../../assets/redMad200.png"
+          alt="Persona escribiendo un comentario con megáfono"
+          class="object-contain w-full sm:w-4xl md:w-2xl lg:w-2xl"
+        >
   </div>
 
   <!-- Title-->

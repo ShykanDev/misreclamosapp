@@ -1,14 +1,14 @@
 <template>
-  <ion-page class="bg-slate-900"  >
+  <ion-page class="bg-slate-900">
     <ion-header class="ion-no-border custom">
-        <ion-toolbar class="flex justify-between items-center px-4">
-          <ion-buttons slot="start">
-            <ion-back-button color="danger" defaultHref="/tabs/initial"></ion-back-button>
-          </ion-buttons>
-          <ion-title
-            class="absolute left-1/2 w-full text-center text-rose-800 -translate-x-1/2 -translate-y-1/2 font-poppins">Iniciar
-            sesión</ion-title>
-        </ion-toolbar>
+      <ion-toolbar class="flex justify-between items-center px-4">
+        <ion-buttons slot="start">
+          <ion-back-button color="danger" defaultHref="/tabs/login"></ion-back-button>
+        </ion-buttons>
+        <ion-title
+          class="absolute left-1/2 w-full text-center text-rose-800 -translate-x-1/2 -translate-y-1/2 font-poppins">Iniciar
+          sesión</ion-title>
+      </ion-toolbar>
     </ion-header>
     <ion-content :fullscreen="true" class="bg-slate-900">
       <div class="flex flex-col gap-4">
@@ -16,64 +16,60 @@
         <!-- Input Fields -->
         <article class="flex flex-col gap-4 p-2">
           <!--<input class="p-2 !py-3 rounded-lg border border-gray-50 outline-none bg-gray-200/50" type="text" placeholder="Correo electrónico"> -->
-          <ion-input aria-label="Correo electrónico" color="danger" label="Correo electrónico" labelPlacement="floating" fill="outline" placeholder="correo@ejemplo.com" class="custom" 
-            :counter="true" :maxlength="40" v-model="email"></ion-input>
-          <ion-input aria-label="contraseña" color="danger" label="Contraseña" labelPlacement="floating" fill="outline" placeholder="*******" class="custom" 
-            :counter="true" :maxlength="20" v-model="password"></ion-input>
+          <ion-input aria-label="Correo electrónico" color="danger" label="Correo electrónico" labelPlacement="floating"
+            fill="outline" placeholder="correo@ejemplo.com" class="custom" :counter="true" :maxlength="40"
+            v-model="email"></ion-input>
+          <ion-input aria-label="contraseña" color="danger" label="Contraseña" labelPlacement="floating" fill="outline"
+            placeholder="*******" class="custom" :counter="true" :maxlength="20" v-model="password"></ion-input>
         </article>
         <!-- Button -->
-        <ion-button @click="handleLogin" class="font-semibold w-11/12 !mx-auto login" expand="block" style="text-transform: none;" >Iniciar sesión</ion-button>
+        <ion-button @click="handleLogin" class="font-semibold w-11/12 !mx-auto login" expand="block"
+          style="text-transform: none;">Iniciar sesión</ion-button>
         <p class="text-center text-slate-500">¿No tiene cuenta?</p>
-        <ion-button router-link="/tabs/register" fill="outline"  color="danger" class="w-11/12 !mx-auto register" style="text-transform: none;">Registrarse</ion-button>
+        <ion-button router-link="/tabs/register" fill="outline" color="danger" class="w-11/12 !mx-auto register"
+          style="text-transform: none;">Registrarse</ion-button>
 
         <div class="flex justify-between">
-          <p class="!text-sm text-left underline ml-2 text-gray-500">¿Olvidó su contraseña?</p>
+          <p class="!text-sm text-left underline ml-2 text-gray-500" @click="showModal = true">¿Olvidó su contraseña?
+          </p>
         </div>
 
-        <ion-modal ref="modal" trigger="open-modal" >
-      <ion-header>
-        <ion-toolbar>
-          <ion-buttons slot="start">
-            <ion-button >Cancel</ion-button>
-          </ion-buttons>
-          <ion-title>Welcome</ion-title>
-          <ion-buttons slot="end">
-            <ion-button :strong="true">Confirm</ion-button>
-          </ion-buttons>
-        </ion-toolbar>
-      </ion-header>
-      <ion-content class="ion-padding">
-        
-          <ion-input
-            label="Enter your name"
-            label-placement="stacked"
-            ref="input"
-            type="text"
-            placeholder="Your name"
-          ></ion-input>
-        
-      </ion-content>
-    </ion-modal>
-  <!-- Loading Overlay -->
-  <ion-loading
-    v-model="isLoading"
-    message="Cargando..."
-    spinner="circles"
-  ></ion-loading>
+        <ion-modal :is-open="showModal" @did-dismiss="showModal = false" ref="modal" trigger="open-modal">
+          <ion-header class="ion-no-border">
+            <ion-toolbar class="ion-padding">
+              <ion-title>Recuperar contraseña</ion-title>
+              <ion-buttons slot="start">
+                <ion-button @click="showModal = false"><ion-icon :icon="arrowBack" color="danger" size="large"></ion-icon></ion-button>
+              </ion-buttons>
+            </ion-toolbar>
+          </ion-header>
+          <ion-content class="ion-padding">
 
-      </div>  
+            <ion-input label="Correo electrónico" label-placement="floating" ref="input" fill="outline" type="text"
+              color="danger" placeholder="Ingrese su correo electrónico" class="custom" :counter="true" :maxlength="40"
+              v-model="email">
+            </ion-input> 
+
+            <ion-button @click="handleResetPassword" class="font-semibold w-11/12 !mx-auto login" expand="block"
+              style="text-transform: none;">Enviar enlace de recuperación</ion-button> 
+          </ion-content>
+        </ion-modal>
+        <!-- Loading Overlay -->
+        <ion-loading :is-open="isLoading" v-model="isLoading" message="Cargando..." spinner="circles"></ion-loading>
+
+      </div>
     </ion-content>
   </ion-page>
 </template>
 
 <script setup lang="ts">
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonBackButton, IonInput, IonButton, IonButtons, IonLoading } from '@ionic/vue';
-import { IonModal } from '@ionic/vue';
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonBackButton, IonInput, IonButton, IonButtons, IonLoading, IonModal } from '@ionic/vue';
 import { ref } from 'vue';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
+import { getAuth, sendPasswordResetEmail, signInWithEmailAndPassword } from 'firebase/auth'
 import { useLogginStore } from '@/stores/loggin';
 import { Notyf } from 'notyf';
 import 'notyf/notyf.min.css';
+import { arrowBack, close } from 'ionicons/icons';
 
 const notyf = new Notyf({
   duration: 5000,
@@ -81,8 +77,8 @@ const notyf = new Notyf({
     x: 'center',
     y: 'top',
   },
-dismissible: true,
-  })
+  dismissible: true,
+})
 
 // Firebase auth
 const auth = getAuth()
@@ -90,7 +86,7 @@ const auth = getAuth()
 // User input values
 const email = ref('');
 const password = ref('');
-
+const showModal = ref(false)
 //Ui value that contains boolean if user email is verified (if true then a popup will be shown)
 const showVerifyEmail = ref(false)
 const isUserEmailVerified = ref(false)
@@ -105,7 +101,7 @@ const validateValues = () => {
 
 
 
-  const handleLogin = () => {
+const handleLogin = () => {
   if (validateValues()) {
     isLoading.value = true
     signInWithEmailAndPassword(auth, email.value, password.value)
@@ -138,16 +134,33 @@ const validateValues = () => {
   }
 }
 
+const handleResetPassword = async () => {
+  try {
+    await sendPasswordResetEmail(auth, email.value)
+    notyf.success(
+      'Correo enviado, por favor verifique su bandeja de entrada, spam o correo no deseado',
+    )
+    console.log('Correo enviado')
+    showModal.value = false
+    email.value = ''
+    notyf.success('Correo enviado, por favor verifique su bandeja de entrada, spam o correo no deseado')
+  } catch (error) {
+    console.log(error)
+    notyf.error(`Error al enviar correo, error: ${error}`)
+  }
+}
 </script>
 
 <style>
-ion-content{
+ion-content {
   --background: #FDF8F8;
 }
-ion-toolbar{
+
+ion-toolbar {
   --background: #FDF8F8;
 
 }
+
 ion-input.custom {
   --color: #A66367;
   --background: #F3E7E8;
@@ -162,17 +175,19 @@ ion-input.custom {
   --outline-width: 0;
   --outline-style: none;
   --outline-color: #A66367;
-  
+
 }
+
 ion-button.login {
   --border-radius: 10px;
-  --background:#EA2832;
+  --background: #EA2832;
   --padding-top: 12px;
   --padding-bottom: 12px;
 }
+
 ion-button.register {
   --border-radius: 10px;
-  --background:#EA2832;
+  --background: #EA2832;
   --padding-top: 12px;
   --padding-bottom: 12px;
 }

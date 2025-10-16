@@ -3,20 +3,19 @@
     <ion-tabs>
       <ion-router-outlet></ion-router-outlet>
       <ion-tab-bar slot="bottom">
-
-        <ion-tab-button tab="tab1" href="/tabs/login">
+        <ion-tab-button style="" tab="tab1" href="/tabs/login">
           <ion-icon aria-hidden="true" :icon="logInOutline" />
-          <ion-label>Ingresar</ion-label>
+          <ion-label class="font-poppins">Ingresar</ion-label>
         </ion-tab-button>
 
         <ion-tab-button tab="tab2" href="/tabs/register">
           <ion-icon aria-hidden="true" :icon="personAddOutline" />
-          <ion-label>Registrarse</ion-label>
+          <ion-label class="font-poppins">Registrarse</ion-label>
         </ion-tab-button>
 
         <ion-tab-button tab="tab3" href="/tabs/initial">
           <ion-icon aria-hidden="true" :icon="square" />
-          <ion-label>Tab 3</ion-label>
+          <ion-label class="font-poppins">Tab 3</ion-label>
         </ion-tab-button>
         
       </ion-tab-bar>
@@ -28,3 +27,19 @@
 import { IonTabBar, IonTabButton, IonTabs, IonLabel, IonIcon, IonPage, IonRouterOutlet } from '@ionic/vue';
 import { ellipse, logInOutline, personAddOutline, square, triangle } from 'ionicons/icons';
 </script>
+
+<style scoped>
+ion-tab-bar {
+  --background: #f0f0f0; /* Background color of the tab bar */
+  --border-top: none; /* Remove top border */
+  --height: 60px; /* Height of the tab bar */
+}
+
+ion-tab-button {
+  --background-focused: #e0e0e0; /* Background when button is focused */
+  --color: #888; /* Default text/icon color */
+  --color-selected: var(--ion-color-danger); /* Color when selected */
+  --padding-end: 10px; /* Padding on the right */
+  --padding-start: 10px; /* Padding on the left */
+}
+</style>

@@ -3,9 +3,9 @@
     <ion-header class="ion-no-border">
       <ion-toolbar >
         <ion-buttons slot="start">
-          <ion-back-button class="text-blue-700" defaultHref="/tabs/initial"></ion-back-button>
+          <ion-back-button class="text-rose-700" defaultHref="/tabs/initial"></ion-back-button>
         </ion-buttons>
-        <ion-title class="text-center text-blue-800">Registrarse</ion-title>
+        <ion-title class="absolute top-1/2 left-1/2 text-center text-rose-800 -translate-x-1/2 -translate-y-1/2">Registrarse</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content>
@@ -19,10 +19,10 @@
   <!-- Contenedor principal -->
   <div class="flex justify-center min-h-screen">
     <!--Card-->
-    <ion-card class="w-full bg-white ion-padding"> 
+    <ion-card class="w-full ion-padding"> 
       <!-- Header con degradado azul -->
       <ion-card-header class="mb-6 text-center">
-        <ion-card-title class="text-2xl">
+        <ion-card-title class="text-2xl text-amber-950">
           Cree su cuenta
         </ion-card-title>
         <ion-card-subtitle class="hidden mt-2 text-gray-500 text-md">
@@ -35,6 +35,7 @@
         <!-- Campo: Nombre -->
      
           <ion-input
+          color="danger"
             labelPlacement="floating"
             v-model="form.name" 
             name="name"
@@ -49,6 +50,7 @@
         <!-- Campo: Email -->
           
           <ion-input
+          color="danger"
             labelPlacement="floating"
             v-model="form.email"
             name="email"
@@ -63,6 +65,7 @@
         <!-- Campo: Contraseña -->
           
           <ion-input
+          color="danger"
             v-model="form.password"
             name="password"
             type="password"
@@ -77,6 +80,7 @@
         <!-- Campo: Confirmar Contraseña -->
      
           <ion-input
+          color="danger"
             v-model="form.confirmPassword"
             name="confirmPassword"
             type="password"
@@ -88,14 +92,14 @@
           ></ion-input>
 
         <!-- Requisitos de contraseña -->
-        <div class="px-4 text-sm">
+        <div class="flex flex-col gap-3 px-4 text-sm">
           <p
             :class="{
               'text-red-500': passswordRequirements.length,
               'text-emerald-600': !passswordRequirements.length && form.password.length >= 9,
             }"
           >
-            *Su contraseña debe tener mínimo 9 caracteres
+            Su contraseña debe tener mínimo 9 caracteres
           </p>
           <p
             :class="{
@@ -103,7 +107,7 @@
               'text-emerald-600': !passswordRequirements.uppercase && form.password.match(/[A-Z]/),
             }"
           >
-            *Su contraseña debe tener al menos una mayúscula
+          Su contraseña debe tener al menos una mayúscula
           </p>
           <p
             :class="{
@@ -111,7 +115,7 @@
               'text-emerald-600': form.password === form.confirmPassword && form.password.length >= 9,
             }"
           >
-            *Su contraseña debe coincidir
+              Su contraseña debe coincidir
           </p>
           <p class="text-gray-500">
             Al registrarse, acepta nuestros
@@ -140,8 +144,8 @@
         </ion-text>
         <ion-text class="text-gray-500">
           ¿Ya tiene cuenta?
-          <router-link to="/tabs/login" class="font-medium text-blue-600 hover:text-blue-700">
-            Inicia sesión
+          <router-link to="/tabs/login" class="font-medium text-rose-600 hover:text-rose-700">
+            Iniciar sesión
           </router-link>
         </ion-text>
       </div>
@@ -158,7 +162,7 @@
       </ion-toolbar>
     </ion-header>
      <ion-content class="relative ion-padding" :fullscreen="true">
-        <h3 class="text-center text-blue-800 font-inter">¡Su cuenta ha sido creada con exito!</h3>
+        <h3 class="text-center text-rose-800 font-inter">¡Su cuenta ha sido creada con exito!</h3>
          <DotLottieVue style="width:90%; margin: 0 auto;" autoplay loop src="https://lottie.host/64a8ea7b-2a04-4d33-bebe-cf0bb2fd9777/7Yx5lQcDap.json" />
 
         <p class="text-center text-black font-poppins">Por favor, revise su correo electrónico para verificar su cuenta. (Si no lo encuentra, verifique la carpeta de spam).</p>
@@ -219,7 +223,7 @@ const isLoading = ref(false)
 const auth = getAuth()
 
 const userName = ref('Alejandro')
-const success = ref(false)
+const success = ref(true)
 
 
 const validatePasswordQuality = () => {
@@ -310,9 +314,9 @@ const showLoading = async () => {
 
 <style scoped>
 ion-input.custom {
-  --color: #525252;
-  --background: #F1F2F4;
-  --placeholder-color: #5c5c5c;
+  --color: #A66367;
+  --background: #F3E7E8;
+  --placeholder-color: #A66367;
   --placeholder-opacity: 0.8;
   --border-radius: 10px !important;
   --border-width: 1px;
@@ -329,7 +333,7 @@ ion-input{
 }
 ion-button.register{
   --border-radius: 10px;
-  --background:#1146b0;
+  --background:#EA2832;
   --padding-top: 1rem;
   --padding-bottom: 1rem;
 }
@@ -341,9 +345,12 @@ ion-loading.custom-loading{
 }
 ion-button.acceptModal{
   --border-radius: 10px;
-  --background:#1146b0;
+  --background:#EA2832;
   --padding-top: 1rem;
   --padding-bottom: 1rem;
   --color:white;
+}
+ion-card{
+  --background:#FDF8F8;
 }
 </style>

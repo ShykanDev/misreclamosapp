@@ -27,6 +27,7 @@
     "notyf": "^3.10.0",
     "pinia": "^3.0.3",
     "pinia-plugin-persistedstate": "^4.5.0",
+    "swiper": "^12.0.2",
     "vue": "^3.3.0",
     "vue-router": "^4.2.0"
   },

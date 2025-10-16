@@ -5,7 +5,7 @@
    
 
     <!-- Title -->
-    <h2 class="mb-4 !text-3xl font-medium text-center text-blue-900">
+    <h2 class="mb-4 !text-3xl font-medium text-center text-rose-900">
       Sea parte del cambio
     </h2>
 
@@ -22,8 +22,8 @@
       <div class="flex">
 
     <!-- Button Login (CTA) -->
-    <ion-button router-link="/tabs/login" class="w-11/12 !mx-auto text-white !p-3.5 font-semibold !rounded-lg loggin" shape="round" fill="solid" style="text-transform:none">Iniciar sesión</ion-button>
-    <ion-button router-link="/tabs/register" class="w-11/12 !mx-auto text-blue-600 !p-3.5 font-semibold !rounded-lg register" shape="round" fill="outline" style="text-transform:none">Registrarse</ion-button>
+    <ion-button router-link="/tabs/login" color="danger" class="w-11/12 !mx-auto text-white !p-3.5 font-semibold !rounded-lg loggin" shape="round" fill="solid" style="text-transform:none">Iniciar sesión</ion-button>
+    <ion-button router-link="/tabs/register" color="danger" class="w-11/12 !mx-auto text-blue-600 !p-3.5 font-semibold !rounded-lg register" shape="round" fill="outline" style="text-transform:none">Registrarse</ion-button>
       </div>
 
 
@@ -53,7 +53,7 @@ import { IonContent, IonButton } from '@ionic/vue';
       --padding-bottom: 120px;
   }
   ion-button.loggin {
-    --background:#0836a0;
+    --background:#2163fd;
     --color: #ffffff;
     --border-radius: 10px !important;
   }
@@ -64,7 +64,7 @@ import { IonContent, IonButton } from '@ionic/vue';
   }
   ion-button.register{
     --background: #ffffff;
-    --color: #2163fd;
+    --color:  #2163fd;
     --border-radius: 10px !important;
   }
 </style>

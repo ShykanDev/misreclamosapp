@@ -3,7 +3,7 @@
         <ion-header class="ion-no-border">
             <ion-toolbar>
                 <ion-title class="text-center">
-                    <span class="font-medium text-center text-blue-900">MisReclamos.com</span>
+                    <span class="font-medium text-center text-rose-900">MisReclamos.com</span>
                 </ion-title>
             </ion-toolbar>
         </ion-header>
@@ -59,7 +59,7 @@ onIonViewDidEnter(async () => {
 // Limpia los listeners al salir de la vista
 onIonViewDidLeave(() => {
   if (!emblaApi.value) return;
-  emblaApi.value.off('select', onSelect);
+  //emblaApi.value.off('select', onSelect);
 });
 </script>
 

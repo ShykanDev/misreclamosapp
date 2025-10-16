@@ -3,14 +3,14 @@
   <!-- Image-->
   <div class="flex justify-center items-center mb-8">
     <img
-      src="../../assets/talkingV2.jpg"
+      src="../../assets/redMad100.png"
       alt="Personas leyendo comentarios sobre productos"
       class="object-contain w-full sm:w-4xl md:w-2xl lg:w-2xl"
     >
   </div>
 
   <!-- Title-->
-  <h2 class="mb-4 !text-3xl font-medium text-center text-blue-900">
+  <h2 class="mb-4 !text-3xl font-medium text-center text-rose-900">
     Compare y descubra experiencias reales
   </h2>
   <div class="flex flex-col items-center">

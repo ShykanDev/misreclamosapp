@@ -38,7 +38,7 @@
       >
     </div>
     <!-- Button Skip (CTA) -->
-    <ion-button router-link="/tabs/tab1" class="w-12/12 !mx-auto !p-3.5 font-semibold !rounded-sm skip"  fill="clear">Omitir por ahora</ion-button>
+    <ion-button router-link="/content/home" class="w-12/12 !mx-auto !p-3.5 font-semibold !rounded-sm skip"  fill="clear">Omitir por ahora</ion-button>
   </div>
 
   </ion-content>
@@ -66,5 +66,8 @@ import { IonContent, IonButton } from '@ionic/vue';
     --background: #ffffff;
     --color:  #2163fd;
     --border-radius: 10px !important;
+  }
+  ion-content{
+    --background: #FDF8F8;
   }
 </style>

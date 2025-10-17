@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from '@ionic/vue-router';
 import { RouteRecordRaw } from 'vue-router';
-import TabsPage from '../views/LoginTabsPage.vue'
 import LoginTabsPage from '../views/LoginTabsPage.vue';
 
 const routes: Array<RouteRecordRaw> = [
@@ -27,6 +26,21 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: 'initial',
         component: () => import('@/views/InitialPage.vue')
+      },
+
+    ]
+  },
+  {
+    path: '/content/',
+    redirect: '/content/home'
+  },
+  {
+    path: '/content/',
+    component: () => import('@/views/content/ContentTabs.vue'),
+    children: [
+      {
+        path: 'home',
+        component: () => import('@/views/content/HomeTab.vue')
       },
     ]
   }

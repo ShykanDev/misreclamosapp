@@ -30,4 +30,8 @@ import { IonContent } from '@ionic/vue';
 </script>
 
 <style scoped>
+
+ion-content{
+  --background: #FDF8F8;
+}
 </style>

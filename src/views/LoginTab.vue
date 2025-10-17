@@ -56,7 +56,6 @@
         </ion-modal>
         <!-- Loading Overlay -->
         <ion-loading :is-open="isLoading" v-model="isLoading" message="Cargando..." spinner="circles"></ion-loading>
-
       </div>
     </ion-content>
   </ion-page>

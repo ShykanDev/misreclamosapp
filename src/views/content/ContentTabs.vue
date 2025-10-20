@@ -2,17 +2,17 @@
     <ion-tabs>
         <ion-router-outlet></ion-router-outlet>
         <ion-tab-bar slot="bottom">
-            <ion-tab-button style="" tab="home" href="/content/home">
+            <ion-tab-button tab="home" href="/content/home">
                 <ion-icon aria-hidden="true" :icon="home" />
                 <ion-label class="font-poppins">Inicio</ion-label>
             </ion-tab-button>
 
-            <ion-tab-button tab="publish" href="/content/publish">
+            <ion-tab-button tab="home" href="/content/home">
             <v-icon name="oi-diff-added" />
                 <ion-label class="font-poppins">Publicar</ion-label>
             </ion-tab-button>
 
-            <ion-tab-button tab="profile" href="/content/profile">
+            <ion-tab-button tab="home" href="/content/home">
                 <ion-icon aria-hidden="true" :icon="personOutline" />
                 <ion-label class="font-poppins">Mi cuenta</ion-label>
             </ion-tab-button>

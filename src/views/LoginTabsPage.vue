@@ -13,10 +13,7 @@
           <ion-label class="font-poppins">Registrarse</ion-label>
         </ion-tab-button>
 
-        <ion-tab-button tab="tab3" href="/tabs/initial">
-          <ion-icon aria-hidden="true" :icon="square" />
-          <ion-label class="font-poppins">Tab 3</ion-label>
-        </ion-tab-button>
+
         
       </ion-tab-bar>
     </ion-tabs>
@@ -25,7 +22,7 @@
 
 <script setup lang="ts">
 import { IonTabBar, IonTabButton, IonTabs, IonLabel, IonIcon, IonPage, IonRouterOutlet } from '@ionic/vue';
-import { ellipse, logInOutline, personAddOutline, square, triangle } from 'ionicons/icons';
+import { ellipse, logInOutline, personAddOutline, square ,homeOutline} from 'ionicons/icons';
 </script>
 
 <style scoped>

@@ -1,1 +1,13 @@
-Add Popup To Show an alert when user has not verified his email [X]
+Add Popup To Show an alert when user has not verified his email [Not Done]
+
+//Login
+Add a loading screen when user is logging in [Not Done]
+
+//Register
+Add a loading screen when user is registering [Not Done]
+
+//Home Tab 
+Comment the Home Tab Typescript [OK]
+Fix the icons that are broken (possible import issue) [OK]
+Fix the console log warnings [Not Done]
+Add a loading screen when user is fetching the complaints [On Progress]

@@ -3,7 +3,7 @@
     <ion-header class="ion-no-border custom">
       <ion-toolbar class="flex justify-between items-center px-4">
         <ion-buttons slot="start">
-          <ion-back-button color="danger" defaultHref="/tabs/login"></ion-back-button>
+          <ion-back-button color="danger" defaultHref="/"></ion-back-button>
         </ion-buttons>
         <ion-title
           class="absolute left-1/2 w-full text-center text-rose-800 -translate-x-1/2 -translate-y-1/2 font-poppins">Iniciar

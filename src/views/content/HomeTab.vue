@@ -1,57 +1,61 @@
 <template>
-    <!--Ion Menu-->
-    <ion-menu type="push" content-id="main-content">
-        <!--Ion Menu Header-->
-        <ion-header class="ion-no-border">
-            <ion-toolbar class="categories" >
-                <ion-title class="text-center text-red-500 font-poppins">
-                    Categorias
-                </ion-title>
-            </ion-toolbar>
-        </ion-header>
+  <!--Ion Menu-->
+  <ion-menu type="push" menu-id="first-menu" content-id="main-content">
+    <!--Ion Menu Header-->
+    <ion-header class="ion-no-border">
+      <ion-toolbar class="categories">
+        <ion-title class="text-center text-red-500 font-poppins">
+          Categorias
+        </ion-title>
+      </ion-toolbar>
+    </ion-header>
 
-        <!--Ion Menu Content -->
-        <ion-content class="categories">
-            <ion-list class="categories">
-                    <ion-item @click="getComments()" v-for="category in fullCategories" :key="category.name"  class="!bg-blue-700 cursor-pointer font-poppins text-slate-600">
-                    <v-icon :name="category.icon" class="mr-3 text-red-400" />
-                    {{ category.name }}
-                    </ion-item>
-            </ion-list>
-        </ion-content>
+    <!--Ion Menu Content -->
+    <ion-content class="categories">
+      <ion-list class="categories">
+        <ion-item @click="getSpecificComplaint(category.name)" v-for="category in fullCategories" :key="category.name"
+          v-cloak class="!bg-blue-700 cursor-pointer font-poppins text-slate-600">
+          <v-icon :name="category.icon" class="mr-3 text-red-400" />
+          {{ category.name }}
+        </ion-item>
+      </ion-list>
+    </ion-content>
 
-    </ion-menu>
-    
-    <!--Initial Page-->
-    <ion-page id="main-content">
-        <ion-header class="ion-no-border">
-            <ion-toolbar>
-                <ion-buttons slot="start">
-                    <ion-menu-button>
-                        <ion-icon :icon="ellipsisVerticalOutline"></ion-icon>
-                    </ion-menu-button>
-                </ion-buttons>
-                <ion-title class="text-center text-amber-900 font-poppins"> 
-                        Inicio
-                </ion-title>
-            </ion-toolbar>
-        </ion-header>
+  </ion-menu>
 
-        <ion-content>
-            <div>
-                <span>Seleccionaste la categoria: {{ selectedCategory }}</span>
-                <p>{{ complaints }}</p>
-            </div>
-        </ion-content>
-    </ion-page>
+  <!--Initial Page-->
+  <ion-page id="main-content">
+    <ion-header class="ion-no-border">
+      <ion-toolbar>
+        <ion-buttons slot="start">
+          <ion-menu-button menu="first-menu">
+            <ion-icon :icon="ellipsisVerticalOutline"></ion-icon>
+          </ion-menu-button>
+        </ion-buttons>
+        <ion-title class="text-center text-rose-800 font-poppins">
+          {{ selectedCategory == '' ? 'Comentarios generales' : 'Comentarios para ' + selectedCategory }}
+        </ion-title>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content class="ion-padding main-content">
+      <div v-if="loading" class="flex fixed top-0 right-0 bottom-0 left-0 justify-center items-center">
+        <ion-spinner name="lines-sharp" />
+      </div>
+      <div v-if="complaints.length > 0">
+        <ComplaintCard v-for="complaint in complaints" :key="complaint.id" :title="complaint.title" :category="complaint.category" :content="complaint.content" :createdAt="complaint.createdAt" :image="complaint.image" :service="complaint.service" :userName="complaint.userName" :userId="complaint.userId" :answers="complaint.answers" />
+      </div>
+    </ion-content>
+  </ion-page>
 </template>
 
 <script lang="ts" setup>
-import { IonMenu, IonPage, IonContent, IonHeader, IonToolbar, IonButtons, IonMenuButton, IonIcon, IonList, IonTitle, IonItem} from '@ionic/vue';
+import { IonMenu, IonPage, IonContent, IonHeader, IonToolbar, IonButtons, IonMenuButton, IonIcon, IonList, IonTitle, IonItem, IonSpinner, menuController } from '@ionic/vue';
 import { getAuth } from 'firebase/auth';
 import { ellipsisVerticalOutline } from 'ionicons/icons';
 import { ref } from 'vue';
 import { collection, getDocs, getFirestore, orderBy, query, where } from 'firebase/firestore'
+import ComplaintCard from '@/components/Content/ComplaintCard.vue';
 //Full categories info  
 const fullCategories = [
   {
@@ -134,7 +138,7 @@ const fullCategories = [
   },
   {
     name: 'Eventos',
-    icon: 'fa-ticket-alt',
+    icon: 'io-ticket-sharp',
     examples: ['Ticketmaster', 'Boletia', 'Superboletos', 'Eticket'],
   },
   {
@@ -269,46 +273,69 @@ const fullCategories = [
   },
   {
     name: 'Otro',
-    icon: '',
+    icon: 'ri-more-fill',
     examples: ['Hospital Veterinario UNAM', 'Mascotitas', 'Petco', 'Veterinaria San Francisco'],
   },
 ]
 
+
+const closeFirstMenu = async () => await menuController.close('first-menu');
+
+//Loading variable
+const loading = ref(false)
+
+//Selected category 
 const selectedCategory = ref('')
 
-
-const handleCategoryClick = (category: string) => {
-    selectedCategory.value = category
-}
-
-
+//Firebase utils
 const auth = getAuth();
 const db = getFirestore();
 const complaintsCollection = collection(db, 'complaints')
 
+//Complaints variable that stores the complaints once they are fetched
 const complaints = ref([])
-const getComments = () => {
-    getDocs(complaintsCollection).then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-            complaints.value.push(doc.data())
-            console.log(doc.id, " => ", doc.data());
-        });
-    })    
+
+//Function that fetches the specific complaints (fetches the complaints that match the category from the database and stores them in the complaints variable)
+const getSpecificComplaint = (category: string) => {
+  loading.value = true
+  selectedCategory.value = category
+  const queryComplaints = query(complaintsCollection, where('category', '==', selectedCategory.value), orderBy('createdAt', 'desc'))
+  complaints.value = []
+  closeFirstMenu()
+  getDocs(queryComplaints).then((querySnapshot) => {
+    if (querySnapshot.empty){
+      console.log('No matching documents.'); 
+      return;
+    }
+    querySnapshot.forEach((doc) => {
+      complaints.value.push(doc.data())
+    });
+  }).finally(() => {
+    loading.value = false
+    closeFirstMenu()
+  })
 }
 
 
 </script>
 
 <style scoped>
-ion-toolbar.categories{
-    --background: #ffebec;
+ion-toolbar.categories {
+  --background: #ffebec;
 }
-ion-content.categories{
-    --background: #F3E7E8;
+
+ion-content.categories {
+  --background: #F3E7E8;
 }
+
 ion-item {
   --background: #fffcfc;
-  --background-activated: #1e40af; /* Color al hacer clic */
-  --background-hover: #1e40af; /* Color al pasar el mouse */
+  --background-activated: #1e40af;
+  /* Color al hacer clic */
+  --background-hover: #1e40af;
+  /* Color al pasar el mouse */
+}
+ion-content.main-content {
+  --background: #F3E7E8;
 }
 </style>

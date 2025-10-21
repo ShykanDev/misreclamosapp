@@ -21,6 +21,7 @@
     "@ionic/vue": "^8.0.0",
     "@ionic/vue-router": "^8.0.0",
     "@lottiefiles/dotlottie-vue": "^0.10.5",
+    "animate.css": "^4.1.1",
     "embla-carousel-vue": "^8.6.0",
     "firebase": "^12.4.0",
     "ionicons": "^7.0.0",

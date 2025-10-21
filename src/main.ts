@@ -73,7 +73,8 @@ import { FaFlag, RiZhihuFill, OiDiffAdded,
   LaToolsSolid,
   IoShareSocialSharp,
   IoPawSharp,
-  MdTravelexploreSharp
+  MdTravelexploreSharp,
+  OiThreeBars
  } from "oh-vue-icons/icons";
 
 addIcons(FaFlag, RiZhihuFill, OiDiffAdded,
@@ -117,6 +118,7 @@ addIcons(FaFlag, RiZhihuFill, OiDiffAdded,
   IoTicketSharp,
   RiMoreFill,
   GiMilkCarton,
+  OiThreeBars,
   GiElectricalResistance,
   GiClothes,
   BiBank2,

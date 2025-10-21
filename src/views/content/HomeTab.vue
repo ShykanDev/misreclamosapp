@@ -29,12 +29,13 @@
       <ion-toolbar>
         <ion-buttons slot="start">
           <ion-menu-button menu="first-menu">
-            <ion-icon :icon="ellipsisVerticalOutline"></ion-icon>
+            <v-icon name="oi-three-bars" class="text-red-700" />
           </ion-menu-button>
         </ion-buttons>
-        <ion-title class="text-center text-rose-800 font-poppins">
-          {{ selectedCategory == '' ? 'Comentarios generales' : 'Comentarios para ' + selectedCategory }}
-        </ion-title>
+        <div class="flex absolute inset-0 flex-col justify-center items-center w-full h-full text-rose-800 font-poppins">
+          <small>Categoria:</small>
+          <p class="animate__animated animate__fadeInRight" :key="selectedCategory">{{ selectedCategory == '' ? 'Comentarios generales' : selectedCategory }} <v-icon :name="fullCategories.find(e =>e.name === selectedCategory)?.icon" class="text-rose-700 animate__animated animate__fadeInRight vicon"/></p>
+        </div>
       </ion-toolbar>
     </ion-header>
 
@@ -50,12 +51,12 @@
 </template>
 
 <script lang="ts" setup>
-import { IonMenu, IonPage, IonContent, IonHeader, IonToolbar, IonButtons, IonMenuButton, IonIcon, IonList, IonTitle, IonItem, IonSpinner, menuController } from '@ionic/vue';
+import { IonMenu, IonPage, IonContent, IonHeader, IonToolbar, IonButtons, IonMenuButton, IonList, IonTitle, IonItem, IonSpinner, menuController } from '@ionic/vue';
 import { getAuth } from 'firebase/auth';
-import { ellipsisVerticalOutline } from 'ionicons/icons';
 import { ref } from 'vue';
 import { collection, getDocs, getFirestore, orderBy, query, where } from 'firebase/firestore'
 import ComplaintCard from '@/components/Content/ComplaintCard.vue';
+import 'animate.css';
 //Full categories info  
 const fullCategories = [
   {
@@ -279,13 +280,15 @@ const fullCategories = [
 ]
 
 
+
+
 const closeFirstMenu = async () => await menuController.close('first-menu');
 
 //Loading variable
 const loading = ref(false)
 
 //Selected category 
-const selectedCategory = ref('')
+const selectedCategory = ref('Vinos o Vinaterías')
 
 //Firebase utils
 const auth = getAuth();
@@ -337,5 +340,14 @@ ion-item {
 }
 ion-content.main-content {
   --background: #F3E7E8;
+}
+
+/*Animate.css*/
+.animate__animated.animate__fadeInRight {
+  --animate-duration: .75s;
+}
+.vicon {
+  --animate-duration: .95s;
+  --animate-delay: 1.9s;
 }
 </style>

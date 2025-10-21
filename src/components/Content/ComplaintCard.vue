@@ -1,80 +1,104 @@
 <template>
-<ion-card class="rounded-3xl custom-card ion-padding">
-  <ion-card-header>
-    <div class="header-container">
-      <div>
-        <ion-card-title class="title">{{ title }}</ion-card-title>
-        <ion-card-subtitle class="author">{{ userName }}</ion-card-subtitle>
-      </div>
-      <div class="header-right">
-        <div class="tag-container">
-          <ion-badge class="bug-badge">{{ category }}</ion-badge>
-          <ion-icon class="gear-icon"></ion-icon>
+  <ion-card class="rounded-3xl custom-card ion-padding">
+    <ion-card-header>
+      <div class="header-container">
+        <div>
+          <ion-card-title class="title">{{ title }}</ion-card-title>
+          <ion-card-subtitle class="author">{{ userName }}</ion-card-subtitle>
         </div>
-        <p class="time">2 hours ago</p>
+        <div class="header-right">
+          <div class="tag-container">
+            <ion-badge class="bug-badge">{{ category }}</ion-badge>
+            <ion-icon class="gear-icon"></ion-icon>
+          </div>
+          <p class="time">2 hours ago</p>
+        </div>
       </div>
-    </div>
-  </ion-card-header>
+    </ion-card-header>
 
-  <ion-card-content>
-    <p class="description font-poppins">
-        {{ content }}
-    </p>
-    <div class="footer-container">
-      <div></div>
-      <img
-        :src="image"
-        alt="Bug screenshot"
-        class="bug-image"
-      />
-    </div>
-  </ion-card-content>
-</ion-card>
+    <ion-card-content>
+      <p class="description font-poppins">
+        {{ finalContent }}
+        <span v-if="isTruncated || !isTruncated && props.content.length > 249" @click="truncateContent()" class="italic cursor-pointer text-slate-500">{{ isTruncated ? 'Ver más...' : 'Ver menos' }}</span>
+      </p>
+      <div class="footer-container">
+        <img :src="image" alt="Complaint screenshot" class="rounded-3xl complaint-image"  />
+      </div>
+    </ion-card-content>
+  </ion-card>
 
 </template>
 
 <script lang="ts" setup>
 import { IonCard, IonCardHeader, IonCardContent, IonCardTitle } from '@ionic/vue';
+import { limit } from 'firebase/firestore';
 import { settings } from 'ionicons/icons';
+import { computed, onMounted, ref } from 'vue';
 
 const props = defineProps({
-    title:{
-        type: String,
-        required: true
-    },
-    category:{
-        type: String,
-        required: true
-    },
-    content:{
-        type: String,
-        required: true
-    },
-    createdAt:{
-        type: String,
-        required: true
-    },
-    image:{
-        type: String,
-        default: "https://placehold.co/80x80"
-    },
-    service:{
-        type: String,
-        required: true
-    },
-    userName:{
-        type: String,
-        required: true
-    },
-    userId:{
-        type: String,
-        required: true
-    },
-    answers:{
-        type: Array,
-        required: true
-    }
+  title: {
+    type: String,
+    required: true
+  },
+  category: {
+    type: String,
+    required: true
+  },
+  content: {
+    type: String,
+    required: true
+  },
+  createdAt: {
+    type: String,
+    required: true
+  },
+  image: {
+    type: String,
+    default: "https://placehold.co/80x80"
+  },
+  service: {
+    type: String,
+    required: true
+  },
+  userName: {
+    type: String,
+    required: true
+  },
+  userId: {
+    type: String,
+    required: true
+  },
+  answers: {
+    type: Array,
+    required: true
+  }
 })
+
+const isTruncated = ref<null|boolean>(null);
+const finalContent = ref()
+
+const initialValidation = () =>  {
+  if (props.content.length > 249) {
+    finalContent.value = props.content.slice(0,250);
+    isTruncated.value = true;
+  } else {
+    finalContent.value = props.content;
+    isTruncated.value = false;
+  }
+}
+onMounted(()=> initialValidation())
+const truncateContent = ():void => {
+  if(isTruncated.value) {
+    finalContent.value = props.content;
+    isTruncated.value = false;
+  } else {
+    finalContent.value = props.content.slice(0, 250);
+    isTruncated.value = true;
+  }
+}
+
+
+
 
 </script>
 
@@ -161,5 +185,4 @@ const props = defineProps({
   border-radius: 0.75rem;
   border: 2px solid #f76f72;
 }
-
 </style>

@@ -22,6 +22,7 @@
     "@ionic/vue-router": "^8.0.0",
     "@lottiefiles/dotlottie-vue": "^0.10.5",
     "animate.css": "^4.1.1",
+    "browser-image-compression": "^2.0.2",
     "embla-carousel-vue": "^8.6.0",
     "firebase": "^12.4.0",
     "ionicons": "^7.0.0",
@@ -30,6 +31,7 @@
     "pinia": "^3.0.3",
     "pinia-plugin-persistedstate": "^4.5.0",
     "swiper": "^12.0.2",
+    "tailwindcss-animated": "^2.0.0",
     "vue": "^3.3.0",
     "vue-router": "^4.2.0"
   },

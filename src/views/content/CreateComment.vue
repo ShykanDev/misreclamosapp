@@ -1,75 +1,44 @@
 <template>
-  <!--Ion Menu-->
-  <ion-menu type="push" menu-id="first-menu" content-id="main-content">
-    <!--Ion Menu Header-->
-    <ion-header class="ion-no-border">
-      <ion-toolbar class="categories">
-        <ion-title class="text-center text-red-500 font-poppins">
-          Categorias
-        </ion-title>
-      </ion-toolbar>
-    </ion-header>
-
-    <!--Ion Menu Content -->
-    <ion-content class="categories">
-      <ion-list class="categories">
-        <ion-item @click="getSpecificComplaint(category.name)" v-for="category in fullCategories" :key="category.name"
-          v-cloak class="!bg-blue-700 cursor-pointer font-poppins text-slate-600">
-          <v-icon :name="category.icon" class="mr-3 text-red-400" />
-          {{ category.name }}
-        </ion-item>
-      </ion-list>
-    </ion-content>
-
-  </ion-menu>
-
-  <!--Initial Page-->
-  <ion-page id="main-content">
-    <ion-header class="ion-no-border">
+  <ion-page>  
+    <ion-header>    
       <ion-toolbar>
-        <ion-buttons slot="start">
-          <ion-menu-button menu="first-menu">
-            <v-icon name="oi-three-bars" class="text-red-700" />
-          </ion-menu-button>
-        </ion-buttons>
-        <div class="flex absolute inset-0 flex-col justify-center items-center w-full h-full text-rose-800 font-poppins">
-          <small>Categoria:</small>
-          <article :key="selectedCategory" class="flex gap-2 items-center">
-            <p class="animate-fade-left">{{ selectedCategory == '' ? 'Comentarios generales' : selectedCategory }}</p>
-            <v-icon :name="fullCategories.find(e =>e.name === selectedCategory)?.icon" class="text-rose-700 animate-fade-left animate-delay-[.18s] animate-duration-[.8s]"/>
-          </article>
-        </div>
+        <ion-title>Crear Comentario</ion-title>
       </ion-toolbar>
     </ion-header>
-
-    <ion-content class="ion-padding main-content">
-      <div v-if="loading" class="flex fixed top-0 right-0 bottom-0 left-0 justify-center items-center">
-        <ion-spinner name="lines-sharp" />
-      </div>
-      <div v-if="complaints.length > 0">
-        <ComplaintCard v-for="complaint in complaints" :key="complaint.id" :title="complaint.title" :category="complaint.category" :content="complaint.content" :createdAt="complaint.createdAt" :image="complaint.image" :service="complaint.service" :userName="complaint.userName" :userId="complaint.userId" :answers="complaint.answers" />
-      </div>
-
-      <div v-if="loading === false && complaints.length === 0" class="flex flex-col gap-2 justify-center items-center h-full"> 
-        <article class="flex flex-col gap-2 justify-center items-center p-4 bg-white rounded-3xl min-h-[40dvh] animate-fade">
-          <h4 class="text-rose-800 font-poppins">!Aún no hay reclamos aquí!</h4>
-          <DotLottieVue class="w-56" autoplay loop src="https://lottie.host/102e5586-f640-45d6-adad-13ed24c1d827/76XQjzn4Ry.lottie"  />
-          <ion-button class="complaint font-alexandria" style="text-transform: none;">Crear Nuevo Reclamo</ion-button>
-        </article>
-      </div>
+    <ion-content>
+      
     </ion-content>
   </ion-page>
 </template>
 
-<script lang="ts" setup>
-import { IonMenu, IonPage, IonContent, IonHeader, IonToolbar, IonButtons, IonMenuButton,  IonList, IonTitle, IonItem, IonSpinner, menuController,  IonButton } from '@ionic/vue';
-import { getAuth } from 'firebase/auth';
-import { ref } from 'vue';
-import { collection, getDocs, getFirestore, orderBy, query, where } from 'firebase/firestore'
-import ComplaintCard from '@/components/Content/ComplaintCard.vue';
-import 'animate.css';
-import { DotLottieVue } from '@lottiefiles/dotlottie-vue';
-//Full categories info  
+<script setup lang="ts">
+import { reactive, ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import imageCompression from 'browser-image-compression'
+import { Notyf } from 'notyf'
+import 'notyf/notyf.min.css'
+import { getFirestore, collection, addDoc, Timestamp } from 'firebase/firestore'
+import { getAuth } from 'firebase/auth'
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/vue'
+
+//Ui Values
+const loading = ref(false)
+const notyf = new Notyf({
+  position: {
+    x: 'center',
+    y: 'top',
+  },
+  duration: 5000,
+  dismissible: true,
+})
+
+//Route & Route
+const route = useRoute()
+const router = useRouter()
+const category = route.params.category || ''
+
+
+//Categories array
 const fullCategories = [
   {
     name: 'Abarrotes y Bebidas',
@@ -151,7 +120,7 @@ const fullCategories = [
   },
   {
     name: 'Eventos',
-    icon: 'io-ticket-sharp',
+    icon: 'fa-ticket-alt',
     examples: ['Ticketmaster', 'Boletia', 'Superboletos', 'Eticket'],
   },
   {
@@ -286,74 +255,185 @@ const fullCategories = [
   },
   {
     name: 'Otro',
-    icon: 'ri-more-fill',
+    icon: '',
     examples: ['Hospital Veterinario UNAM', 'Mascotitas', 'Petco', 'Veterinaria San Francisco'],
   },
 ]
 
+// Images configuration for the form
+const imageSelected = ref()
+const imgFileInput = ref<HTMLInputElement | null>(null)
+const imageFileValue = ref()
+const compressedImageBase64 = ref()
+const handleFileInputChange = (e: Event) => {
+  if (e.target) {
+    imageSelected.value = URL.createObjectURL(e.target.files[0])
+    imageFileValue.value = e.target.files[0]
+  }
+}
+const removeImage = () => imageSelected.value = '';
+const renewImage = () => imgFileInput.value?.click();
 
-const closeFirstMenu = async () => await menuController.close('first-menu');
 
-//Loading variable
-const loading = ref(false)
-
-//Selected category 
-const selectedCategory = ref('Vinos o Vinaterías')
-
-//Firebase utils
-const auth = getAuth();
-const db = getFirestore();
-const complaintsCollection = collection(db, 'complaints')
-
-//Complaints variable that stores the complaints once they are fetched
-const complaints = ref([])
-
-//Function that fetches the specific complaints (fetches the complaints that match the category from the database and stores them in the complaints variable)
-const getSpecificComplaint = (category: string) => {
-  loading.value = true
-  selectedCategory.value = category
-  const queryComplaints = query(complaintsCollection, where('category', '==', selectedCategory.value), orderBy('createdAt', 'desc'))
-  complaints.value = []
-  closeFirstMenu()
-  getDocs(queryComplaints).then((querySnapshot) => {
-    if (querySnapshot.empty){
-      console.log('No matching documents.'); 
-      return;
-    }
-    querySnapshot.forEach((doc) => {
-      complaints.value.push(doc.data())
-    });
-  }).finally(() => {
-    loading.value = false
-    closeFirstMenu()
+//Function to convert file to base64
+function toBase64(file: File) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.readAsDataURL(file) // convierte automáticamente a Base64 con prefijo data:
+    reader.onload = () => resolve(reader.result)
+    reader.onerror = (error) => reject(error)
   })
 }
 
+//Firebase
+const auth = getAuth()
+const db = getFirestore()
+const complaintsCollection = collection(db, 'complaints')
+
+//Complaint object to send to Firestore
+const complaintObject = reactive({
+  userName: auth.currentUser?.displayName || 'Anonimo',
+  title: '',
+  category: '',
+  content: '',
+  image: '',
+  userUid: '',
+  createdAt: {},
+  service: '',
+})
+
+//Async function to compress image and convert to base64
+const compressImage = async () => {
+  if (!imageFileValue.value) {
+    notyf.error('No se seleccionó una imagen')
+    return false
+  }
+  const imageFile = imageFileValue.value
+  console.log('originalFile instanceof Blob', imageFile instanceof Blob) // true
+  console.log(`originalFile size ${imageFile.size / 1024 / 1024} MB`)
+  const options = {
+    maxSizeMB: 0.2,
+    maxWidthOrHeight: 1100,
+    useWebWorker: true,
+  }
+  loading.value = true
+  try {
+    const compressedFile = await imageCompression(imageFile, options)
+    console.log('compressedFile instanceof Blob', compressedFile instanceof Blob)
+    console.log(`compressedFile size ${compressedFile.size / 1024 / 1024} MB`)
+    compressedImageBase64.value = await toBase64(compressedFile)
+    console.log('compressedImageBase64', compressedImageBase64.value)
+    complaintObject.image = compressedImageBase64.value
+    return true
+  } catch (error: any) {
+    notyf.error(`Error al comprimir la imagen ${error}` )
+    console.log(error.message)
+    return false
+  } finally {
+    loading.value = false
+  }
+}
+
+//Verify fields before sending to Firestore
+const verifyFields = () => {
+  if (!complaintObject.category) {
+    notyf.error('Debe seleccionar una categoría')
+    return false
+  }
+  if (!complaintObject.title) {
+    notyf.error('Debe ingresar un título')
+    return false
+  }
+  if (!complaintObject.content) {
+    notyf.error('Debe ingresar una descripción')
+    return false
+  }
+  return true
+}
+
+//Send complaint to Firestore
+const sendComplaint = async () => {
+  if (!verifyFields()) return
+  if (imageSelected.value) {
+    await compressImage()
+    if (!compressedImageBase64.value) return
+  }
+  loading.value = true
+  complaintObject.userUid = auth.currentUser?.uid || ''
+  complaintObject.createdAt = Timestamp.now()
+  addDoc(complaintsCollection, complaintObject)
+    .then(() => {
+      notyf.success('Reclamo enviado correctamente')
+      complaintObject.category = ''
+      complaintObject.content = ''
+      complaintObject.title = ''
+      complaintObject.image = ''
+      complaintObject.service = ''
+      complaintObject.userName = ''
+      imageSelected.value = ''
+      imageFileValue.value = null
+      compressedImageBase64.value = ''
+      loading.value = false
+    })
+    .catch((error) => {
+      console.log('Error sending doc:', error)
+      notyf.error('Error al enviar el reclamo: ' + error)
+    })
+    .finally(() => {
+      console.log('finally')
+      loading.value = false
+    })
+}
 
 </script>
 
+
 <style scoped>
-ion-toolbar.categories {
-  --background: #ffebec;
+.bgStyle {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='%236c0098' fill-opacity='0.4'%3E%3Cpath fill-rule='evenodd' d='M11 0l5 20H6l5-20zm42 31a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM0 72h40v4H0v-4zm0-8h31v4H0v-4zm20-16h20v4H20v-4zM0 56h40v4H0v-4zm63-25a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm10 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM53 41a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm10 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm10 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-30 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-28-8a5 5 0 0 0-10 0h10zm10 0a5 5 0 0 1-10 0h10zM56 5a5 5 0 0 0-10 0h10zm10 0a5 5 0 0 1-10 0h10zm-3 46a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm10 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM21 0l5 20H16l5-20zm43 64v-4h-4v4h-4v4h4v4h4v-4h4v-4h-4zM36 13h4v4h-4v-4zm4 4h4v4h-4v-4zm-4 4h4v4h-4v-4zm8-8h4v4h-4v-4z'/%3E%3C/g%3E%3C/svg%3E");
 }
 
-ion-content.categories {
-  --background: #F3E7E8;
+/* From Uiverse.io by Yaya12085 */
+.custum-file-upload {
+  height: 200px;
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: space-between;
+  gap: 20px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed #cacaca;
+  background-color: rgba(255, 255, 255, 1);
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0px 48px 35px -48px rgba(0, 0, 0, 0.1);
 }
 
-ion-item {
-  --background: #fffcfc;
-  --background-activated: #1e40af;
-  /* Color al hacer clic */
-  --background-hover: #1e40af;
-  /* Color al pasar el mouse */
+.custum-file-upload .icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-ion-content.main-content {
-  --background: #F3E7E8;
+
+.custum-file-upload .icon svg {
+  height: 80px;
+  fill: rgba(75, 85, 99, 1);
 }
-ion-button.complaint {
-  --background: #af1e1e;
-  --color: white;
-  --border-radius: 10px;
+
+.custum-file-upload .text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.custum-file-upload .text span {
+  font-weight: 400;
+  color: rgba(75, 85, 99, 1);
+}
+
+.custum-file-upload input {
+  display: none;
 }
 </style>

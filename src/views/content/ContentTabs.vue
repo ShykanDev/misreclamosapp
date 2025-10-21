@@ -7,9 +7,9 @@
                 <ion-label class="font-poppins">Inicio</ion-label>
             </ion-tab-button>
 
-            <ion-tab-button tab="home" href="/content/home">
+            <ion-tab-button tab="create" href="/content/create">
             <v-icon name="oi-diff-added" />
-                <ion-label class="font-poppins">Publicar</ion-label>
+                <ion-label class="font-poppins">Crear</ion-label>
             </ion-tab-button>
 
             <ion-tab-button tab="home" href="/content/home">

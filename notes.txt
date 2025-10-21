@@ -13,3 +13,9 @@ Fix the console log warnings [Not Done]
 Add a loading screen when user is fetching the complaints [OK]
 fix the title of the page [Not Done]
 Add a variable that contains the selected category [On Progress]
+
+//Create Complaint
+Add to router the create complaint page [Not Done]
+Add a loading screen when user is creating the complaint [Not Done]
+Add a loading screen when user is uploading the image [Not Done]
+Add UI Fixes to all the page [Not Done]

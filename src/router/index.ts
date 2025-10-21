@@ -27,7 +27,6 @@ const routes: Array<RouteRecordRaw> = [
         path: 'initial',
         component: () => import('@/views/InitialPage.vue')
       },
-
     ]
   },
   {
@@ -42,6 +41,10 @@ const routes: Array<RouteRecordRaw> = [
         path: 'home',
         component: () => import('@/views/content/HomeTab.vue')
       },
+      {
+        path: 'create',
+        component: () => import('@/views/content/CreateComment.vue')
+      }
     ]
   }
 ]

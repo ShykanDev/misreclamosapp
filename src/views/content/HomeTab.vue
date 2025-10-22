@@ -1,42 +1,24 @@
 <template>
-  <!--Ion Menu-->
-  <ion-menu type="push" menu-id="first-menu" content-id="main-content">
-    <!--Ion Menu Header-->
-    <ion-header class="ion-no-border">
-      <ion-toolbar class="categories">
-        <ion-title class="text-center text-red-500 font-poppins">
-          Categorias
-        </ion-title>
-      </ion-toolbar>
-    </ion-header>
 
-    <!--Ion Menu Content -->
-    <ion-content class="categories">
-      <ion-list class="categories">
-        <ion-item @click="getSpecificComplaint(category.name)" v-for="category in fullCategories" :key="category.name"
-          v-cloak class="!bg-blue-700 cursor-pointer font-poppins text-slate-600">
-          <v-icon :name="category.icon" class="mr-3 text-red-400" />
-          {{ category.name }}
-        </ion-item>
-      </ion-list>
-    </ion-content>
-
-  </ion-menu>
 
   <!--Initial Page-->
-  <ion-page id="main-content">
+  <ion-page>
     <ion-header class="ion-no-border">
       <ion-toolbar>
-        <ion-buttons slot="start">
-          <ion-menu-button menu="first-menu">
-            <v-icon name="oi-three-bars" class="text-red-700" />
-          </ion-menu-button>
-        </ion-buttons>
-        <div class="flex absolute inset-0 flex-col justify-center items-center w-full h-full text-rose-800 font-poppins">
+       <ion-buttons slot="start">
+  <ion-button @click="openMenu">
+    <v-icon name="oi-three-bars" class="text-red-700" />
+  </ion-button>
+</ion-buttons>
+
+
+        <div
+          class="flex absolute inset-0 flex-col justify-center items-center w-full h-full text-rose-800 font-poppins">
           <small>Categoria:</small>
           <article :key="selectedCategory" class="flex gap-2 items-center">
             <p class="animate-fade-left">{{ selectedCategory == '' ? 'Comentarios generales' : selectedCategory }}</p>
-            <v-icon :name="fullCategories.find(e =>e.name === selectedCategory)?.icon" class="text-rose-700 animate-fade-left animate-delay-[.18s] animate-duration-[.8s]"/>
+            <v-icon :name="fullCategories.find(e => e.name === selectedCategory)?.icon"
+              class="text-rose-700 animate-fade-left animate-delay-[.18s] animate-duration-[.8s]" />
           </article>
         </div>
       </ion-toolbar>
@@ -47,14 +29,21 @@
         <ion-spinner name="lines-sharp" />
       </div>
       <div v-if="complaints.length > 0">
-        <ComplaintCard v-for="complaint in complaints" :key="complaint.id" :title="complaint.title" :category="complaint.category" :content="complaint.content" :createdAt="complaint.createdAt" :image="complaint.image" :service="complaint.service" :userName="complaint.userName" :userId="complaint.userId" :answers="complaint.answers" />
+        <ComplaintCard v-for="complaint in complaints" :key="complaint.id" :title="complaint.title"
+          :category="complaint.category" :content="complaint.content" :createdAt="complaint.createdAt"
+          :image="complaint.image" :service="complaint.service" :userName="complaint.userName"
+          :userId="complaint.userId" :answers="complaint.answers" />
       </div>
 
-      <div v-if="loading === false && complaints.length === 0" class="flex flex-col gap-2 justify-center items-center h-full"> 
-        <article class="flex flex-col gap-2 justify-center items-center p-4 bg-white rounded-3xl min-h-[40dvh] animate-fade">
+      <div v-if="loading === false && complaints.length === 0"
+        class="flex flex-col gap-2 justify-center items-center h-full">
+        <article
+          class="flex flex-col gap-2 justify-center items-center p-4 bg-white rounded-3xl min-h-[40dvh] animate-fade">
           <h4 class="text-rose-800 font-poppins">!Aún no hay reclamos aquí!</h4>
-          <DotLottieVue class="w-56" autoplay loop src="https://lottie.host/102e5586-f640-45d6-adad-13ed24c1d827/76XQjzn4Ry.lottie"  />
-          <ion-button class="complaint font-alexandria" style="text-transform: none;">Crear Nuevo Reclamo</ion-button>
+          <DotLottieVue class="w-56" autoplay loop
+            src="https://lottie.host/102e5586-f640-45d6-adad-13ed24c1d827/76XQjzn4Ry.lottie" />
+          <ion-button router-link="/create" class="complaint font-alexandria" style="text-transform: none;">Crear Nuevo
+            Reclamo</ion-button>
         </article>
       </div>
     </ion-content>
@@ -62,7 +51,7 @@
 </template>
 
 <script lang="ts" setup>
-import { IonMenu, IonPage, IonContent, IonHeader, IonToolbar, IonButtons, IonMenuButton,  IonList, IonTitle, IonItem, IonSpinner, menuController,  IonButton } from '@ionic/vue';
+import { IonPage, IonContent, IonHeader, IonToolbar, IonButtons, IonMenuButton, IonSpinner, menuController, IonButton, IonMenu, } from '@ionic/vue';
 import { getAuth } from 'firebase/auth';
 import { ref } from 'vue';
 import { collection, getDocs, getFirestore, orderBy, query, where } from 'firebase/firestore'
@@ -316,8 +305,8 @@ const getSpecificComplaint = (category: string) => {
   complaints.value = []
   closeFirstMenu()
   getDocs(queryComplaints).then((querySnapshot) => {
-    if (querySnapshot.empty){
-      console.log('No matching documents.'); 
+    if (querySnapshot.empty) {
+      console.log('No matching documents.');
       return;
     }
     querySnapshot.forEach((doc) => {
@@ -328,6 +317,10 @@ const getSpecificComplaint = (category: string) => {
     closeFirstMenu()
   })
 }
+
+const openMenu = async () => {
+  await menuController.open('first-menu');
+};
 
 
 </script>
@@ -348,9 +341,11 @@ ion-item {
   --background-hover: #1e40af;
   /* Color al pasar el mouse */
 }
+
 ion-content.main-content {
   --background: #F3E7E8;
 }
+
 ion-button.complaint {
   --background: #af1e1e;
   --color: white;

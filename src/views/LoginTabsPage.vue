@@ -12,9 +12,6 @@
           <ion-icon aria-hidden="true" :icon="personAddOutline" />
           <ion-label class="font-poppins">Registrarse</ion-label>
         </ion-tab-button>
-
-
-        
       </ion-tab-bar>
     </ion-tabs>
   </ion-page>
@@ -22,7 +19,7 @@
 
 <script setup lang="ts">
 import { IonTabBar, IonTabButton, IonTabs, IonLabel, IonIcon, IonPage, IonRouterOutlet } from '@ionic/vue';
-import { ellipse, logInOutline, personAddOutline, square ,homeOutline} from 'ionicons/icons';
+import { logInOutline, personAddOutline} from 'ionicons/icons';
 </script>
 
 <style scoped>

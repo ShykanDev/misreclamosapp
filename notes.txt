@@ -19,3 +19,17 @@ Add to router the create complaint page [Not Done]
 Add a loading screen when user is creating the complaint [Not Done]
 Add a loading screen when user is uploading the image [Not Done]
 Add UI Fixes to all the page [Not Done]
+
+// ⚠️ Important
+// Ion Tabs and Ion Menu are not directly compatible.
+// To make them work together, we need a different structure:
+// The Ion Menu should exist as a single, top-level parent.
+// All other tab views must be rendered separately (outside the menu’s parent).
+// This ensures proper routing, transitions, and lifecycle behavior.
+
+// Create Complaint
+// - Add route for the Create Complaint page [Not Done]
+// - Show a loading screen when the user is creating a complaint [Not Done]
+// - Show a loading screen when uploading images [Not Done]
+// - Apply UI fixes across all related pages [Not Done]
+

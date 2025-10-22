@@ -30,22 +30,12 @@ const routes: Array<RouteRecordRaw> = [
     ]
   },
   {
-    path: '/content/',
-    redirect: '/content/home'
+    path: '/home/',
+    component: () => import('@/views/content/HomeTab.vue'),
   },
   {
-    path: '/content/',
-    component: () => import('@/views/content/ContentTabs.vue'),
-    children: [
-      {
-        path: 'home',
-        component: () => import('@/views/content/HomeTab.vue')
-      },
-      {
-        path: 'create',
-        component: () => import('@/views/content/CreateComment.vue')
-      }
-    ]
+    path: '/create',
+    component: () => import('@/views/create/CreateComplaintTab.vue'),
   }
 ]
 

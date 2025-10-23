@@ -38,7 +38,7 @@
       >
     </div>
     <!-- Button Skip (CTA) -->
-    <ion-button router-link="/content/home" class="w-12/12 !mx-auto !p-3.5 font-semibold !rounded-sm skip"  fill="clear">Omitir por ahora</ion-button>
+    <ion-button router-link="/home" class="w-12/12 !mx-auto !p-3.5 font-semibold !rounded-sm skip"  fill="clear">Omitir por ahora</ion-button>
   </div>
 
   </ion-content>

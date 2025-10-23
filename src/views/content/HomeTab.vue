@@ -1,17 +1,41 @@
 <template>
-
-
   <!--Initial Page-->
-  <ion-page>
+  <ion-page >
+      <!--Menu-->
+  <section class="fixed top-0 bottom-0 left-0 z-50"  :class="isMenuOpen ? ' w-9/12 bg-red-500 sm:w-5/12 md:w-4/12 lg:w-3/12 transition-all duration-300 ease-in-out' : 'translate-x-[-100%] transition-all duration-300 ease-in-out'">
+    <!--Menu Header-->
+    <ion-header class="ion-no-border">
+      <ion-toolbar class="categories">
+        <ion-buttons slot="end">
+          <ion-button @click="isMenuOpen = !isMenuOpen" fill="clear">
+            <v-icon name="oi-three-bars" />
+          </ion-button>
+        </ion-buttons>
+        <ion-title class="text-center text-red-500 font-poppins">
+          Categorias
+        </ion-title>
+      </ion-toolbar>
+    </ion-header>
+
+    <!--Menu Content -->
+    <ion-content class="categories">
+      <ion-list class="categories">
+        <ion-item @click="getSpecificComplaint(category.name)" v-for="category in fullCategories" :key="category.name"
+           class="!bg-blue-700 cursor-pointer font-poppins text-slate-600">
+          <v-icon :name="category.icon" class="mr-3 text-red-400" />
+          {{ category.name }}
+        </ion-item>
+      </ion-list>
+    </ion-content>
+
+  </section>
     <ion-header class="ion-no-border">
       <ion-toolbar>
-       <ion-buttons slot="start">
-  <ion-button @click="openMenu">
-    <v-icon name="oi-three-bars" class="text-red-700" />
-  </ion-button>
-</ion-buttons>
-
-
+        <ion-buttons slot="start">
+          <ion-button @click="isMenuOpen = !isMenuOpen" fill="clear">
+            <v-icon name="oi-three-bars" />
+          </ion-button>
+        </ion-buttons>
         <div
           class="flex absolute inset-0 flex-col justify-center items-center w-full h-full text-rose-800 font-poppins">
           <small>Categoria:</small>
@@ -25,6 +49,12 @@
     </ion-header>
 
     <ion-content class="ion-padding main-content">
+
+      <!--Overlay when menu is open-->
+      <Transition name="fade" >
+        <div v-if="isMenuOpen" @click="isMenuOpen = false" class="fixed inset-0 z-40 bg-black/40"></div>
+      </Transition>
+
       <div v-if="loading" class="flex fixed top-0 right-0 bottom-0 left-0 justify-center items-center">
         <ion-spinner name="lines-sharp" />
       </div>
@@ -51,9 +81,9 @@
 </template>
 
 <script lang="ts" setup>
-import { IonPage, IonContent, IonHeader, IonToolbar, IonButtons, IonMenuButton, IonSpinner, menuController, IonButton, IonMenu, } from '@ionic/vue';
+import { IonPage, IonContent, IonHeader, IonToolbar, IonButtons, IonSpinner, menuController, IonButton, IonMenu, IonTitle, IonItem, IonList, IonMenuButton } from '@ionic/vue';
 import { getAuth } from 'firebase/auth';
-import { ref } from 'vue';
+import { ref, Transition } from 'vue';
 import { collection, getDocs, getFirestore, orderBy, query, where } from 'firebase/firestore'
 import ComplaintCard from '@/components/Content/ComplaintCard.vue';
 import 'animate.css';
@@ -318,9 +348,8 @@ const getSpecificComplaint = (category: string) => {
   })
 }
 
-const openMenu = async () => {
-  await menuController.open('first-menu');
-};
+const isMenuOpen = ref(false);
+
 
 
 </script>
@@ -350,5 +379,46 @@ ion-button.complaint {
   --background: #af1e1e;
   --color: white;
   --border-radius: 10px;
+}
+/* Asegúrate de que el menú tenga un ancho */
+ion-menu {
+  width: 80%;
+  max-width: 320px;
+}
+
+/* Estilos para el contenido del menú */
+ion-toolbar.categories {
+  --background: #ffebec;
+}
+
+ion-content.categories {
+  --background: #F3E7E8;
+}
+
+ion-item {
+  --background: #fffcfc;
+  --background-activated: #1e40af;
+  --background-hover: #1e40af;
+}
+
+/* Estilos para el contenido principal */
+ion-content.main-content {
+  --background: #F3E7E8;
+}
+
+ion-button.complaint {
+  --background: #af1e1e;
+  --color: white;
+  --border-radius: 10px;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>

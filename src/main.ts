@@ -74,8 +74,10 @@ import { FaFlag, RiZhihuFill, OiDiffAdded,
   IoShareSocialSharp,
   IoPawSharp,
   MdTravelexploreSharp,
-  OiThreeBars
- } from "oh-vue-icons/icons";
+  OiThreeBars,
+  HiSolidArrowSmLeft,
+  MdCategoryRound,
+FaRegularUser } from "oh-vue-icons/icons";
 
 addIcons(FaFlag, RiZhihuFill, OiDiffAdded,
   FaShoppingBasket,
@@ -127,6 +129,9 @@ addIcons(FaFlag, RiZhihuFill, OiDiffAdded,
   IoShareSocialSharp,
   IoPawSharp,
   MdTravelexploreSharp,
+  HiSolidArrowSmLeft,
+  MdCategoryRound,
+  FaRegularUser
 );
 
 /**

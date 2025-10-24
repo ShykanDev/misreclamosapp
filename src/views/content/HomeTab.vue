@@ -1,17 +1,17 @@
 <template>
   <!--Initial Page-->
-  <ion-page >
+  <ion-page>
       <!--Menu-->
-  <section class="fixed top-0 bottom-0 left-0 z-50"  :class="isMenuOpen ? ' w-9/12 bg-red-500 sm:w-5/12 md:w-4/12 lg:w-3/12 transition-all duration-300 ease-in-out' : 'translate-x-[-100%] transition-all duration-300 ease-in-out'">
+  <section class="fixed top-0 bottom-0 left-0 z-50 sm:w-5/12 md:w-4/12 lg:w-3/12"  :class="isMenuOpen ? 'w-9/12 bg-red-500  transition-all duration-300 animate-ease-out' : 'translate-x-[-100%]  transition-all duration-100 ease-in-out'">
     <!--Menu Header-->
     <ion-header class="ion-no-border">
       <ion-toolbar class="categories">
         <ion-buttons slot="end">
           <ion-button @click="isMenuOpen = !isMenuOpen" fill="clear">
-            <v-icon name="oi-three-bars" />
+            <v-icon v-if="isMenuOpen" name="md-close-outlined" class="text-red-500 animate-spin animate-once animate-duration-[.49s] animate-ease-out" />
           </ion-button>
         </ion-buttons>
-        <ion-title class="text-center text-red-500 font-poppins">
+        <ion-title :key="isMenuOpen ? 'open' : 'closed'" class="text-center transform transition-all duration-300 ease-in-out text-red-500 font-poppins animate-fade-right  animate-duration-[.8s]">
           Categorias
         </ion-title>
       </ion-toolbar>
@@ -19,11 +19,13 @@
 
     <!--Menu Content -->
     <ion-content class="categories">
-      <ion-list class="categories">
-        <ion-item @click="getSpecificComplaint(category.name)" v-for="category in fullCategories" :key="category.name"
-           class="!bg-blue-700 cursor-pointer font-poppins text-slate-600">
-          <v-icon :name="category.icon" class="mr-3 text-red-400" />
-          {{ category.name }}
+      <ion-list  class="categories">
+        <ion-item  :color="category.name === selectedCategory ? 'danger' : 'none'" @click="getSpecificComplaint(category.name)" v-for="category in fullCategories" :key="category.name"
+           class="cursor-pointer font-poppins text-slate-600">
+          <v-icon :name="category.icon" class="mr-3" :class="category.name === selectedCategory ? 'text-white' : 'text-red-400'" />
+          <ion-text >
+            {{ category.name }}
+          </ion-text>
         </ion-item>
       </ion-list>
     </ion-content>
@@ -33,7 +35,7 @@
       <ion-toolbar>
         <ion-buttons slot="start">
           <ion-button @click="isMenuOpen = !isMenuOpen" fill="clear">
-            <v-icon name="oi-three-bars" />
+            <v-icon name="oi-three-bars" class="text-red-600" />
           </ion-button>
         </ion-buttons>
         <div
@@ -50,19 +52,25 @@
 
     <ion-content class="ion-padding main-content">
 
+      <!--Viewer-->
+      <viewer :images="selectedImage">
+        
+    </viewer>
+
+
       <!--Overlay when menu is open-->
       <Transition name="fade" >
-        <div v-if="isMenuOpen" @click="isMenuOpen = false" class="fixed inset-0 z-40 bg-black/40"></div>
+        <div v-if="isMenuOpen"  @click="isMenuOpen = false" class="fixed inset-0 z-40 bg-black/40"></div>
       </Transition>
 
       <div v-if="loading" class="flex fixed top-0 right-0 bottom-0 left-0 justify-center items-center">
         <ion-spinner name="lines-sharp" />
       </div>
-      <div v-if="complaints.length > 0">
-        <ComplaintCard v-for="complaint in complaints" :key="complaint.id" :title="complaint.title"
+      <div v-if="complaints.length > 0" class="flex flex-col gap-4">
+        <ComplaintCard @callShow="callShowImageFromParent" v-for="complaint in complaints as IComplaint[]" :key="complaint.id" :title="complaint.title"
           :category="complaint.category" :content="complaint.content" :createdAt="complaint.createdAt"
           :image="complaint.image" :service="complaint.service" :userName="complaint.userName"
-          :userId="complaint.userId" :answers="complaint.answers" />
+          :userUid="complaint.userUid" :answers="complaint.answers" :docId="complaint.docId"/>
       </div>
 
       <div v-if="loading === false && complaints.length === 0"
@@ -81,13 +89,16 @@
 </template>
 
 <script lang="ts" setup>
-import { IonPage, IonContent, IonHeader, IonToolbar, IonButtons, IonSpinner, menuController, IonButton, IonMenu, IonTitle, IonItem, IonList, IonMenuButton } from '@ionic/vue';
+import { IonPage, IonContent, IonHeader, IonToolbar, IonButtons, IonSpinner, menuController, IonButton, IonTitle, IonItem, IonList, onIonViewDidEnter, onIonViewDidLeave } from '@ionic/vue';
 import { getAuth } from 'firebase/auth';
-import { ref, Transition } from 'vue';
+import { ref, watch } from 'vue';
 import { collection, getDocs, getFirestore, orderBy, query, where } from 'firebase/firestore'
 import ComplaintCard from '@/components/Content/ComplaintCard.vue';
 import 'animate.css';
 import { DotLottieVue } from '@lottiefiles/dotlottie-vue';
+import { IComplaint } from '@/interfaces/IComplaint';
+ import { api as viewerApi } from 'v-viewer'
+import { useHomeStore } from '@/stores/home';
 //Full categories info  
 const fullCategories = [
   {
@@ -325,10 +336,11 @@ const db = getFirestore();
 const complaintsCollection = collection(db, 'complaints')
 
 //Complaints variable that stores the complaints once they are fetched
-const complaints = ref([])
+const complaints = ref<IComplaint[]>([])  
 
 //Function that fetches the specific complaints (fetches the complaints that match the category from the database and stores them in the complaints variable)
 const getSpecificComplaint = (category: string) => {
+  isMenuOpen.value = false
   loading.value = true
   selectedCategory.value = category
   const queryComplaints = query(complaintsCollection, where('category', '==', selectedCategory.value), orderBy('createdAt', 'desc'))
@@ -340,8 +352,12 @@ const getSpecificComplaint = (category: string) => {
       return;
     }
     querySnapshot.forEach((doc) => {
-      complaints.value.push(doc.data())
+      complaints.value.push({
+        ...doc.data(),
+        docId: doc.id
+      })
     });
+    console.log(complaints.value)
   }).finally(() => {
     loading.value = false
     closeFirstMenu()
@@ -350,8 +366,41 @@ const getSpecificComplaint = (category: string) => {
 
 const isMenuOpen = ref(false);
 
+const selectedImage = ref<string[]>([])
 
+  const show = () => {
+    viewerApi({
+      images: selectedImage.value
+    })
+  }
 
+  const callShowImageFromParent = (img: string) => {
+    selectedImage.value = [img]
+    console.log(selectedImage.value)
+    show()
+  }
+
+  const storeHome = useHomeStore();
+  onIonViewDidEnter(() => {
+    if(storeHome.getCategorySelected !== ''){
+      getSpecificComplaint(storeHome.getCategorySelected)
+    } else {
+      getSpecificComplaint('Vinos o Vinaterías')
+    }
+  })
+
+  onIonViewDidLeave(() => {
+    storeHome.setCategorySelected('')
+  })
+
+watch(
+  () => storeHome.getCategorySelected,  // Getter function
+  (newValue) => {
+    if (newValue) {
+      getSpecificComplaint(newValue)
+    }
+  }
+)
 </script>
 
 <style scoped>

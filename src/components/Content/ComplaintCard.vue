@@ -5,81 +5,113 @@
         <div class="">
           <ion-card-title class="title">{{ title }}</ion-card-title>
           <div class="flex gap-2 items-center mt-2">
-            <v-icon name="fa-regular-user" class="text-orange-800"/>
+            <v-icon name="fa-regular-user" class="text-orange-800" />
             <ion-card-subtitle class="author">{{ userName }}</ion-card-subtitle>
           </div>
         </div>
         <div class="header-right">
           <div class="tag-container">
-            <ion-badge class="bug-badge">{{ category }}</ion-badge>
-            <v-icon name="md-category-round" class="text-orange-800"/>
+            <ion-badge class="bug-badge">{{ category }}</ion-badge>     
+            <v-icon name="md-category-round" class="text-orange-800" />
           </div>
           <p class="time">{{ createdAtToString() }}</p>
         </div>
       </div>
     </ion-card-header>
 
-    <ion-card-content>
+    <ion-card-content class="ion-no-padding">
       <p class="description font-poppins">
         {{ finalContent }}
-        <span v-if="isTruncated || !isTruncated && props.content.length > 249" @click="truncateContent()" class="italic cursor-pointer text-slate-500">{{ isTruncated ? 'Ver más...' : 'Ver menos' }}</span>
+        <span v-if="isTruncated || !isTruncated && props.content.length > 249" @click="truncateContent()"
+          class="italic cursor-pointer text-slate-500">{{ isTruncated ? 'Ver más...' : 'Ver menos' }}</span>
       </p>
-      <div v-if="image" class="footer-container">
-        <img :src="image" alt="Complaint screenshot" class="rounded-3xl complaint-image"  />
+      <div v-if="image" class="flex justify-center p-4">
+        <img @click="callShowImageFromParent" :src="image" alt="Complaint screenshot" class="rounded-2xl cursor-pointer complaint-image w-xs md:w-sm" />
       </div>
-      <div>
+      <div class="mt-2.5">
         <!-- Answers (Mobile Adaptation) -->
         <div v-if="props.answers && props.answers.length > 0"
-          class="flex overflow-y-auto flex-col p-2 w-full max-h-96 rounded-2xl bg-blue-50/50">
-          <ion-card-title class="text-lg font-poppins text-slate-700">Respuestas</ion-card-title>
-  <div v-for="answer in props.answers as IAnswer[]" :key="answer.uidTo"
-    class="relative p-4 mb-3 w-full bg-white rounded-lg border-l-4 shadow-sm transition-shadow duration-200 hover:shadow-md"
-    :class="{
-      'bg-blue-50/50 border-blue-200': answer.uidFrom == answer.uidTo,
-      'bg-rose-50 border-slate-300': answer.uidFrom !== answer.uidTo && !answer.isCompany,
-      'bg-green-50 border-green-200': answer.isCompany,
-    }">
-    <div class="flex gap-2 items-center mb-1.5">
-      <p v-if="answer.uidFrom === answer.uidTo"
-        class="flex absolute top-1 right-2 gap-1 items-center text-xs font-semibold text-blue-500">
-        Autor <v-icon name="ri-shield-user-fill" scale="0.9" />
-      </p>
-      <span v-if="answer.uidFrom"
-        class="flex justify-center items-center w-6 h-6 text-xs font-semibold text-white rounded-full shrink-0" :class="{
-          'bg-blue-900': answer.uidFrom == answer.uidTo,
-          'bg-slate-400': answer.uidFrom !== answer.uidTo && !answer.isCompany,
-          'bg-green-900': answer.isCompany,
-        }">{{ answer.answeringFromName.slice(0, 1) }}</span>
-      <span class="text-sm font-medium truncate max-w-[70%]">{{ answer.answeringFromName }}</span>
-      <span v-if="answer.isCompany"
-        class="flex absolute top-0 right-2 gap-0.5 items-center text-xs font-medium text-green-800">
-        <v-icon name="la-user-tie-solid" scale="0.9" /> Empresa
-      </span>
-      <span class="mt-0.5 text-xs font-medium truncate text-slate-600">
-        {{ answer.date.toDate().toLocaleDateString('es-ES', {
-          year: 'numeric',
-          month: 'short',
-          day: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit',
-          hour12: false,
-        }) }}
-      </span>
-    </div>
-    <p class="text-sm leading-relaxed text-gray-800 break-words">{{ answer.answer }}</p>
-    <div v-if="answer.image" class="overflow-hidden relative mt-2 max-w-full max-h-48 rounded-xl shadow-sm select-none">
-      <article
-        class="flex absolute inset-0 flex-col justify-center items-center opacity-0 transition-all duration-300 cursor-pointer bg-black/70 hover:opacity-100">
-        <v-icon name="fa-eye" scale="1.3" class="text-white" />
-        <p class="text-xs text-white select-none">Ver imagen</p>
-      </article>
-      <img :src="answer.image" alt="user image"
-        class="object-cover w-full h-40 transition-transform duration-300 cursor-pointer hover:scale-[1.02]" />
-    </div>
-  </div>
-</div>
+          class="flex overflow-y-auto flex-col p-1 w-full max-h-96 rounded-2xl spacey bg-blue-50/20">
+          <ion-card-title class="text-lg text-center underline font-poppins text-slate-700">Respuestas</ion-card-title>
+          <div v-for="answer in props.answers as IAnswer[]" :key="answer.uidTo"
+            class="relative p-4 mb-3 w-full rounded-xl border-b shadow-sm transition-all duration-200 hover:shadow-md font-alexandria"
+            :class="{
+              'bg-blue-50/30 border-b-blue-500 border-b-2': answer.uidFrom == answer.uidTo,
+              'bg-slate-50/30 border-b-slate-500 border-b-2': answer.uidFrom !== answer.uidTo && !answer.isCompany,
+              'bg-green-50/30 border-b-green-500 border-b-2': answer.isCompany,
+            }">
 
+            <!-- Header: Avatar + Nombre + Etiquetas -->
+            <div class="flex gap-2 items-center mb-2">
+              <span v-if="answer.uidFrom"
+                class="flex justify-center items-center w-7 h-7 text-xs font-semibold text-white rounded-full shrink-0"
+                :class="{
+                  'bg-blue-600': answer.uidFrom == answer.uidTo,
+                  'bg-slate-500': answer.uidFrom !== answer.uidTo && !answer.isCompany,
+                  'bg-green-600': answer.isCompany,
+                }">
+                {{ answer.answeringFromName.slice(0, 1).toUpperCase() }}
+              </span>
+
+              <span class="text-sm font-medium truncate max-w-[65%]">
+                {{ answer.answeringFromName }}
+              </span>
+
+              <span class="ml-auto text-xs font-medium text-slate-500">
+                {{ answer.date.toDate().toLocaleDateString('es-ES', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                hour12: true,
+                }) }}
+              </span>
+            </div>
+
+            <!-- Etiquetas: Autor/Empresa -->
+            <div class="flex gap-1 items-center mb-1">
+              <p v-if="answer.uidFrom === answer.uidTo"
+                class="flex gap-1 items-center text-xs font-semibold text-blue-600">
+                <v-icon name="ri-shield-user-fill" scale="0.9" /> Autor
+              </p>
+              <span v-if="answer.isCompany"
+                class="flex gap-0.5 items-center ml-auto text-xs font-medium text-green-700">
+                <v-icon name="la-user-tie-solid" scale="0.9" /> Empresa
+              </span>
+            </div>
+
+            <!-- Contenido: Texto -->
+            <p class="mt-1 text-sm leading-relaxed break-words text-slate-700">
+              {{ answer.answer }}
+            </p>
+
+            <!-- Imagen (si existe) -->
+            <div v-if="answer.image"
+              class="overflow-hidden relative mt-3 max-w-full max-h-48 rounded-lg shadow-sm group">
+              <img :src="answer.image" alt="user image"
+                class="object-cover w-full h-40 transition-transform duration-300 group-hover:scale-[1.02] cursor-pointer" />
+              <div
+                class="flex absolute inset-0 flex-col justify-center items-center text-white opacity-0 transition-all duration-300 bg-black/90 group-hover:opacity-100">
+                <v-icon name="fa-eye" scale="1.3" />
+                <p class="text-xs select-none">Ver imagen</p>
+              </div>
+            </div>
+          </div>
+        </div>
+              <!-- Action Button -->
+      <div class="pt-4 border-t border-gray-100">
+        <button @click="answerComment"
+          class="flex gap-2 justify-center items-center !px-4 !py-2.5 text-sm font-medium !rounded-lg !shadow-sm transition-all duration-700 ease-in-out cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2"
+          :class="{'bg-white border-2 border-dashed border-red-500 text-red-700': !showReplyCard, 'bg-rose-600 hover:bg-rose-500 text-white': showReplyCard}"
+          >
+          <v-icon v-show="!showReplyCard" name="bi-reply-all-fill" scale="1.2" />
+          <v-icon v-show="showReplyCard" name="io-close-circle-sharp" class="text-white" scale="1.2" />
+          {{ showReplyCard ? 'Cerrar' : 'Responder Comentario' }}
+        </button>
       </div>
+    </div>
+    <AnswerComment v-if="showReplyCard"  @callClose="toggleReplyCard" :from-name="userName" :doc-id="docId" :answering-to-name="userName" :answering-to-uid="userUid" :category="category"/>
     </ion-card-content>
   </ion-card>
 
@@ -87,9 +119,10 @@
 
 <script lang="ts" setup>
 import { IAnswer } from '@/interfaces/IComplaint';
-import { IonCard, IonCardHeader, IonCardContent, IonCardTitle, IonCardSubtitle, IonBadge} from '@ionic/vue';
+import { IonCard, IonCardHeader, IonCardContent, IonCardTitle, IonCardSubtitle, IonBadge } from '@ionic/vue';
 import { Timestamp } from 'firebase/firestore';
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
+import AnswerComment from './AnswerComment.vue';
 
 const props = defineProps({
   title: {
@@ -127,24 +160,28 @@ const props = defineProps({
   answers: {
     type: Array,
     required: true
+  },
+  docId: {
+    type: String,
+    required: true
   }
 })
 
-const isTruncated = ref<null|boolean>(null);
+const isTruncated = ref<null | boolean>(null);
 const finalContent = ref()
 
-const initialValidation = () =>  {
+const initialValidation = () => {
   if (props.content.length > 249) {
-    finalContent.value = props.content.slice(0,250);
+    finalContent.value = props.content.slice(0, 250);
     isTruncated.value = true;
   } else {
     finalContent.value = props.content;
     isTruncated.value = false;
   }
 }
-onMounted(()=> initialValidation())
-const truncateContent = ():void => {
-  if(isTruncated.value) {
+onMounted(() => initialValidation())
+const truncateContent = (): void => {
+  if (isTruncated.value) {
     finalContent.value = props.content;
     isTruncated.value = false;
   } else {
@@ -153,7 +190,7 @@ const truncateContent = ():void => {
   }
 }
 
-const createdAtToString = () => { 
+const createdAtToString = () => {
   return new Date(props.createdAt.toDate()).toLocaleString('es-ES', {
     year: 'numeric',
     month: 'long',
@@ -162,6 +199,22 @@ const createdAtToString = () => {
     minute: '2-digit'
   });
 }
+
+const emits = defineEmits(['callShow'])
+const callShowImageFromParent = () => {
+  emits('callShow', props.image)
+}
+
+
+//Toggle the view of the comment
+const answerComment = () => {
+  toggleReplyCard()
+}
+
+//show reply comment card
+const showReplyCard = ref(false);
+
+const toggleReplyCard = () => showReplyCard.value = !showReplyCard.value;
 
 
 </script>

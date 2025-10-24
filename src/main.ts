@@ -1,5 +1,7 @@
 import { createApp } from 'vue'
 import App from './App.vue'
+import 'viewerjs/dist/viewer.css'
+import VueViewer from 'v-viewer'
 import router from './router';
 import './style.css';
 import { IonicVue } from '@ionic/vue';
@@ -77,7 +79,9 @@ import { FaFlag, RiZhihuFill, OiDiffAdded,
   OiThreeBars,
   HiSolidArrowSmLeft,
   MdCategoryRound,
-FaRegularUser } from "oh-vue-icons/icons";
+FaRegularUser,
+MdCloseOutlined,
+BiReplyAllFill } from "oh-vue-icons/icons";
 
 addIcons(FaFlag, RiZhihuFill, OiDiffAdded,
   FaShoppingBasket,
@@ -131,7 +135,9 @@ addIcons(FaFlag, RiZhihuFill, OiDiffAdded,
   MdTravelexploreSharp,
   HiSolidArrowSmLeft,
   MdCategoryRound,
-  FaRegularUser
+  FaRegularUser,
+  MdCloseOutlined,
+  BiReplyAllFill
 );
 
 /**
@@ -175,7 +181,8 @@ const app = createApp(App)
   .component("v-icon", OhVueIcon)
   .use(IonicVue)
   .use(router)
-  .use(pinia);
+  .use(pinia)
+  .use(VueViewer)
 
 router.isReady().then(() => {
   app.mount('#app');

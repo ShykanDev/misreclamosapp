@@ -22,4 +22,5 @@ export interface IComplaint {
   image?: string
   userName: string
   userUid: string
+  docId: string
 }

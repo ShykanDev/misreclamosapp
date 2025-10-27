@@ -7,7 +7,7 @@
           <div class="flex gap-2 items-center mt-2">
             <v-icon name="fa-regular-user" class="text-orange-800" />
             <ion-card-subtitle class="author">{{ userName }}</ion-card-subtitle>
-          </div>
+          </div> 
         </div>
         <div class="header-right">
           <div class="tag-container">
@@ -33,7 +33,7 @@
         <div v-if="props.answers && props.answers.length > 0"
           class="flex overflow-y-auto flex-col p-1 w-full max-h-96 rounded-2xl spacey bg-blue-50/20">
           <ion-card-title class="text-lg text-center underline font-poppins text-slate-700">Respuestas</ion-card-title>
-          <div v-for="answer in props.answers as IAnswer[]" :key="answer.uidTo"
+          <div v-for="(answer, index) in props.answers" :key="index"
             class="relative p-4 mb-3 w-full rounded-xl border-b shadow-sm transition-all duration-200 hover:shadow-md font-alexandria"
             :class="{
               'bg-blue-50/30 border-b-blue-500 border-b-2': answer.uidFrom == answer.uidTo,
@@ -89,10 +89,10 @@
             <!-- Imagen (si existe) -->
             <div v-if="answer.image"
               class="overflow-hidden relative mt-3 max-w-full max-h-48 rounded-lg shadow-sm group">
-              <img :src="answer.image" alt="user image"
+              <img @click="callShowImageFromParent" :src="answer.image" alt="user image"
                 class="object-cover w-full h-40 transition-transform duration-300 group-hover:scale-[1.02] cursor-pointer" />
               <div
-                class="flex absolute inset-0 flex-col justify-center items-center text-white opacity-0 transition-all duration-300 bg-black/90 group-hover:opacity-100">
+              @click="callShowAnswerImageFromParent(answer.image)"  class="flex absolute inset-0 flex-col justify-center items-center text-white opacity-0 transition-all duration-300 bg-black/90 group-hover:opacity-100">
                 <v-icon name="fa-eye" scale="1.3" />
                 <p class="text-xs select-none">Ver imagen</p>
               </div>
@@ -111,7 +111,7 @@
         </button>
       </div>
     </div>
-    <AnswerComment v-if="showReplyCard"  @callClose="toggleReplyCard" :from-name="userName" :doc-id="docId" :answering-to-name="userName" :answering-to-uid="userUid" :category="category"/>
+    <AnswerComment v-if="showReplyCard" @callShowImage="callShowImageFromParent"  @callClose="toggleReplyCard" :from-name="userName" :doc-id="docId" :answering-to-name="userName" :answering-to-uid="userUid" :category="category"/>
     </ion-card-content>
   </ion-card>
 
@@ -121,7 +121,7 @@
 import { IAnswer } from '@/interfaces/IComplaint';
 import { IonCard, IonCardHeader, IonCardContent, IonCardTitle, IonCardSubtitle, IonBadge } from '@ionic/vue';
 import { Timestamp } from 'firebase/firestore';
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, ref } from 'vue';
 import AnswerComment from './AnswerComment.vue';
 
 const props = defineProps({
@@ -158,7 +158,7 @@ const props = defineProps({
     required: true
   },
   answers: {
-    type: Array,
+    type: Array as () => IAnswer[],
     required: true
   },
   docId: {
@@ -201,9 +201,9 @@ const createdAtToString = () => {
 }
 
 const emits = defineEmits(['callShow'])
-const callShowImageFromParent = () => {
-  emits('callShow', props.image)
-}
+const callShowImageFromParent = () => emits('callShow', props.image);
+
+const callShowAnswerImageFromParent = (imageAnswer:string) => emits('callShow', imageAnswer);
 
 
 //Toggle the view of the comment

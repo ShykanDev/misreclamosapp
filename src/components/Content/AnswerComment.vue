@@ -144,7 +144,7 @@ import imageCompression from 'browser-image-compression'
 import { useHomeStore } from '@/stores/home'
 
 //emmits
-const emit = defineEmits(['callReload']);
+const emit = defineEmits(['callReload', 'callShowImage']);
 
 //ui notifications
 const notyf = new Notyf({
@@ -222,7 +222,7 @@ const isCompany = ref(false)
 
 //function to set isCompany value
 const setIsCompany = (value: boolean) => isCompany.value = value;
-
+const callShowImageFromParent = () => emit('callShowImage', props.image);
 //props
 const props = defineProps({
   answeringToName: {

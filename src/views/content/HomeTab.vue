@@ -57,6 +57,10 @@
     </ion-header>
 
     <ion-content class="ion-padding main-content content">
+      <!-- Refresh when user swipes down-->
+      <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
+      <ion-refresher-content></ion-refresher-content>
+    </ion-refresher>
 
       <!--Viewer-->
       <viewer :images="selectedImage">
@@ -95,7 +99,7 @@
 </template>
 
 <script lang="ts" setup>
-import { IonPage, IonContent, IonHeader, IonToolbar, IonButtons, IonSpinner, menuController, IonButton, IonTitle, IonItem, IonList, onIonViewDidEnter, onIonViewDidLeave } from '@ionic/vue';
+import { IonPage, IonContent, IonHeader, IonToolbar, IonButtons, IonSpinner, menuController, IonButton, IonTitle, IonItem, IonList, onIonViewDidEnter, onIonViewDidLeave, RefresherCustomEvent } from '@ionic/vue';
 import { ref } from 'vue';
 import { collection, getDocs, getFirestore, orderBy, query, where } from 'firebase/firestore'
 import ComplaintCard from '@/components/Content/ComplaintCard.vue';
@@ -106,6 +110,7 @@ import { IComplaint } from '@/interfaces/IComplaint';
 import { useHomeStore } from '@/stores/home';
 import { useRoute, useRouter } from 'vue-router';
 import router from '@/router';
+import { IonRefresher, IonRefresherContent } from '@ionic/vue';
 //Full categories info  
 const fullCategories = [
   {
@@ -404,6 +409,13 @@ const setSelectedCategory = (category: string) => {
   homeStore.setCategorySelected(category)
   console.log('category selected:   ', category)
 }
+const handleRefresh = (event: RefresherCustomEvent) => {
+    setTimeout(() => {
+      // Any calls to load data go here
+      getSpecificComplaint(selectedCategory.value)
+      event.target.complete();
+    }, 1000);
+  };
 </script>
 
 <style scoped>
@@ -483,7 +495,33 @@ ion-button.complaint {
 }
 
 ion-content.content {
-  
   --margin-bottom: 520px;
 }
-</style>| 
+
+.ion-content-scroll-host {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    overflow-y: auto;
+  }
+
+  .ion-content-scroll-host::before,
+  .ion-content-scroll-host::after {
+    position: absolute;
+
+    width: 1px;
+    height: 1px;
+
+    content: '';
+  }
+
+  .ion-content-scroll-host::before {
+    bottom: -1px;
+  }
+
+  .ion-content-scroll-host::after {
+    top: -1px;
+  }
+</style>

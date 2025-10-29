@@ -8,7 +8,7 @@
   <h3 class="flex gap-2 items-center mb-3 text-lg font-semibold text-gray-800">
     <v-icon name="bi-reply-all-fill" scale="1.1" /> 
   </h3>
-
+    <ion-loading :is-open="isLoading" :duration="3000" message="Enviando respuesta..."> </ion-loading>
   <form @submit.prevent class="space-y-4">
     <div>
       <label for="answer" class="block mb-1.5 text-sm font-medium text-gray-700">
@@ -99,13 +99,7 @@
 
     <div class="flex justify-center py-4">
       <DotLottieVue
-        v-if="showLottie"
-        style="height: 80px; width: 80px"
-        autoplay
-        src="https://lottie.host/75d6cb4b-837d-4961-8023-98bd5af4c24e/hysY57apaT.lottie"
-      />
-      <DotLottieVue
-        v-if="showLottieError && !showLottie"
+        v-if="showLottieError"
         style="height: 80px; width: 80px"
         autoplay
         loop
@@ -139,7 +133,7 @@ import { getFirestore, Timestamp, doc, arrayUnion, updateDoc } from 'firebase/fi
 import { Notyf } from 'notyf'
 import 'notyf/notyf.min.css' // For React, Vue and Svelte
 import { ref } from 'vue'
-import { IonTextarea, useIonRouter } from '@ionic/vue'
+import { IonTextarea, useIonRouter, IonLoading } from '@ionic/vue'
 import imageCompression from 'browser-image-compression'
 import { useHomeStore } from '@/stores/home'
 
@@ -296,7 +290,6 @@ const answerComment = async () => {
   const docRef = doc(db, `complaints/${props.docId}`)
   updateDoc(docRef, { answers: arrayUnion(getAnswerData(compressedImageBase64.value)) })
     .then(() => {
-      showLottie.value = true
       notyf.success('Se ha enviado su respuesta')
       answer.value = '' // limpiar el input
       isLoading.value = false

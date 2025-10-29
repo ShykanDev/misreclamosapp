@@ -144,7 +144,7 @@ import imageCompression from 'browser-image-compression'
 import { useHomeStore } from '@/stores/home'
 
 //emmits
-const emit = defineEmits(['callReload', 'callShowImage']);
+const emit = defineEmits(['callReload', 'callShowImage', 'callReloadStageTwo']);
 
 //ui notifications
 const notyf = new Notyf({
@@ -302,7 +302,8 @@ const answerComment = async () => {
       isLoading.value = false
       setTimeout(() => {
         emit('callReload')
-      }, 2300)
+        callReloadStageTwo()
+      }, 1000)
       storeHome.setCategorySelected(props. category)
     })
     .catch((error) => {
@@ -314,6 +315,9 @@ const answerComment = async () => {
       isLoading.value = false
     })
 }
+
+const callReloadStageTwo = () => emit('callReloadStageTwo');
+
 </script>
 
 <style scoped>

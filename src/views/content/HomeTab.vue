@@ -10,6 +10,7 @@
           <ion-button @click="isMenuOpen = !isMenuOpen" fill="clear">
             <v-icon v-if="isMenuOpen" name="md-close-outlined" class="text-red-500 animate-spin animate-once animate-duration-[.49s] animate-ease-out" />
           </ion-button>
+        
         </ion-buttons>
         <ion-title :key="isMenuOpen ? 'open' : 'closed'" class="text-center transform transition-all duration-300 ease-in-out text-red-500 font-poppins animate-fade-right  animate-duration-[.8s]">
           Categorias
@@ -38,6 +39,11 @@
             <v-icon name="oi-three-bars" class="text-red-600" />
           </ion-button>
         </ion-buttons>
+        <ion-buttons slot="end">
+          <ion-button @click="setSelectedCategory(selectedCategory)" router-link="/create">
+            <v-icon name="md-postadd" class="text-red-600" scale="1.5"/>
+          </ion-button>
+        </ion-buttons>
         <div
           class="flex absolute inset-0 flex-col justify-center items-center w-full h-full text-rose-800 font-poppins">
           <small>Categoria:</small>
@@ -50,7 +56,7 @@
       </ion-toolbar>
     </ion-header>
 
-    <ion-content class="ion-padding main-content">
+    <ion-content class="ion-padding main-content content">
 
       <!--Viewer-->
       <viewer :images="selectedImage">
@@ -67,7 +73,7 @@
         <ion-spinner name="lines-sharp" />
       </div>
       <div v-if="complaints.length > 0" class="flex flex-col gap-4">
-        <ComplaintCard @callShow="callShowImageFromParent" v-for="complaint in complaints as IComplaint[]" :key="complaint.id" :title="complaint.title"
+        <ComplaintCard @callShow="callShowImageFromParent" @callReloadStageOne="getSpecificComplaint(selectedCategory)" v-for="complaint in complaints" :key="complaint.id" :title="complaint.title"
           :category="complaint.category" :content="complaint.content" :createdAt="complaint.createdAt"
           :image="complaint.image" :service="complaint.service" :userName="complaint.userName"
           :userUid="complaint.userUid" :answers="complaint.answers" :docId="complaint.docId"/>
@@ -80,7 +86,7 @@
           <h4 class="text-rose-800 font-poppins">!Aún no hay reclamos aquí!</h4>
           <DotLottieVue class="w-56" autoplay loop
             src="https://lottie.host/102e5586-f640-45d6-adad-13ed24c1d827/76XQjzn4Ry.lottie" />
-          <ion-button router-link="/create" class="complaint font-alexandria" style="text-transform: none;">Crear Nuevo
+          <ion-button @click="setSelectedCategory(selectedCategory)" router-link="/create" class="complaint font-alexandria" style="text-transform: none;">Crear Nuevo
             Reclamo</ion-button>
         </article>
       </div>
@@ -99,6 +105,8 @@ import { DotLottieVue } from '@lottiefiles/dotlottie-vue';
 import { IComplaint } from '@/interfaces/IComplaint';
  import { api as viewerApi } from 'v-viewer'
 import { useHomeStore } from '@/stores/home';
+import { useRoute, useRouter } from 'vue-router';
+import router from '@/router';
 //Full categories info  
 const fullCategories = [
   {
@@ -381,26 +389,23 @@ const selectedImage = ref<string[]>([])
   }
 
   const storeHome = useHomeStore();
+
+  //TODO: Change the behavior of this function when user enters and the from url is /create keep the category selected (use pinia to store the category selected in create page)
   onIonViewDidEnter(() => {
-    if(storeHome.getCategorySelected !== ''){
+    if(storeHome.getCategorySelected  != '' ){
       getSpecificComplaint(storeHome.getCategorySelected)
     } else {
-      getSpecificComplaint('Vinos o Vinaterías')
+      getSpecificComplaint('Turismo')
     }
   })
 
-  onIonViewDidLeave(() => {
-    storeHome.setCategorySelected('')
-  })
 
-watch(
-  () => storeHome.getCategorySelected,  // Getter function
-  (newValue) => {
-    if (newValue) {
-      getSpecificComplaint(newValue)
-    }
-  }
-)
+const homeStore = useHomeStore();
+
+const setSelectedCategory = (category: string) => {
+  homeStore.setCategorySelected(category)
+  console.log('category selected:   ', category)
+}
 </script>
 
 <style scoped>
@@ -470,4 +475,8 @@ ion-button.complaint {
 .fade-leave-to {
   opacity: 0;
 }
-</style>
+
+ion-content.content {
+  --margin-bottom: 520px;
+}
+</style>| 

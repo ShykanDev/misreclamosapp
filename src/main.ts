@@ -81,7 +81,9 @@ import { FaFlag, RiZhihuFill, OiDiffAdded,
   MdCategoryRound,
 FaRegularUser,
 MdCloseOutlined,
-BiReplyAllFill } from "oh-vue-icons/icons";
+BiReplyAllFill,
+MdAddcircleoutline, 
+MdPostadd} from "oh-vue-icons/icons";
 
 addIcons(FaFlag, RiZhihuFill, OiDiffAdded,
   FaShoppingBasket,
@@ -137,7 +139,9 @@ addIcons(FaFlag, RiZhihuFill, OiDiffAdded,
   MdCategoryRound,
   FaRegularUser,
   MdCloseOutlined,
-  BiReplyAllFill
+  BiReplyAllFill,
+  MdAddcircleoutline,
+  MdPostadd
 );
 
 /**
@@ -156,8 +160,9 @@ import './theme/variables.css';
 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
+import { getAnalytics, isSupported } from "firebase/analytics";
 import { createPinia } from 'pinia';
+import { Capacitor } from '@capacitor/core';
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -175,7 +180,8 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const firebaseApp = initializeApp(firebaseConfig);
-const analytics = getAnalytics(firebaseApp);
+
+
 
 const app = createApp(App)
   .component("v-icon", OhVueIcon)

@@ -1,6 +1,6 @@
 <template>
 <ion-page>
-<ion-header>
+<ion-header class="ion-no-border">
   <ion-toolbar>
     <ion-buttons slot="start">
 <ion-back-button defaultHref="/home" class="text-red-700"></ion-back-button>
@@ -17,16 +17,16 @@
     css-class="custom-loading"
   ></ion-loading>
 
-  <ion-content class="ion-padding font-plus-jakarta-sans">
-    <!-- Título -->
+  <ion-content class="ion-padding font-plus-jakarta-sans main">
+    <!-- Title -->
     <ion-text color="dark">
-      <h2 class="mb-2 !text-4xl !font-bold text-left">
+      <h2 class="mb-2 !text-4xl !font-bold text-left !text-rose-950">
         Añadir un nuevo reclamo para la categoría
-        <ion-text color="primary">{{ useHomeStore().getCategorySelected }}</ion-text>
+        <ion-text color="danger">{{ useHomeStore().getCategorySelected ?? 'Undefined'}}</ion-text>
       </h2>
     </ion-text>
 
-    <!-- Subtítulo -->
+    <!-- Subtitle -->
     <ion-text color="medium" class="block mb-6">
       <p class="text-lg font-medium">
         Comparta sus experiencias y hagamos visible lo que necesita cambiar en servicios,
@@ -34,23 +34,24 @@
       </p>
     </ion-text>
 
-    <!-- Formulario -->
+    <!-- Form -->
     <form class="space-y-6" @submit.prevent="sendComplaint">
-      <!-- Campo: Título -->
+      <!-- Title -->
       
-        <ion-label position="stacked" color="dark">Título</ion-label>
+        <ion-label position="stacked" color="custom" class="font-medium font-poppins" style="color: #4E0218;">Título</ion-label>
         <ion-input
           type="text"
           id="title"
           v-model="complaintObject.title"
           placeholder="Me prometieron que me daban un descuento de 20%"
           clear-input
-          
+          fill="outline"
+          color="danger"
         ></ion-input>
 
-      <!-- Campo: Servicio -->
+      <!-- Service -->
       
-        <ion-label position="stacked" color="dark" class="">Servicio</ion-label>
+        <ion-label position="stacked" color="custom" class="font-medium font-poppins" style="color: #4E0218;">Servicio</ion-label>
         <ion-input
           type="text"
           id="service"
@@ -59,31 +60,34 @@
           clear-input
           fill="outline"
           class="mt-1.5"
+          color="danger"
         ></ion-input>
 
-      <!-- Campo: Categoría -->
+      <!-- Category -->
       
-        <ion-label position="stacked" color="dark">Categoría</ion-label>
+        <ion-label position="stacked" color="custom" class="font-medium font-poppins" style="color: #4E0218;">Categoría</ion-label>
         <ion-select
           v-model="complaintObject.category"
           id="category"
-          interface="popover"
+          interface="action-sheet"
           placeholder="Seleccione una categoría"
           fill="outline"
           class="mt-1.5"
+          color="danger"
         >
           <ion-select-option
             v-for="category in fullCategories"
             :key="category.name"
-            :value="category.name"
+            :value="category.name" 
           >
-            {{ category.name }}
+          {{ category.name }}
+          <v-icon :name="category.icon" class="mr-2"></v-icon>
           </ion-select-option>
         </ion-select>
 
-      <!-- Campo: Descripción -->
+      <!-- Description -->
       
-        <ion-label position="stacked" color="dark" class="!mb-3">Descripción</ion-label>
+        <ion-label position="stacked" color="custom" class="font-medium font-poppins" style="color: #4E0218;">Descripción</ion-label>
         <ion-textarea
           id="comment"
           :rows="5"
@@ -92,12 +96,12 @@
           auto-grow
           autofocus
           fill="outline"
-          color="primary"
+          color="danger"
           class="mt-1.5"
           inputmode="text"
         ></ion-textarea>
 
-      <!-- Botón para elegir nueva imagen -->
+      <!-- Button to choose new image -->
       <div class="flex justify-between items-center mb-4 w-full">
         <ion-button
           v-if="imageSelected"
@@ -111,16 +115,17 @@
         </ion-button>
       </div>
 
-     <!-- Subida de imagen con estilo Ionic -->
+     <!-- Image upload with Ionic style -->
 <ion-item v-show="!imageSelected" lines="full" class="ion-margin-vertical">
   <ion-button
     @click="imgFileInput?.click()"
     fill="clear"
     expand="block"
     class="ion-text-center"
+    style="color: #4E0218;"
   >
     <ion-icon :icon="cloudUploadOutline" size="large" color="medium"></ion-icon>
-    <ion-label color="medium">Haga clic para subir una imagen</ion-label>
+    <ion-label color="medium" style="color: #4E0218;" class="ion-margin-start">Haga clic para subir una imagen</ion-label>
   </ion-button>
   <input
     @change="handleFileInputChange"
@@ -133,12 +138,12 @@
 </ion-item>
 
 
-      <!-- Vista previa de la imagen -->
+      <!-- Image preview -->
       <div v-if="imageSelected" class="flex flex-col items-center mb-4">
         <img
           :src="imageSelected"
           :key="imageSelected"
-          class="object-cover w-48 h-48 rounded-3xl border-2 border-rose-200 border-dashed animate-bounce animate-once"
+          class="object-cover w-full rounded-3xl border-2 border-rose-200 border-dashed sm:w-sm animate-fade-up animate-once"
           alt="Imagen seleccionada"
         />
         <ion-button
@@ -152,26 +157,26 @@
         </ion-button>
       </div>
 
-      <!-- Recordatorio -->
+      <!-- Reminder -->
       <ion-card class="mb-4 border-l-4 border-rose-500 bg-rose-50/80">
         <ion-card-content>
           <ion-text color="danger">
             <p class="text-sm font-medium">
-              <strong class="font-bold">Importante:</strong> Sé respetuoso. Los comentarios son
+              <strong class="font-bold">Important:</strong> Be respectful. Comments are
               revisados por nuestro equipo.
             </p>
           </ion-text>
         </ion-card-content>
       </ion-card>
 
-      <!-- Botón de envío -->
+      <!-- Send button -->
       <div class="flex justify-center">
         <ion-button
           type="submit"
           expand="block"
           class="ion-margin-vertical"
-          shape="round"
           color="danger"
+          fill="outline"
         >
           Enviar reclamo
         </ion-button>
@@ -206,9 +211,8 @@ import {
 } from '@ionic/vue';
 
 // Icono de Ionic para la subida de archivos
-import { arrowBackCircle, arrowBackCircleOutline, cloudUploadOutline } from 'ionicons/icons';
 
-import { onMounted, reactive, ref } from 'vue'
+import { reactive, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import imageCompression from 'browser-image-compression'
 import { Notyf } from 'notyf'
@@ -216,6 +220,7 @@ import 'notyf/notyf.min.css'
 import { getFirestore, collection, addDoc, Timestamp } from 'firebase/firestore'
 import { getAuth } from 'firebase/auth'
 import { useHomeStore } from '@/stores/home';
+import { cloudUploadOutline } from 'ionicons/icons';
 
 //Ui Values
 const loading = ref(false)
@@ -461,9 +466,10 @@ const imgFileInput = ref<HTMLInputElement | null>(null)
 const imageFileValue = ref()
 const compressedImageBase64 = ref()
 const handleFileInputChange = (e: Event) => {
-  if (e.target) {
-    imageSelected.value = URL.createObjectURL(e.target.files[0])
-    imageFileValue.value = e.target.files[0]
+  const target = e.target as HTMLInputElement;
+  if (target.files) {
+    imageSelected.value = URL.createObjectURL(target.files[0])
+    imageFileValue.value = target.files[0]
   }
 }
 const removeImage = () => imageSelected.value = '';
@@ -582,13 +588,20 @@ const sendComplaint = async () => {
     })
 }
 
+const storeHome = useHomeStore();
+
+
+watch(
+  () => storeHome.getCategorySelected,
+  (newValue) => {
+    console.log('Valor del store cambiado:', newValue);
+  }
+);
+
 </script>
 
 
 <style scoped>
-.bgStyle {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='%236c0098' fill-opacity='0.4'%3E%3Cpath fill-rule='evenodd' d='M11 0l5 20H6l5-20zm42 31a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM0 72h40v4H0v-4zm0-8h31v4H0v-4zm20-16h20v4H20v-4zM0 56h40v4H0v-4zm63-25a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm10 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM53 41a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm10 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm10 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-30 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-28-8a5 5 0 0 0-10 0h10zm10 0a5 5 0 0 1-10 0h10zM56 5a5 5 0 0 0-10 0h10zm10 0a5 5 0 0 1-10 0h10zm-3 46a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm10 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM21 0l5 20H16l5-20zm43 64v-4h-4v4h-4v4h4v4h4v-4h4v-4h-4zM36 13h4v4h-4v-4zm4 4h4v4h-4v-4zm-4 4h4v4h-4v-4zm8-8h4v4h-4v-4z'/%3E%3C/g%3E%3C/svg%3E");
-}
 
 /* From Uiverse.io by Yaya12085 */
 .custum-file-upload {
@@ -616,7 +629,7 @@ const sendComplaint = async () => {
 
 .custum-file-upload .icon svg {
   height: 80px;
-  fill: rgba(75, 85, 99, 1);
+  fill: rgb(200, 25, 25);
 }
 
 .custum-file-upload .text {
@@ -627,10 +640,22 @@ const sendComplaint = async () => {
 
 .custum-file-upload .text span {
   font-weight: 400;
-  color: rgba(75, 85, 99, 1);
+  color: rgb(128, 12, 12);
 }
 
 .custum-file-upload input {
   display: none;
 }
+
+ion-content.main{
+  --background: #FDF8F8;
+}
+
+ion-label.custom{
+  color: #fff !important ;
+}
+
+ion-input.custom{
+  color: #fff !important ;
+} 
 </style>

@@ -89,13 +89,9 @@
             <!-- Imagen (si existe) -->
             <div v-if="answer.image"
               class="overflow-hidden relative mt-3 max-w-full max-h-48 rounded-lg shadow-sm group">
-              <img @click="callShowImageFromParent" :src="answer.image" alt="user image"
+              <img @click="callShowAnswerImageFromParent(answer.image)" :src="answer.image" alt="user image"
                 class="object-cover w-full h-40 transition-transform duration-300 group-hover:scale-[1.02] cursor-pointer" />
-              <div
-              @click="callShowAnswerImageFromParent(answer.image)"  class="flex absolute inset-0 flex-col justify-center items-center text-white opacity-0 transition-all duration-300 bg-black/90 group-hover:opacity-100">
-                <v-icon name="fa-eye" scale="1.3" />
-                <p class="text-xs select-none">Ver imagen</p>
-              </div>
+     
             </div>
           </div>
         </div>
@@ -111,7 +107,7 @@
         </button>
       </div>
     </div>
-    <AnswerComment v-if="showReplyCard" @callShowImage="callShowImageFromParent"  @callClose="toggleReplyCard" :from-name="userName" :doc-id="docId" :answering-to-name="userName" :answering-to-uid="userUid" :category="category"/>
+    <AnswerComment class="ion-margin-top" @callReloadStageTwo="callReloadStageOne" v-if="showReplyCard" @callShowImage="callShowImageFromParent"  @callClose="toggleReplyCard" :from-name="userName" :doc-id="docId" :answering-to-name="userName" :answering-to-uid="userUid" :category="category"/>
     </ion-card-content>
   </ion-card>
 
@@ -200,7 +196,7 @@ const createdAtToString = () => {
   });
 }
 
-const emits = defineEmits(['callShow'])
+const emits = defineEmits(['callShow', 'callReloadStageOne'])
 const callShowImageFromParent = () => emits('callShow', props.image);
 
 const callShowAnswerImageFromParent = (imageAnswer:string) => emits('callShow', imageAnswer);
@@ -216,6 +212,7 @@ const showReplyCard = ref(false);
 
 const toggleReplyCard = () => showReplyCard.value = !showReplyCard.value;
 
+const callReloadStageOne = () => emits('callReloadStageOne');
 
 </script>
 

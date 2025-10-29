@@ -35,6 +35,7 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: '/create',
+    name: 'Create',
     component: () => import('@/views/create/CreateComplaintTab.vue'),
   }
 ]

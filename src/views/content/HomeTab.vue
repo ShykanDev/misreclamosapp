@@ -20,7 +20,7 @@
 
     <!--Menu Content -->
     <ion-content class="categories">
-      <div class="flex overflow-y-scroll flex-col gap-4 pb-14 pl-2 h-full pt-4.5 categories ion-padding-end">
+      <div class="flex overflow-y-scroll flex-col gap-4 pb-24 pl-2 h-full pt-4.5 categories ion-padding-end">
          <ion-searchbar :debounce="50" @ionInput="handleInput($event)" animated placeholder="Buscar categoría" class="ion-no-margin ion-no-padding"></ion-searchbar>
 
          <TransitionGroup name="fade" tag="div" class="flex flex-col gap-4">

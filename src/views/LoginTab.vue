@@ -1,12 +1,12 @@
 <template>
-  <ion-page class="bg-slate-900">
+  <ion-page class="">
     <ion-header class="ion-no-border custom">
-      <ion-toolbar class="flex justify-between items-center px-4">
+      <ion-toolbar class="">
         <ion-buttons slot="start">
-          <ion-back-button color="danger" defaultHref="/"></ion-back-button>
+          <ion-back-button color="danger" defaultHref="/tabs/initial"></ion-back-button>
         </ion-buttons>
         <ion-title
-          class="absolute left-1/2 w-full text-center text-rose-800 -translate-x-1/2 -translate-y-1/2 font-poppins">Iniciar
+          class="text-rose-700 font-poppins">Iniciar
           sesión</ion-title>
       </ion-toolbar>
     </ion-header>
@@ -45,9 +45,9 @@
           </ion-header>
           <ion-content class="ion-padding">
 
-            <ion-input label="Correo electrónico" label-placement="floating" ref="input" fill="outline" type="text"
+            <ion-input label="Correo electrónico" label-placement="floating" ref="input" fill="outline" type="email"
               color="danger" placeholder="Ingrese su correo electrónico" class="custom" :counter="true" :maxlength="40"
-              v-model="email">
+              v-model="email" >
             </ion-input> 
 
             <ion-button @click="handleResetPassword" class="font-semibold w-11/12 !mx-auto login" expand="block"
@@ -62,13 +62,14 @@
 </template>
 
 <script setup lang="ts">
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonBackButton, IonInput, IonButton, IonButtons, IonLoading, IonModal } from '@ionic/vue';
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonBackButton, IonInput, IonButton, IonButtons, IonLoading, IonModal, useIonRouter } from '@ionic/vue';
 import { ref } from 'vue';
-import { getAuth, sendPasswordResetEmail, signInWithEmailAndPassword } from 'firebase/auth'
+import { sendPasswordResetEmail, signInWithEmailAndPassword } from 'firebase/auth'
 import { useLogginStore } from '@/stores/loggin';
 import { Notyf } from 'notyf';
 import 'notyf/notyf.min.css';
-import { arrowBack, close } from 'ionicons/icons';
+import { auth as FixedFirebaseAuth } from '@/main';
+import { arrowBack} from 'ionicons/icons';
 
 const notyf = new Notyf({
   duration: 5000,
@@ -80,7 +81,7 @@ const notyf = new Notyf({
 })
 
 // Firebase auth
-const auth = getAuth()
+const auth = FixedFirebaseAuth;
 
 // User input values
 const email = ref('');
@@ -98,8 +99,7 @@ const validateValues = () => {
   return true
 }
 
-
-
+const router = useIonRouter();
 const handleLogin = () => {
   if (validateValues()) {
     isLoading.value = true
@@ -119,6 +119,7 @@ const handleLogin = () => {
         console.log(userCredential)
         email.value = ''
         password.value = ''
+        router.navigate('/home','forward', 'push')
       })
       .catch((error) => {
         const errorCode = error.code
@@ -134,6 +135,12 @@ const handleLogin = () => {
 }
 
 const handleResetPassword = async () => {
+  isLoading.value = true
+  if(email.value === '') {
+    notyf.error('Introduzca un correo electrónico')
+    isLoading.value = false
+    return
+  }
   try {
     await sendPasswordResetEmail(auth, email.value)
     notyf.success(
@@ -146,6 +153,8 @@ const handleResetPassword = async () => {
   } catch (error) {
     console.log(error)
     notyf.error(`Error al enviar correo, error: ${error}`)
+  } finally {
+    isLoading.value = false
   }
 }
 </script>

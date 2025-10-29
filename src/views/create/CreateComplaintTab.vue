@@ -5,7 +5,7 @@
     <ion-buttons slot="start">
 <ion-back-button defaultHref="/home" class="text-red-700"></ion-back-button>
     </ion-buttons>
-    <ion-title class="absolute inset-0 top-1/2 font-semibold text-center font-poppins transform -translate-y-1/2 text-rose-700 animate-fade-left animate-delay-[.18s] animate-duration-[.8s]">Añadir Reclamo</ion-title>
+    <ion-title class="absolute inset-0 top-1/2 font-semibold text-center text-rose-700 transform -translate-y-1/2 font-poppins">Añadir Reclamo</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -158,16 +158,18 @@
       </div>
 
       <!-- Reminder -->
-      <ion-card class="mb-4 border-l-4 border-rose-500 bg-rose-50/80">
-        <ion-card-content>
-          <ion-text color="danger">
-            <p class="text-sm font-medium">
-              <strong class="font-bold">Important:</strong> Be respectful. Comments are
-              revisados por nuestro equipo.
-            </p>
-          </ion-text>
-        </ion-card-content>
-      </ion-card>
+     <ion-card   class="p-4 mb-4 bg-gray-50 border-l-4 border-red-500">
+  <p class="text-sm font-medium text-gray-700">
+    <strong class="font-bold text-gray-900">Importante:</strong>
+    Al publicar un comentario, usted acepta que su contenido es de su exclusiva responsabilidad.
+    Los comentarios son revisados por nuestro equipo para garantizar que cumplan con las
+    <a href="#terminos-y-condiciones" class="font-medium text-blue-600 hover:underline">
+      normas de la comunidad
+    </a>.
+    Evite lenguaje ofensivo, difamatorio o inapropiado.
+  </p>
+</ion-card>
+
 
       <!-- Send button -->
       <div class="flex justify-center">

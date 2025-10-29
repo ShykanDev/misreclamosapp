@@ -2,7 +2,7 @@
   <!--Initial Page-->
   <ion-page>
       <!--Menu-->
-  <section class="fixed top-0 bottom-0 left-0 z-50 sm:w-5/12 md:w-4/12 lg:w-3/12"  :class="isMenuOpen ? 'w-9/12 bg-red-500  transition-all duration-300 animate-ease-out' : 'translate-x-[-100%]  transition-all duration-100 ease-in-out'">
+  <section class="fixed top-0 left-0 z-50 h-full sm:w-5/12 md:w-4/12 lg:w-3/12"  :class="isMenuOpen ? 'w-9/12  transition-all duration-300 animate-ease-out' : 'translate-x-[-100%]  transition-all duration-100 ease-in-out'">
     <!--Menu Header-->
     <ion-header class="ion-no-border">
       <ion-toolbar class="categories">
@@ -20,15 +20,15 @@
 
     <!--Menu Content -->
     <ion-content class="categories">
-      <ion-list  class="categories">
-        <ion-item  :color="category.name === selectedCategory ? 'danger' : 'none'" @click="getSpecificComplaint(category.name)" v-for="category in fullCategories" :key="category.name"
-           class="cursor-pointer font-poppins text-slate-600">
-          <v-icon :name="category.icon" class="mr-3" :class="category.name === selectedCategory ? 'text-white' : 'text-red-400'" />
-          <ion-text >
+      <div class="flex overflow-y-scroll flex-col gap-4 pb-14 pl-2 h-full pt-4.5 categories ion-padding-end">
+        <article  :class="category.name === selectedCategory ? 'text-rose-700 font-bold' : 'none'" @click="getSpecificComplaint(category.name)" v-for="category in fullCategories" :key="category.name"
+           class="pb-1 border-b cursor-pointer font-poppins text-slate-600 border-b-slate-300">
+          <v-icon :name="category.icon" class="mr-3" :class="category.name === selectedCategory ? 'text-rose-600' : 'text-red-400'" />
+          <ion-text :class="category.name === selectedCategory ? 'text-rose-700 font-plus-jakarta-sans font-medium' : 'text-slate-600 font-plus-jakarta-sans'" >
             {{ category.name }}
           </ion-text>
-        </ion-item>
-      </ion-list>
+        </article>
+      </div>
     </ion-content>
 
   </section>
@@ -96,8 +96,7 @@
 
 <script lang="ts" setup>
 import { IonPage, IonContent, IonHeader, IonToolbar, IonButtons, IonSpinner, menuController, IonButton, IonTitle, IonItem, IonList, onIonViewDidEnter, onIonViewDidLeave } from '@ionic/vue';
-import { getAuth } from 'firebase/auth';
-import { ref, watch } from 'vue';
+import { ref } from 'vue';
 import { collection, getDocs, getFirestore, orderBy, query, where } from 'firebase/firestore'
 import ComplaintCard from '@/components/Content/ComplaintCard.vue';
 import 'animate.css';
@@ -339,7 +338,6 @@ const loading = ref(false)
 const selectedCategory = ref('Vinos o Vinaterías')
 
 //Firebase utils
-const auth = getAuth();
 const db = getFirestore();
 const complaintsCollection = collection(db, 'complaints')
 
@@ -414,14 +412,14 @@ ion-toolbar.categories {
 }
 
 ion-content.categories {
-  --background: #F3E7E8;
+  --background: #F3E7E8; 
 }
 
 ion-item {
   --background: #fffcfc;
-  --background-activated: #1e40af;
+  --background-activated: #da1515;
   /* Color al hacer clic */
-  --background-hover: #1e40af;
+  --background-hover: #c30f05;
   /* Color al pasar el mouse */
 }
 
@@ -434,6 +432,13 @@ ion-button.complaint {
   --color: white;
   --border-radius: 10px;
 }
+
+ion-button.complaint:hover {
+  --background: #af1e1e;
+  --color: white;
+  --border-radius: 10px;
+}
+
 /* Asegúrate de que el menú tenga un ancho */
 ion-menu {
   width: 80%;
@@ -446,13 +451,13 @@ ion-toolbar.categories {
 }
 
 ion-content.categories {
-  --background: #F3E7E8;
+  --background: #ffffff;
 }
 
 ion-item {
   --background: #fffcfc;
-  --background-activated: #1e40af;
-  --background-hover: #1e40af;
+  --background-activated: #da1515;
+  --background-hover: #c30f05;
 }
 
 /* Estilos para el contenido principal */
@@ -464,6 +469,7 @@ ion-button.complaint {
   --background: #af1e1e;
   --color: white;
   --border-radius: 10px;
+  --hover-background: #c30f05;
 }
 
 .fade-enter-active,
@@ -477,6 +483,7 @@ ion-button.complaint {
 }
 
 ion-content.content {
+  
   --margin-bottom: 520px;
 }
 </style>| 

@@ -26,6 +26,10 @@ import '@ionic/vue/css/text-transformation.css';
 import '@ionic/vue/css/flex-utils.css';
 import '@ionic/vue/css/display.css';
 
+//Firebase 
+import { initializeAuth, getAuth, setPersistence, indexedDBLocalPersistence,
+Auth } from "firebase/auth";
+
 import { OhVueIcon, addIcons } from "oh-vue-icons";
 import { FaFlag, RiZhihuFill, OiDiffAdded,
   FaShoppingBasket,
@@ -160,9 +164,7 @@ import './theme/variables.css';
 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAnalytics, isSupported } from "firebase/analytics";
 import { createPinia } from 'pinia';
-import { Capacitor } from '@capacitor/core';
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -181,8 +183,20 @@ const firebaseConfig = {
 // Initialize Firebase
 const firebaseApp = initializeApp(firebaseConfig);
 
+import { isPlatform } from "@ionic/vue";
+import { Firestore, getFirestore, initializeFirestore, persistentLocalCache } from 'firebase/firestore';
+let auth: Auth;
+//Add firestore if fetch data on ios shows an error
+//let db: Firestore;
+if (isPlatform('hybrid')) {
+auth = initializeAuth(firebaseApp, { persistence: indexedDBLocalPersistence });
+//db = initializeFirestore(firebaseApp, { localCache: persistentLocalCache() });
+} else {
+auth = getAuth(firebaseApp);
+setPersistence(auth, indexedDBLocalPersistence);
+}
 
-
+export { auth };
 const app = createApp(App)
   .component("v-icon", OhVueIcon)
   .use(IonicVue)

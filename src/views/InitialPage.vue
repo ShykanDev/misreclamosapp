@@ -17,7 +17,6 @@
     <div class="swiper-slide"><PageOne></PageOne></div>
     <div class="swiper-slide"><PageTwo></PageTwo></div>
     <div class="swiper-slide"><PageTree></PageTree></div>
-    ...
   </div>
   <!-- If we need pagination -->
   <div class="swiper-pagination"></div>

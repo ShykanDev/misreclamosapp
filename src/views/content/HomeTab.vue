@@ -20,18 +20,22 @@
 
     <!--Menu Content -->
     <ion-content class="categories">
-      <div class="flex overflow-y-scroll flex-col gap-4 pb-24 pl-2 h-full pt-4.5 categories ion-padding-end">
-         <ion-searchbar :debounce="50" @ionInput="handleInput($event)" animated placeholder="Buscar categoría" class="ion-no-margin ion-no-padding"></ion-searchbar>
+      <div class="flex overflow-y-scroll flex-col gap-4 pb-40 pl-2 h-full sm:pb-24 pt-4.5 categories ion-padding-end">
+          <ion-searchbar :key="isMenuOpen ? 'open' : 'closed'"  :debounce="50" @ionInput="handleInput($event)" animated placeholder="Buscar categoría" class="ion-no-margin ion-no-padding custom" :class="'animate-fade-up animate-duration-[.5s]' "></ion-searchbar>
+        <DotLottieVue v-if="fullCategories.length === 0" class="animate-jump-in"  loop autoplay src="https://lottie.host/45b1d829-5c3d-4b52-b50a-d1df3307b48f/SSfM0UfuL8.lottie"></DotLottieVue>
+         <TransitionGroup  :name="activateAnimationMenuList ? 'list' : 'none'" tag="div" class="flex flex-col gap-4">
+          <div class="flex flex-col justify-center items-center w-full">
+      <ion-text v-show="fullCategories.length === 0" class="text-center text-rose-800 w-md animate-jump-in font-poppins">No se encontró esa categoría</ion-text>
+        </div>
 
-         <TransitionGroup name="fade" tag="div" class="flex flex-col gap-4">
-
-        <article  :class="category.name === selectedCategory ? 'text-rose-700 font-bold' : 'none'" @click="getSpecificComplaint(category.name)" v-for="category in fullCategories" :key="category.name"
-           class="pb-1 border-b cursor-pointer font-poppins text-slate-600 border-b-slate-300">
+        <article  :class="category.name === selectedCategory ? 'text-rose-700 font-bold border-b-rose-300' : 'none border-b-slate-300'" @click="getSpecificComplaint(category.name)" v-for="category in fullCategories" :key="category.name"
+           class="pb-1 border-b cursor-pointer font-poppins text-slate-600">
           <v-icon :name="category.icon" class="mr-3" :class="category.name === selectedCategory ? 'text-rose-600' : 'text-red-400'" />
           <ion-text :class="category.name === selectedCategory ? 'text-rose-700 font-plus-jakarta-sans font-medium' : 'text-slate-600 font-plus-jakarta-sans'" >
             {{ category.name }}
           </ion-text>
         </article>
+
         </TransitionGroup>
       </div>
     </ion-content>
@@ -40,7 +44,7 @@
     <ion-header class="ion-no-border">
       <ion-toolbar>
         <ion-buttons slot="start">
-          <ion-button @click="isMenuOpen = !isMenuOpen" fill="clear">
+          <ion-button @click="openMenu()" fill="clear">
             <v-icon name="oi-three-bars" class="text-red-600" />
           </ion-button>
         </ion-buttons>
@@ -75,7 +79,7 @@
 
       <!--Overlay when menu is open-->
       <Transition name="fade" >
-        <div v-if="isMenuOpen"  @click="isMenuOpen = false" class="fixed inset-0 z-40 bg-black/40"></div>
+        <div v-if="isMenuOpen"  @click="closeMenu()" class="fixed inset-0 z-40 bg-black/40"></div>
       </Transition>
 
       <div v-if="loading" class="flex fixed top-0 right-0 bottom-0 left-0 justify-center items-center">
@@ -104,16 +108,17 @@
 </template>
 
 <script lang="ts" setup>
-import { IonPage, IonContent, IonHeader, IonToolbar, IonButtons, IonSpinner, menuController, IonButton, IonTitle, IonItem, IonList, onIonViewDidEnter, onIonViewDidLeave, RefresherCustomEvent } from '@ionic/vue';
-import { ref } from 'vue';
+import { IonPage, IonContent, IonHeader, IonToolbar, IonButtons, IonSpinner, menuController, IonButton, IonTitle, onIonViewDidEnter, RefresherCustomEvent } from '@ionic/vue';
+import { nextTick, ref } from 'vue';
 import { collection, getDocs, getFirestore, orderBy, query, where } from 'firebase/firestore'
 import ComplaintCard from '@/components/Content/ComplaintCard.vue';
 import 'animate.css';
 import { DotLottieVue } from '@lottiefiles/dotlottie-vue';
 import { IComplaint } from '@/interfaces/IComplaint';
  import { api as viewerApi } from 'v-viewer'
-import { useHomeStore } from '@/stores/home';
+import { useHomeStore } from '@/stores/home';     
 import { IonRefresher, IonRefresherContent, IonSearchbar } from '@ionic/vue';
+import { key } from 'ionicons/icons';
 //Full categories info  
 const fullCategories = ref([
   {
@@ -580,7 +585,6 @@ const getSpecificComplaint = (category: string) => {
   selectedCategory.value = category
   const queryComplaints = query(complaintsCollection, where('category', '==', selectedCategory.value), orderBy('createdAt', 'desc'))
   complaints.value = []
-  closeFirstMenu()
   getDocs(queryComplaints).then((querySnapshot) => {
     if (querySnapshot.empty) {
       console.log('No matching documents.');
@@ -594,8 +598,8 @@ const getSpecificComplaint = (category: string) => {
     });
     console.log(complaints.value)
   }).finally(() => {
+    fullCategories.value = fullCategoriesOrig.value
     loading.value = false
-    closeFirstMenu()
   })
 }
 
@@ -650,6 +654,20 @@ const handleRefresh = (event: RefresherCustomEvent) => {
       fullCategories.value = fullCategoriesOrig.value.filter((d) => d.name.toLowerCase().indexOf(query) > -1);
     }
   };
+
+const activateAnimationMenuList = ref(false);
+
+const openMenu = async() => {
+  isMenuOpen.value = !isMenuOpen.value;
+await nextTick();
+activateAnimationMenuList.value = true;
+}
+
+const closeMenu = async() => {
+  isMenuOpen.value = !isMenuOpen.value;
+await nextTick();
+activateAnimationMenuList.value = false;
+}
 </script>
 
 <style scoped>
@@ -758,13 +776,31 @@ ion-content.content {
   .ion-content-scroll-host::after {
     top: -1px;
   }
-  .list-enter-active,
+  .list-move, /* apply transition to moving elements */
+.list-enter-active,
 .list-leave-active {
   transition: all 0.5s ease;
 }
+
 .list-enter-from,
 .list-leave-to {
   opacity: 0;
   transform: translateX(30px);
 }
+
+/* ensure leaving items are taken out of layout flow so that moving
+   animations can be calculated correctly. */
+.list-leave-active {
+  position: absolute;
+}
+ ion-searchbar.custom {
+    --background: #fcfcfc;
+    --color: #640808;
+    --placeholder-color: #721212;
+    --icon-color: #721212;
+    --clear-button-color: #721212;
+    --border-radius: 40px;
+    --shadow: none;
+    --box-shadow: 2px 2px 5px rgba(89, 6, 6, 0.2);
+  }
 </style>

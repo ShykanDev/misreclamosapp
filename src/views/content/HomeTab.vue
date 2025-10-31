@@ -101,6 +101,8 @@
             src="https://lottie.host/102e5586-f640-45d6-adad-13ed24c1d827/76XQjzn4Ry.lottie" />
           <ion-button @click="setSelectedCategory(selectedCategory)" router-link="/create" class="complaint font-alexandria" style="text-transform: none;">Crear Nuevo
             Reclamo</ion-button>
+          <ion-button @click="setSelectedCategory(selectedCategory)" router-link="/profile" class="complaint font-alexandria" style="text-transform: none;">
+            Ir al perfil</ion-button>
         </article>
       </div>
     </ion-content>

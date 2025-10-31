@@ -37,7 +37,12 @@ const routes: Array<RouteRecordRaw> = [
     path: '/create',
     name: 'Create',
     component: () => import('@/views/create/CreateComplaintTab.vue'),
-  }
+  },
+  {
+    path: '/profile',
+    name: 'Profile',
+    component: () => import('@/views/profile/ProfilePage.vue'),
+  } 
 ]
 
 const router = createRouter({

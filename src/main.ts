@@ -87,7 +87,12 @@ FaRegularUser,
 MdCloseOutlined,
 BiReplyAllFill,
 MdAddcircleoutline, 
-MdPostadd} from "oh-vue-icons/icons";
+MdPostadd,
+BiArrowRightShort,
+IoDocumentText,
+MdDeleteforever,
+MdRemoveredeyeRound
+}from "oh-vue-icons/icons";
 
 addIcons(FaFlag, RiZhihuFill, OiDiffAdded,
   FaShoppingBasket,
@@ -145,7 +150,11 @@ addIcons(FaFlag, RiZhihuFill, OiDiffAdded,
   MdCloseOutlined,
   BiReplyAllFill,
   MdAddcircleoutline,
-  MdPostadd
+  MdPostadd,
+  BiArrowRightShort,
+  IoDocumentText,
+  MdDeleteforever,
+  MdRemoveredeyeRound
 );
 
 /**

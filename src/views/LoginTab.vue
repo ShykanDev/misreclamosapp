@@ -70,6 +70,7 @@ import { Notyf } from 'notyf';
 import 'notyf/notyf.min.css';
 import { auth as FixedFirebaseAuth } from '@/main';
 import { arrowBack} from 'ionicons/icons';
+import { useUserStore } from '@/stores/user';
 
 const notyf = new Notyf({
   duration: 5000,
@@ -105,16 +106,16 @@ const handleLogin = () => {
     isLoading.value = true
     signInWithEmailAndPassword(auth, email.value, password.value)
       .then((userCredential) => {
-        console.log('userCredential.user.emailVerified =>', userCredential.user.emailVerified)
         if (!userCredential.user.emailVerified) {
           showVerifyEmail.value = true
-          console.log('Email no verificado')
           return
         }
         const user = userCredential.user
         isUserEmailVerified.value = user.emailVerified
         useLogginStore().setUserEmailVerified(user.emailVerified)
         useLogginStore().setUserLoggedIn(true)
+        useUserStore().setName(user.displayName || 'User')
+        useUserStore().setUserId(user.uid)
         notyf.success(`Le damos la bienvenida ${user.displayName}`)
         console.log(userCredential)
         email.value = ''

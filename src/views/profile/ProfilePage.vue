@@ -24,6 +24,11 @@
                         <h3 class="text-lg font-inter  text-rose-800 mb-4 !font-black">
                             Mis Reclamos Publicados
                         </h3>
+
+                        <div v-show="isLoading" class="flex flex-col gap-2 justify-center items-center mt-4">
+                            <ion-spinner name="bubbles" color="danger"></ion-spinner>
+                            <ion-text class="text-slate-600 font-plus-jakarta-sans">Obteniendo sus reclamos...</ion-text>
+                        </div>
                         <ion-list v-if="userComplaints.length>0">
                             <ion-item-sliding v-for="complaint in userComplaints" :key="complaint.content" class="mb-2" >
                                 <ion-item>
@@ -43,18 +48,19 @@
                                     </ion-item-content>
                                 </ion-item>
                                 <ion-item-options side="end">
-                                    <ion-item-option color="danger" class="bg-red-600 min-w-16">
+                                    <ion-item-option color="danger" >
                                         <v-icon name="md-deleteforever" scale="1.7"></v-icon>
                                     </ion-item-option>
                                 </ion-item-options>
                                 <ion-item-options side="start">
-                                    <ion-item-option color="primary" class="bg-blue-500 min-w-16">
+                                    <ion-item-option color="primary">
                                         <v-icon name="md-removeredeye-round" scale="1.7"></v-icon>
                                     </ion-item-option>
                                 </ion-item-options>
                             </ion-item-sliding>
 
                         </ion-list>
+
                      
                     </div>
 
@@ -77,27 +83,6 @@
                             <i class="fa-solid fa-chevron-right text-[#0A0A0A] text-sm"></i>
                         </div>
                     </div>
-
-                    <!-- Bottom Navigation -->
-                    <nav
-                        class="fixed bottom-0 left-0 w-full bg-white border-t border-[#E5E7EB] flex justify-around py-2">
-                        <div class="flex flex-col items-center text-[#6B7280]">
-                            <i class="mb-1 text-xl fa-solid fa-house"></i>
-                            <span class="text-xs">Home</span>
-                        </div>
-                        <div class="flex flex-col items-center text-[#6B7280]">
-                            <i class="mb-1 text-xl fa-solid fa-square-plus"></i>
-                            <span class="text-xs">Publicar</span>
-                        </div>
-                        <div class="flex flex-col items-center text-[#6B7280]">
-                            <i class="mb-1 text-xl fa-solid fa-magnifying-glass"></i>
-                            <span class="text-xs">Buscar</span>
-                        </div>
-                        <div class="flex flex-col items-center text-black">
-                            <i class="mb-1 text-xl fa-solid fa-user"></i>
-                            <span class="text-xs font-medium">Mi Cuenta</span>
-                        </div>
-                    </nav>
                 </div>
             </section>
         </ion-content>
@@ -105,7 +90,7 @@
 </template>
 
 <script lang="ts" setup>
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonItem, IonButtons, IonBackButton, IonList , IonItemSliding, IonText, IonButton, onIonViewDidEnter, onIonViewDidLeave} from '@ionic/vue';
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonItem, IonButtons, IonBackButton, IonList , IonItemSliding, IonText, IonButton, onIonViewDidEnter, onIonViewDidLeave, IonSpinner} from '@ionic/vue';
 import { useUserStore } from '@/stores/user';
 import { collection, getDocs, getFirestore, query, where } from 'firebase/firestore';
 import { ref } from 'vue';
@@ -119,14 +104,18 @@ const complaintsCollection = collection(db, 'complaints');
 
 const userComplaints = ref<IComplaint[]>([])
 
+const isLoading = ref(false);
 const qGetUserComplaints = query(complaintsCollection,where('userUid', '==', userStore.getUserID));
 const getUserComplaints = () => {
+    isLoading.value = true;
     getDocs(qGetUserComplaints).then((snapshot)=>{
         snapshot.forEach(doc => {
             userComplaints.value.push(doc.data())
         })
     }).catch((err)=> {
         console.log(err);
+    }).finally(() => {
+        isLoading.value = false;
     })
 }
 

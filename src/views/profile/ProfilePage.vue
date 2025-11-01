@@ -11,12 +11,13 @@
             </ion-toolbar>
         </ion-header>
         <ion-content>
-          
+
             <section class="flex justify-center font-plus-jakarta-sans">
                 <div class="flex flex-col px-6 pt-6 w-full min-h-screen">
                     <!-- Profile Section -->
                     <div class="flex flex-col items-center mb-8">
-                        <h4  class="text-xl font-semibold text-slate-800">!Bienvenido {{ userStore.getName.split(' ').slice(0, 1).join() }}!</h4>
+                        <h4 class="text-xl font-semibold text-slate-800">!Bienvenido {{ userStore.getName.split('
+                            ').slice(0, 1).join() }}!</h4>
                     </div>
 
                     <!-- Claims Section -->
@@ -27,45 +28,73 @@
 
                         <div v-show="isLoading" class="flex flex-col gap-2 justify-center items-center mt-4">
                             <ion-spinner name="bubbles" color="danger"></ion-spinner>
-                            <ion-text class="text-slate-600 font-plus-jakarta-sans">Obteniendo sus reclamos...</ion-text>
+                            <ion-text class="text-slate-600 font-plus-jakarta-sans">Obteniendo sus
+                                reclamos...</ion-text>
                         </div>
-                     <ion-list v-if="userComplaints.length > 0">
+                       <ion-list v-if="userComplaints.length > 0">
   <ion-item-sliding
     v-for="complaint in userComplaints"
-    :key="complaint.content"
+    :key="complaint.id || complaint.title"
     class="mb-2"
   >
-    <ion-item>
-      <!-- slot correcto -->
-      <div slot="start" class="flex justify-center items-center p-2 mr-1.5 w-16 h-full bg-rose-100 rounded-sm">
-        <img v-if="complaint.image" :src="complaint.image" class="rounded-xs" alt="">
-        <v-icon v-else name="io-document-text" class="text-rose-700" scale="1.6"></v-icon>
-      </div>
-
-      <!-- 👇 ion-label en lugar de ion-item-content -->
-      <ion-label class="flex flex-col gap-1 mb-4">
-        <ion-text class="font-medium font-plus-jakarta-sans text-red-950">
-          {{ complaint.title }}
-        </ion-text>
-        <ion-text class="text-sm font-plus-jakarta-sans">
-          Categoría:
-          <span class="px-2 py-0.5 text-sm text-rose-900 bg-rose-100 rounded-full">Transporte</span>
-        </ion-text>
-        <ion-text class="text-sm">2023-08-15</ion-text>
-      </ion-label>
-    </ion-item>
-
-    <ion-item-options slot="end">
-      <ion-item-option color="danger">
-       <ion-icon :icon="trashBin"></ion-icon>
+    <!-- OPCIONES IZQUIERDA -->
+    <ion-item-options side="start">
+      <ion-item-option color="primary">
+        <ion-icon :icon="eyeOutline" slot="icon-only"></ion-icon>
       </ion-item-option>
     </ion-item-options>
 
+    <!-- ITEM PRINCIPAL -->
+    <ion-item>
+      <div
+        slot="start"
+        class="flex justify-center items-center p-2 mr-1.5 w-16 h-full bg-rose-100 rounded-sm"
+      >
+        <img
+          v-if="complaint.image"
+          :src="complaint.image"
+          class="rounded-xs"
+          alt=""
+        />
+        <v-icon
+          v-else
+          name="io-document-text"
+          class="text-rose-700"
+          scale="1.6"
+        ></v-icon>
+      </div>
+
+      <ion-label>
+        <div class="flex flex-col gap-1 mb-4">
+          <ion-text class="font-medium font-plus-jakarta-sans text-red-950">
+            {{ complaint.title }}
+          </ion-text>
+
+          <ion-text class="text-sm font-plus-jakarta-sans">
+            Categoría:
+            <span
+              class="px-2 py-0.5 text-sm text-rose-900 bg-rose-100 rounded-full"
+              >Transporte</span
+            >
+          </ion-text>
+
+          <ion-text class="text-sm">2023-08-15</ion-text>
+        </div>
+      </ion-label>
+    </ion-item>
+
+    <!-- OPCIONES DERECHA -->
+    <ion-item-options side="end">
+      <ion-item-option color="danger" expandable="true">
+        <ion-icon :icon="trashBin" slot="icon-only"></ion-icon>
+      </ion-item-option>
+    </ion-item-options>
   </ion-item-sliding>
 </ion-list>
 
 
-                     
+
+
                     </div>
 
                     <!-- Options Section -->
@@ -94,7 +123,7 @@
 </template>
 
 <script lang="ts" setup>
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonItem, IonIcon,IonButtons, IonBackButton, IonList , IonItemSliding, IonText, IonButton, onIonViewDidEnter, onIonViewDidLeave, IonSpinner} from '@ionic/vue';
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonItem, IonIcon, IonButtons, IonBackButton, IonList, IonItemSliding, IonText, IonButton, onIonViewDidEnter, onIonViewDidLeave, IonSpinner } from '@ionic/vue';
 import { useUserStore } from '@/stores/user';
 import { collection, getDocs, getFirestore, query, where } from 'firebase/firestore';
 import { ref } from 'vue';
@@ -111,14 +140,14 @@ const complaintsCollection = collection(db, 'complaints');
 const userComplaints = ref<IComplaint[]>([])
 
 const isLoading = ref(false);
-const qGetUserComplaints = query(complaintsCollection,where('userUid', '==', userStore.getUserID));
+const qGetUserComplaints = query(complaintsCollection, where('userUid', '==', userStore.getUserID));
 const getUserComplaints = () => {
     isLoading.value = true;
-    getDocs(qGetUserComplaints).then((snapshot)=>{
+    getDocs(qGetUserComplaints).then((snapshot) => {
         snapshot.forEach(doc => {
             userComplaints.value.push(doc.data())
         })
-    }).catch((err)=> {
+    }).catch((err) => {
         console.log(err);
     }).finally(() => {
         isLoading.value = false;
@@ -130,7 +159,7 @@ onIonViewDidEnter(() => {
     getUserComplaints();
 })
 
-onIonViewDidLeave(()=> {
+onIonViewDidLeave(() => {
     console.log('Leaved Profile')
 })
 

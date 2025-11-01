@@ -32,10 +32,10 @@
                         <ion-list v-if="userComplaints.length>0">
                             <ion-item-sliding v-for="complaint in userComplaints" :key="complaint.content" class="mb-2" >
                                 <ion-item>
-                                    <ion-item-start class="flex justify-center items-center p-2 mr-1.5 w-16 h-full bg-rose-100 rounded-sm">
+                                    <div slot="start" class="flex justify-center items-center p-2 mr-1.5 w-16 h-full bg-rose-100 rounded-sm">
                                         <img v-if="complaint.image" :src="complaint.image" class="rounded-xs" alt="">
                                         <v-icon v-else name="io-document-text" class="text-rose-700" scale="1.6"></v-icon>
-                                    </ion-item-start>
+                                    </div>
                                     <ion-item-content class="flex flex-col gap-1 ion-padding">
                                         <ion-item-title>
                                             <ion-text class="font-medium font-plus-jakarta-sans text-red-950">

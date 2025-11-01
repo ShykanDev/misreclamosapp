@@ -29,37 +29,46 @@
                             <ion-spinner name="bubbles" color="danger"></ion-spinner>
                             <ion-text class="text-slate-600 font-plus-jakarta-sans">Obteniendo sus reclamos...</ion-text>
                         </div>
-                        <ion-list v-if="userComplaints.length>0">
-                            <ion-item-sliding v-for="complaint in userComplaints" :key="complaint.content" class="mb-2" >
-                                <ion-item>
-                                    <div slot="start" class="flex justify-center items-center p-2 mr-1.5 w-16 h-full bg-rose-100 rounded-sm">
-                                        <img v-if="complaint.image" :src="complaint.image" class="rounded-xs" alt="">
-                                        <v-icon v-else name="io-document-text" class="text-rose-700" scale="1.6"></v-icon>
-                                    </div>
-                                    <ion-item-content class="flex flex-col gap-1 ion-padding">
-                                        <ion-item-title>
-                                            <ion-text class="font-medium font-plus-jakarta-sans text-red-950">
-                                                {{ complaint.title }}
-                                            </ion-text>
-                                        </ion-item-title>
-                                            <ion-text class="text-sm font-plus-jakarta-sans">
-                                                Categoría: <span class="px-2 py-0.5 text-sm text-rose-900 bg-rose-100 rounded-full">Transporte</span> </ion-text>
-                                                <ion-text class="text-sm">2023-08-15</ion-text>
-                                    </ion-item-content>
-                                </ion-item>
-                                <ion-item-options side="end">
-                                    <ion-item-option color="danger" >
-                                        <v-icon name="md-deleteforever" scale="1.7"></v-icon>
-                                    </ion-item-option>
-                                </ion-item-options>
-                                <ion-item-options side="start">
-                                    <ion-item-option color="primary">
-                                        <v-icon name="md-removeredeye-round" scale="1.7"></v-icon>
-                                    </ion-item-option>
-                                </ion-item-options>
-                            </ion-item-sliding>
+                     <ion-list v-if="userComplaints.length > 0">
+  <ion-item-sliding
+    v-for="complaint in userComplaints"
+    :key="complaint.content"
+    class="mb-2"
+  >
+    <ion-item>
+      <!-- slot correcto -->
+      <div slot="start" class="flex justify-center items-center p-2 mr-1.5 w-16 h-full bg-rose-100 rounded-sm">
+        <img v-if="complaint.image" :src="complaint.image" class="rounded-xs" alt="">
+        <v-icon v-else name="io-document-text" class="text-rose-700" scale="1.6"></v-icon>
+      </div>
 
-                        </ion-list>
+      <!-- 👇 ion-label en lugar de ion-item-content -->
+      <ion-label class="flex flex-col gap-1 mb-4">
+        <ion-text class="font-medium font-plus-jakarta-sans text-red-950">
+          {{ complaint.title }}
+        </ion-text>
+        <ion-text class="text-sm font-plus-jakarta-sans">
+          Categoría:
+          <span class="px-2 py-0.5 text-sm text-rose-900 bg-rose-100 rounded-full">Transporte</span>
+        </ion-text>
+        <ion-text class="text-sm">2023-08-15</ion-text>
+      </ion-label>
+    </ion-item>
+
+    <ion-item-options side="end">
+      <ion-item-option color="danger">
+        <v-icon name="md-deleteforever" scale="1.7"></v-icon>
+      </ion-item-option>
+    </ion-item-options>
+
+    <ion-item-options side="start">
+      <ion-item-option color="primary">
+        <v-icon name="md-removeredeye-round" scale="1.7"></v-icon>
+      </ion-item-option>
+    </ion-item-options>
+  </ion-item-sliding>
+</ion-list>
+
 
                      
                     </div>

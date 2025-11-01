@@ -55,17 +55,12 @@
       </ion-label>
     </ion-item>
 
-    <ion-item-options side="end">
+    <ion-item-options slot="end">
       <ion-item-option color="danger">
-        <v-icon name="md-deleteforever" scale="1.7"></v-icon>
+       <ion-icon :icon="trashBin"></ion-icon>
       </ion-item-option>
     </ion-item-options>
 
-    <ion-item-options side="start">
-      <ion-item-option color="primary">
-        <v-icon name="md-removeredeye-round" scale="1.7"></v-icon>
-      </ion-item-option>
-    </ion-item-options>
   </ion-item-sliding>
 </ion-list>
 
@@ -99,11 +94,13 @@
 </template>
 
 <script lang="ts" setup>
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonItem, IonButtons, IonBackButton, IonList , IonItemSliding, IonText, IonButton, onIonViewDidEnter, onIonViewDidLeave, IonSpinner} from '@ionic/vue';
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonItem, IonIcon,IonButtons, IonBackButton, IonList , IonItemSliding, IonText, IonButton, onIonViewDidEnter, onIonViewDidLeave, IonSpinner} from '@ionic/vue';
 import { useUserStore } from '@/stores/user';
 import { collection, getDocs, getFirestore, query, where } from 'firebase/firestore';
 import { ref } from 'vue';
 import { IComplaint } from '@/interfaces/IComplaint';
+import { Icon } from 'ionicons/dist/types/components/icon/icon';
+import { eyeOutline, trashBin, trashBinOutline } from 'ionicons/icons';
 
 const userStore = useUserStore();
 

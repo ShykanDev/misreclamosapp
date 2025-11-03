@@ -16,8 +16,7 @@
                 <div class="flex flex-col px-6 pt-6 w-full min-h-screen">
                     <!-- Profile Section -->
                     <div class="flex flex-col items-center mb-8">
-                        <h4 class="text-xl font-semibold text-slate-800">!Bienvenido {{ userStore.getName.split('
-                            ').slice(0, 1).join() }}!</h4>
+                        <h4 class="text-xl font-semibold text-slate-800">!Bienvenido {{ userStore.getName.split('').slice(0, 1).join() }}!</h4>
                     </div>
 
                     <!-- Claims Section -->

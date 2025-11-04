@@ -188,16 +188,9 @@ import {
   sendEmailVerification,
   updateProfile,
 } from 'firebase/auth'
-import { Notyf } from 'notyf'
-import 'notyf/notyf.min.css' // for React, Vue and Svelte
-//import LoaderA from '@/animations/Loaders/LoaderA.vue'
-//import ResetPassword from '@/modals/Register/ResetPassword.vue'
-//import { BiBook } from 'oh-vue-icons/icons'
-
-// Create an instance of Notyf
-const notyf = new Notyf({
-  position: { x: 'right', y: 'top' },
-})
+import { useNotif } from '@/stores/notif';
+// Create an instance of notifStore
+const notifStore = useNotif()
 
 interface FormData {
   name: string
@@ -249,15 +242,15 @@ const handleSubmit = async () => {
     !form.value.password ||
     !form.value.confirmPassword
   ) {
-    notyf.error('Todos los campos son obligatorios')
+    notifStore.error('Hay campos vacíos', 'Todos los campos son obligatorios')
     return
   }
   if (form.value.password !== form.value.confirmPassword) {
-    notyf.error('Las contraseñas no coinciden')
+    notifStore.error('Contraseñas inválidas', 'Las contraseñas no coinciden')
     return
   }
   if (!validatePasswordQuality()) {
-    notyf.error('La contraseña no cumple con los requisitos')
+    notifStore.error('Contraseña inválida', 'La contraseña no cumple con los requisitos')
     return
   } else {
     try {
@@ -275,10 +268,8 @@ const handleSubmit = async () => {
       console.log(userCredential)
       console.log('User registered successfully')
     } catch (error) {
-      console.log(error)
-      notyf.error(
-        'Ocurrió un error al registrar el usuario, intentelo de nuevo y verifique sus datos',
-      )
+      const e = error as Error
+      notifStore.error('Error al registrar el usuario', `${e.message}`)
       isLoading.value = false
     }
   }

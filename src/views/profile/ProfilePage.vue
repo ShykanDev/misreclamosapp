@@ -1,6 +1,6 @@
 <template>
   <ion-page>
-    <ion-header>
+    <ion-header class="ion-no-border">
       <ion-toolbar>
         <ion-buttons slot="start">
           <ion-back-button defaultHref="/home" style="color: orangered;"></ion-back-button>
@@ -28,12 +28,57 @@
           </ion-text>
           <small class="text-slate-600">Creado el: {{ dateFormated(complaint.createdAt) }}</small>
           
+          <article class="p-6 bg-white rounded-lg border-l-4 border-red-500 shadow-md md:p-8 dark:bg-gray-800 dark:border-red-600">
+    <div class="flex items-center space-x-4">
+        <svg xmlns="http://www.w3.org/2000/svg" class="flex-shrink-0 w-8 h-8 text-red-500 dark:text-red-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10.29 3.86L1.86 18c-.37.6-.37 1.35 0 1.95.37.6.99.95 1.7.95h16.88c.7 0 1.32-.35 1.7-.95.37-.6.37-1.35 0-1.95L13.71 3.86c-.37-.6-.99-.95-1.7-.95s-1.33.35-1.7.95z"/>
+            <line x1="12" y1="9" x2="12" y2="13"/>
+            <line x1="12" y1="17" x2="12.01" y2="17"/>
+        </svg>
+        <h2 class="text-2xl font-bold text-gray-900 dark:text-white">
+            Prevención de Abuso y Eliminación de Mensajes
+        </h2>
+    </div>
+
+    <div class="mt-4 text-gray-700 dark:text-gray-300">
+        <p class="mb-4">
+            Para mantener una plataforma saludable y prevenir abusos graves, como la difusión de  <span class="font-bold text-rose-800">información engañosa</span> o <span class="font-bold text-rose-800">spam persistente</span>, la eliminación de mensajes está disponible.
+            Sin embargo, este proceso se gestiona para garantizar la rendición de cuentas y evitar el uso indebido de la función de eliminación.
+        </p>
+
+        <h3 class="mt-6 mb-3 text-xl font-semibold text-red-500 dark:text-red-400">
+            ⚠️ Cómo Solicitar la Eliminación
+        </h3>
+        <ul class="pl-5 space-y-3 list-disc">
+            <li>
+                <span class="font-bold">Paso Obligatorio:</span> Las solicitudes de eliminación deben enviarse <span class="font-bold">por correo electrónico</span> a nuestro equipo de soporte. Esto es necesario para su revisión y verificación.
+            </li>
+            <li>
+                <span class="font-bold">Dirección de Correo Electrónico:</span> Por favor, envíe su solicitud a: <a href="mailto:informes@grupochimex.com" class="font-medium text-red-600 underline hover:text-red-700 dark:text-red-400 dark:hover:text-red-300">informes@grupochimex.com</a>
+            </li>
+            <li>
+                <span class="font-bold">Información Requerida:</span> Su correo electrónico debe incluir los siguientes detalles para que podamos localizar el mensaje y evaluar la reclamación:
+                <ul class="pl-4 mt-1 space-y-1 text-sm list-circle">
+                    <li>El <span class="font-bold">Nombre de Usuario</span></li>
+                    <li>El <span class="font-bold">Contenido Exacto</span> del mensaje.</li>
+                    <li>La <span class="font-bold">Fecha y Hora</span> (o una estimación aproximada) en que se envió el mensaje.</li>
+                    <li>Una <span class="font-bold">Razón Clara para la Eliminación</span> (por ejemplo, "<span class='font-bold'>Datos Ingresados Incorrectamente</span>", "<span class='font-bold'>Retirada de un Reclamo/Petición</span>", "<span class='font-bold'>Información Obsoleta</span>").</li>
+                </ul>
+            </li>
+        </ul>
+
+        <p class="mt-4 text-sm italic text-gray-500 dark:text-gray-400">
+            Las solicitudes se revisan en el orden en que se reciben. Solo se eliminarán los mensajes que se considere que infringen nuestras políticas o sea una razón con fines legítimos.
+        </p>
+    </div>
+</article>
+
           <div class="w-full ion-margin-top">
             <ion-button @click="showModal = false" size="large" expand="full" shape="round" style="text-transform: none;" class="font-medium text-slate-900 font-poppins cancel modal ion-margin-bottom">
               Cancelar
             </ion-button>
-            <ion-button @click="handleDeletion(complaint.docRef)" size="large" expand="full" shape="round" style="text-transform: none;" class="font-bold font-poppins delete modal">
-              Borrar
+            <ion-button @click="handleDeletion" size="large" expand="full" shape="round" style="text-transform: none;" class="font-bold font-poppins delete modal">
+              Enviar Correo
             </ion-button>
           </div>
          </section>
@@ -222,6 +267,10 @@ const handleDeletion = (complaintDocRef:any):void => {
 </script>
 
 <style scoped>
+ion-toolbar{
+    --background: white !important;
+
+}
   ion-modal {
     --border-radius: 46px;
     --box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);

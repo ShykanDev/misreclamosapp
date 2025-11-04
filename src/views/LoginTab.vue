@@ -19,7 +19,7 @@
           <ion-input aria-label="Correo electrónico" color="danger" label="Correo electrónico" labelPlacement="floating"
             fill="outline" placeholder="correo@ejemplo.com" class="custom" :counter="true" :maxlength="40"
             v-model="email"></ion-input>
-          <ion-input aria-label="contraseña" color="danger" label="Contraseña" labelPlacement="floating" fill="outline"
+          <ion-input aria-label="contraseña" type="password" color="danger" label="Contraseña" labelPlacement="floating" fill="outline"
             placeholder="*******" class="custom" :counter="true" :maxlength="20" v-model="password"></ion-input>
         </article>
         <!-- Button -->
@@ -66,20 +66,12 @@ import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonBackButton, Io
 import { ref } from 'vue';
 import { sendPasswordResetEmail, signInWithEmailAndPassword } from 'firebase/auth'
 import { useLogginStore } from '@/stores/loggin';
-import { Notyf } from 'notyf';
-import 'notyf/notyf.min.css';
 import { auth as FixedFirebaseAuth } from '@/main';
 import { arrowBack} from 'ionicons/icons';
 import { useUserStore } from '@/stores/user';
+import { useNotif } from '@/stores/notif';
 
-const notyf = new Notyf({
-  duration: 5000,
-  position: {
-    x: 'center',
-    y: 'top',
-  },
-  dismissible: true,
-})
+const notifStore = useNotif();
 
 // Firebase auth
 const auth = FixedFirebaseAuth;
@@ -116,7 +108,7 @@ const handleLogin = () => {
         useLogginStore().setUserLoggedIn(true)
         useUserStore().setName(user.displayName || 'User')
         useUserStore().setUserId(user.uid)
-        notyf.success(`Le damos la bienvenida ${user.displayName}`)
+        notifStore.success('Inicio de sesión correcto', `Le damos la bienvenida ${user.displayName ?? 'Usuario'}`)
         console.log(userCredential)
         email.value = ''
         password.value = ''
@@ -124,36 +116,33 @@ const handleLogin = () => {
       })
       .catch((error) => {
         const errorCode = error.code
-        notyf.error(`Error al iniciar sesión, error: ${errorCode}`)
+        notifStore.error(`Error al iniciar sesión`, `Error: ${errorCode}`)
         console.log(`ErrorCode: ${errorCode}`)
       }).finally(() => {
         isLoading.value = false
       })
   } else {
     console.log('Formulario inválido')
-    notyf.error('Verifique los campos')
+    notifStore.error('Verifique los campos')
   }
 }
 
 const handleResetPassword = async () => {
   isLoading.value = true
   if(email.value === '') {
-    notyf.error('Introduzca un correo electrónico')
+    notifStore.error('Introduzca un correo electrónico', 'Error: correo electrónico vacío')
     isLoading.value = false
     return
   }
   try {
     await sendPasswordResetEmail(auth, email.value)
-    notyf.success(
-      'Correo enviado, por favor verifique su bandeja de entrada, spam o correo no deseado',
-    )
-    console.log('Correo enviado')
     showModal.value = false
     email.value = ''
-    notyf.success('Correo enviado, por favor verifique su bandeja de entrada, spam o correo no deseado')
+    notifStore.success('Correo enviado', 'por favor verifique su bandeja de entrada, spam o correo no deseado')
   } catch (error) {
-    console.log(error)
-    notyf.error(`Error al enviar correo, error: ${error}`)
+    const e = error as Error
+    console.log(e)
+    notifStore.error(`Error al enviar correo`, `Error: ${e.message}`)
   } finally {
     isLoading.value = false
   }

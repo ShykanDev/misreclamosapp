@@ -77,7 +77,7 @@
             <ion-button @click="showModal = false" size="large" expand="full" shape="round" style="text-transform: none;" class="font-medium text-slate-900 font-poppins cancel modal ion-margin-bottom">
               Cancelar
             </ion-button>
-            <ion-button @click="handleDeletion" size="large" expand="full" shape="round" style="text-transform: none;" class="font-bold font-poppins delete modal">
+            <ion-button @click="handleDeletion(complaint.docRef)" size="large" expand="full" shape="round" style="text-transform: none;" class="font-bold font-poppins delete modal">
               Enviar Correo
             </ion-button>
           </div>
@@ -155,19 +155,14 @@
             <h3 class="text-lg font-semibold text-[#0A0A0A] mb-4">Opciones</h3>
 
             <div class="flex justify-between items-center py-3">
-              <p class="text-base text-[#0A0A0A]">Editar perfil</p>
-              <i class="fa-solid fa-chevron-right text-[#0A0A0A] text-sm"></i>
-            </div>
-
-            <div class="flex justify-between items-center py-3">
               <p class="text-base text-[#0A0A0A]">Cambiar contraseña</p>
               <i class="fa-solid fa-chevron-right text-[#0A0A0A] text-sm"></i>
             </div>
 
-            <div class="flex justify-between items-center py-3">
-              <p class="text-base text-[#0A0A0A]">Gestionar notificaciones</p>
-              <i class="fa-solid fa-chevron-right text-[#0A0A0A] text-sm"></i>
-            </div>
+            <ion-button @click="logOut" color="danger" shape="round">
+              <ion-icon :icon="logOutOutline" class="mr-2" ></ion-icon>
+               Cerrar Sesión
+            </ion-button>
           </div>
         </div>
       </section>
@@ -178,14 +173,17 @@
 </template>
 
 <script lang="ts" setup>
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonItem, IonIcon, IonButtons, IonBackButton, IonList, IonItemSliding, IonText, IonButton, onIonViewDidEnter, onIonViewDidLeave, IonSpinner, IonItemOptions, IonItemOption, IonModal, IonLabel } from '@ionic/vue';
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonItem, IonIcon, IonButtons, IonBackButton, IonList, IonItemSliding, IonText, IonButton, onIonViewDidEnter, onIonViewDidLeave, IonSpinner, IonItemOptions, IonItemOption, IonModal, IonLabel, useIonRouter } from '@ionic/vue';
 import { useUserStore } from '@/stores/user';
 import { collection, deleteDoc, getDocs, getFirestore, query, Timestamp, where } from 'firebase/firestore';
 import { ref } from 'vue';
 import { IComplaint } from '@/interfaces/IComplaint';
 import { Icon } from 'ionicons/dist/types/components/icon/icon';
-import { eyeOutline, trashBin, trashBinOutline, trashSharp } from 'ionicons/icons';
+import { eyeOutline, logOutOutline, trashBin, trashBinOutline, trashSharp } from 'ionicons/icons';
 import { MdSnowshoeingOutlined } from 'oh-vue-icons/icons';
+import { auth } from '@/main';
+import { signOut } from 'firebase/auth';
+import { useNotif } from '@/stores/notif';
 
 const userStore = useUserStore();
 
@@ -222,6 +220,7 @@ onIonViewDidEnter(() => {
 
 onIonViewDidLeave(() => {
   console.log('Leaved Profile')
+  userComplaints.value = []
 })
 
 const showModal = ref(false);
@@ -263,6 +262,20 @@ const handleDeletion = (complaintDocRef:any):void => {
     userComplaints.value =[];
     getUserComplaints();
   })
+}
+
+const notifStore = useNotif();
+const ionRouter = useIonRouter();
+const authUser = auth;
+const logOut  = () => {
+  signOut(authUser).then(res => {
+  notifStore.success('Sesión terminada', 'Su sesión ha sido cerrada correctamente')
+  console.log(res);
+    ionRouter.navigate('/tabs/login','root', 'push' )
+  }).catch(err=> {
+    notifStore.error('Error al cerrar sesión', 'Hubo un error al intentar cerrar sesión, intente de nuevo'+ err)
+  }
+  )
 }
 </script>
 

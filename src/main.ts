@@ -91,7 +91,11 @@ MdPostadd,
 BiArrowRightShort,
 IoDocumentText,
 MdDeleteforever,
-MdRemoveredeyeRound
+MdRemoveredeyeRound,
+BiTrashFill,
+BiCheckCircleFill,
+IoClose,
+IoCloseCircle
 }from "oh-vue-icons/icons";
 
 addIcons(FaFlag, RiZhihuFill, OiDiffAdded,
@@ -154,7 +158,11 @@ addIcons(FaFlag, RiZhihuFill, OiDiffAdded,
   BiArrowRightShort,
   IoDocumentText,
   MdDeleteforever,
-  MdRemoveredeyeRound
+  MdRemoveredeyeRound,
+  BiTrashFill,
+  BiCheckCircleFill,
+  IoClose,
+  IoCloseCircle
 );
 
 /**

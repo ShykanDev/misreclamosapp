@@ -1,4 +1,4 @@
-import type { Timestamp } from 'firebase/firestore'
+import type { DocumentData, DocumentReference, Timestamp } from 'firebase/firestore'
 
 export interface IAnswer {
   uidTo: string
@@ -23,4 +23,5 @@ export interface IComplaint {
   userName: string
   userUid: string
   docId: string
+  docRef?:DocumentReference<DocumentData, DocumentData>
 }

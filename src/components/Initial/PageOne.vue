@@ -6,7 +6,7 @@
     <img
           src="../../assets/redMad200.png"
           alt="Persona escribiendo un comentario con megáfono"
-          class="object-contain w-full sm:w-4xl md:w-2xl lg:w-2xl"
+          class="object-contain w-full sm:w-4xl md:w-xl lg:w-xl"
         >
   </div>
 

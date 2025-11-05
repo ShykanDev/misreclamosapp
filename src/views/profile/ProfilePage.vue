@@ -185,6 +185,7 @@ import { auth } from '@/main';
 import { signOut } from 'firebase/auth';
 import { useNotif } from '@/stores/notif';
 import { useRouter } from 'vue-router';
+import { useLogginStore } from '@/stores/loggin';
 
 const userStore = useUserStore();
 
@@ -267,10 +268,18 @@ const handleDeletion = (complaintDocRef:any):void => {
 
 const notifStore = useNotif();
 const ionRouter = useIonRouter();
-const vueRouter = useRouter();
+const loginStore = useLogginStore();
 const authUser = auth;
 const logOut  = () => {
-  ionRouter.navigate('/tabs/login', 'root', 'replace');
+  signOut(authUser).then(() => {
+    notifStore.success('Sesión terminada', 'Su sesión ha sido cerrada correctamente');
+    userStore.resetUser();
+    loginStore.setUserLoggedIn(false);
+    ionRouter.navigate('/tabs/login', 'root', 'replace');
+  }).catch((err) => {
+    console.log(err);
+    notifStore.error('Error', 'Error al cerrar sesión');
+  })
 }
 </script>
 

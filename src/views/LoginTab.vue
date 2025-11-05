@@ -3,7 +3,7 @@
     <ion-header class="ion-no-border custom">
       <ion-toolbar class="">
         <ion-buttons slot="start">
-          <ion-back-button color="danger" defaultHref="/tabs/initial"></ion-back-button>
+          <ion-back-button text="Volver" color="danger" defaultHref="/tabs/initial"></ion-back-button>
         </ion-buttons>
         <ion-title
           class="text-rose-700 font-poppins">Iniciar
@@ -23,7 +23,7 @@
             placeholder="*******" class="custom" :counter="true" :maxlength="20" v-model="password"></ion-input>
         </article>
         <!-- Button -->
-        <ion-button @click="handleLogin" class="font-semibold w-11/12 !mx-auto login" expand="block"
+        <ion-button @click="handleLogin" color="danger" class="font-semibold w-11/12 !mx-auto login" expand="block"
           style="text-transform: none;">Iniciar sesión</ion-button>
         <p class="text-center text-slate-500">¿No tiene cuenta?</p>
         <ion-button router-link="/tabs/register" fill="outline" color="danger" class="w-11/12 !mx-auto register"
@@ -87,6 +87,7 @@ const isLoading = ref(false)
 // Validate values to validate if user and password are not empty 
 const validateValues = () => {
   if (email.value === '' || password.value === '') {
+    notifStore.error('Introduzca un correo electrónico y contraseña', 'Error: correo electrónico y contraseña vacíos')
     return false
   }
   return true
@@ -123,7 +124,7 @@ const handleLogin = () => {
       })
   } else {
     console.log('Formulario inválido')
-    notifStore.error('Verifique los campos')
+    notifStore.error('Formulario inválido', 'Error: correo electrónico y contraseña vacíos')
   }
 }
 
@@ -147,6 +148,7 @@ const handleResetPassword = async () => {
     isLoading.value = false
   }
 }
+
 </script>
 
 <style>

@@ -11,6 +11,10 @@ export const useUserStore = defineStore('user', {
         },
         setUserId(userId:string){
             this.userId = userId
+        },
+        resetUser(){
+            this.name = '';
+            this.userId = '';
         }
     },
     getters:{

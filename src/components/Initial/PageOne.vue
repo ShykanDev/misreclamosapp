@@ -2,7 +2,7 @@
 <ion-content class="flex flex-col gap-4 items-center p-6 rounded-2xl shadow-lg ion-padding" >
   <!-- Image-->
   <div class="flex justify-center items-center mb-8">
-
+         
     <img
           src="../../assets/redMad200.png"
           alt="Persona escribiendo un comentario con megáfono"
@@ -26,7 +26,8 @@
 </template>
 
 <script lang="ts" setup>
-import { IonContent } from '@ionic/vue';
+import { IonContent, IonToast } from '@ionic/vue';
+
 </script>
 
 <style scoped>

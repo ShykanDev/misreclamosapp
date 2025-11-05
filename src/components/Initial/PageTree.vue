@@ -2,8 +2,6 @@
   <ion-content class="flex flex-col justify-evenly items-center p-6 rounded-2xl shadow-lg md:ionpb">
     <div class="min-h-full">
 
-   
-
     <!-- Title -->
     <h2 class="mb-4 !text-3xl font-medium text-center text-rose-900">
       Sea parte del cambio

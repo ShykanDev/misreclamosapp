@@ -1,15 +1,18 @@
 <template>
-  <ion-app>
+  <ion-app >
+    <GlobalToast />
     <ion-router-outlet />
   </ion-app>
 </template>
 
 <script setup lang="ts">
-import { IonApp, IonRouterOutlet } from '@ionic/vue';
-import { useNotif } from './stores/notif';
-const notifStore = useNotif();
+import { IonApp, IonRouterOutlet, onIonViewDidEnter } from '@ionic/vue';
 import 'animate.css';
+import GlobalToast from './components/Global/GlobalToast.vue';
 
+onIonViewDidEnter(() => {
+  console.log('IonViewDidEnter');
+});
 
 
 </script>

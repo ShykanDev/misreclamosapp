@@ -3,12 +3,12 @@
     <ion-tabs>
       <ion-router-outlet></ion-router-outlet>
       <ion-tab-bar slot="bottom">
-        <ion-tab-button style="" tab="tab1" href="/tabs/login">
+        <ion-tab-button v-if="!loginStore.getIsUserLoggedIn" tab="tab1" href="/tabs/login">
           <ion-icon aria-hidden="true" :icon="logInOutline" />
           <ion-label class="font-poppins">Ingresar</ion-label>
         </ion-tab-button>
 
-        <ion-tab-button tab="register" href="/tabs/register">
+        <ion-tab-button v-if="!loginStore.getIsUserLoggedIn" tab="register" href="/tabs/register">
           <ion-icon aria-hidden="true" :icon="personAddOutline" />
           <ion-label class="font-poppins">Registrarse</ion-label>
         </ion-tab-button>
@@ -23,7 +23,7 @@
           <ion-label class="font-poppins">Crear</ion-label>
         </ion-tab-button>
 
-        <ion-tab-button tab="profile" href="/tabs/profile">
+        <ion-tab-button v-if="loginStore.getIsUserLoggedIn" tab="profile" href="/tabs/profile">
           <ion-icon aria-hidden="true" :icon="personCircleOutline" />
           <ion-label class="font-poppins">Mi cuenta</ion-label>
         </ion-tab-button>
@@ -35,8 +35,11 @@
 </template>
 
 <script setup lang="ts">
+import { useLogginStore } from '@/stores/loggin';
 import { IonTabBar, IonTabButton, IonTabs, IonLabel, IonIcon, IonPage, IonRouterOutlet } from '@ionic/vue';
 import { addCircleOutline, addCircleSharp, homeOutline, logInOutline, personAddOutline, personCircleOutline} from 'ionicons/icons';
+
+const loginStore = useLogginStore();
 </script>
 
 <style scoped>

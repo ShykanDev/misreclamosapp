@@ -22,7 +22,7 @@
     <ion-text color="dark">
       <h2 class="mb-2 !text-4xl !font-bold text-left !text-rose-950">
         Añadir un nuevo reclamo para la categoría
-        <ion-text color="danger">{{ useHomeStore().getCategorySelected ?? 'Undefined'}}</ion-text>
+        <ion-text color="danger" class="flex gap-2 items-center">{{ useCreateStore().getCategorySelected ?? 'Undefined'}} <v-icon :name="fullCategories.find(e => e.name === storeHome.getCategorySelected)?.icon ?? 'ri-more-fill' " class="text-red-600" scale="1.9"></v-icon></ion-text>
       </h2>
     </ion-text>
 
@@ -67,18 +67,18 @@
       
         <ion-label position="stacked" color="custom" class="font-medium font-poppins" style="color: #4E0218;">Categoría</ion-label>
         <ion-select
-          v-model="complaintObject.category"
           id="category"
           interface="action-sheet"
           placeholder="Seleccione una categoría"
           fill="outline"
           class="mt-1.5"
           color="danger"
+          v-model="complaintObject.category"
         >
           <ion-select-option
             v-for="category in fullCategories"
             :key="category.name"
-            :value="category.name" 
+            :value="category.name"
           >
           {{ category.name }}
           <v-icon :name="category.icon" class="mr-2"></v-icon>
@@ -210,6 +210,7 @@ import {
   IonBackButton,
   IonButtons,
   IonTitle,
+  onIonViewDidEnter,
 } from '@ionic/vue';
 
 // Icono de Ionic para la subida de archivos
@@ -223,6 +224,7 @@ import { getFirestore, collection, addDoc, Timestamp } from 'firebase/firestore'
 import { getAuth } from 'firebase/auth'
 import { useHomeStore } from '@/stores/home';
 import { cloudUploadOutline } from 'ionicons/icons';
+import { useCreateStore } from '@/stores/create';
 
 //Ui Values
 const loading = ref(false)
@@ -592,13 +594,11 @@ const sendComplaint = async () => {
 
 const storeHome = useHomeStore();
 
-
-watch(
-  () => storeHome.getCategorySelected,
-  (newValue) => {
-    console.log('Valor del store cambiado:', newValue);
+onIonViewDidEnter(() => {
+  if (storeHome.getCategorySelected) {
+    complaintObject.category = storeHome.getCategorySelected;
   }
-);
+});
 
 </script>
 

@@ -49,7 +49,7 @@ export const useNotif = defineStore("notif", {
     },
     error(titleVal:string, subtitleVal:string){
         this.type = 'error' 
-           this.setShow(true)
+        this.setShow(true)
         this.title = titleVal;
         this.subtitle = subtitleVal;
     },

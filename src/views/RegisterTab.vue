@@ -3,7 +3,7 @@
     <ion-header class="ion-no-border">
       <ion-toolbar >
         <ion-buttons slot="start">
-          <ion-back-button class="text-rose-700" defaultHref="/tabs/initial"></ion-back-button>
+          <ion-back-button text="Volver" class="text-rose-700" defaultHref="/tabs/initial"></ion-back-button>
         </ion-buttons>
         <ion-title class="absolute top-1/2 left-1/2 text-center text-rose-800 -translate-x-1/2 -translate-y-1/2">Registrarse</ion-title>
       </ion-toolbar>
@@ -31,7 +31,7 @@
       </ion-card-header>
 
       <!-- Formulario -->
-      <form @submit.prevent="handleSubmit()" class="space-y-5">
+      <form @submit.prevent="handleSubmit()" class="space-y-5 font-spline-sans">
         <!-- Campo: Nombre -->
      
           <ion-input
@@ -95,15 +95,16 @@
         <div class="flex flex-col gap-3 px-4 text-sm">
           <p
             :class="{
-              'text-red-500': passswordRequirements.length,
+              'text-rose-800': passswordRequirements.length,
               'text-emerald-600': !passswordRequirements.length && form.password.length >= 9,
             }"
           >
+          <v-icon name="" class="mr-2"></v-icon>
             Su contraseña debe tener mínimo 9 caracteres
           </p>
           <p
             :class="{
-              'text-red-500': passswordRequirements.uppercase,
+              'text-rose-800': passswordRequirements.uppercase,
               'text-emerald-600': !passswordRequirements.uppercase && form.password.match(/[A-Z]/),
             }"
           >
@@ -111,7 +112,7 @@
           </p>
           <p
             :class="{
-              'text-red-500': form.password !== form.confirmPassword,
+              'text-rose-800': form.password !== form.confirmPassword,
               'text-emerald-600': form.password === form.confirmPassword && form.password.length >= 9,
             }"
           >
@@ -129,6 +130,7 @@
         <ion-button
             type="submit"
           expand="block"
+          color="danger"
           class="register"
           style="text-transform: none;"
         >
@@ -167,7 +169,7 @@
 
         <p class="text-center text-black font-poppins">Por favor, revise su correo electrónico para verificar su cuenta. (Si no lo encuentra, verifique la carpeta de spam).</p>
         <div class="flex justify-center">
-          <ion-button @click="success = false" style="text-transform: none;" class="mt-6 font-bold acceptModal font-inter">Ir a la pantalla de inicio</ion-button>
+          <ion-button @click="success = false" router-link="/tabs/login" color="danger" style="text-transform: none;" class="mt-6 font-bold acceptModal font-inter">Ir a la pantalla de inicio</ion-button>
         </div>
         <p class="absolute bottom-4 left-1/2 text-center -translate-x-1/2 text-slate-700 font-poppins">Gracias por usar nuestra aplicación.</p>
       </ion-content>

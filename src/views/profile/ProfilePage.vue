@@ -3,7 +3,7 @@
     <ion-header class="ion-no-border">
       <ion-toolbar>
         <ion-buttons slot="start">
-          <ion-back-button defaultHref="/home" style="color: orangered;"></ion-back-button>
+          <ion-back-button defaultHref="/tabs/home" style="color: orangered;"></ion-back-button>
         </ion-buttons>
         <ion-title class="text-2xl font-bold text-center text-red-800 font-plus-jakarta-sans">
           Mi cuenta
@@ -184,6 +184,7 @@ import { MdSnowshoeingOutlined } from 'oh-vue-icons/icons';
 import { auth } from '@/main';
 import { signOut } from 'firebase/auth';
 import { useNotif } from '@/stores/notif';
+import { useRouter } from 'vue-router';
 
 const userStore = useUserStore();
 
@@ -266,16 +267,10 @@ const handleDeletion = (complaintDocRef:any):void => {
 
 const notifStore = useNotif();
 const ionRouter = useIonRouter();
+const vueRouter = useRouter();
 const authUser = auth;
 const logOut  = () => {
-  signOut(authUser).then(res => {
-  notifStore.success('Sesión terminada', 'Su sesión ha sido cerrada correctamente')
-  console.log(res);
-    ionRouter.navigate('/tabs/login','root', 'push' )
-  }).catch(err=> {
-    notifStore.error('Error al cerrar sesión', 'Hubo un error al intentar cerrar sesión, intente de nuevo'+ err)
-  }
-  )
+  ionRouter.navigate('/tabs/login', 'root', 'replace');
 }
 </script>
 

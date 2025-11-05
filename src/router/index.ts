@@ -10,7 +10,7 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: "/tabs/",
-    component: LoginTabsPage, //Parent of the tabs (Who envolve the children tabs ONE)
+    component: LoginTabsPage,
     children: [
       //Array that contains the children tabs
       {
@@ -21,6 +21,7 @@ const routes: Array<RouteRecordRaw> = [
       {
         //Tab that contains 2 properties path and component (Every ONE page should contain at least these 2 properties)
         path: "login",
+        name: "login",
         component: () => import("@/views/LoginTab.vue"),
       },
       {
@@ -31,28 +32,18 @@ const routes: Array<RouteRecordRaw> = [
         path: "initial",
         component: () => import("@/views/InitialPage.vue"),
       },
-    ],
-  },
-  {
-    path: "/home",
-    component: ContentTabs,
-    children: [
       {
-        path: "children",
-        component: () => import("@/views/content/HomeTab.vue"),
-        name: "home",
-      },
-      {
-        path: "/home/",
+        path: "home",
+        name: "Home",
         component: () => import("@/views/content/HomeTab.vue"),
       },
       {
-        path: "/create",
+        path: "create",
         name: "Create",
         component: () => import("@/views/create/CreateComplaintTab.vue"),
       },
       {
-        path: "/profile",
+        path: "profile",
         name: "Profile",
         component: () => import("@/views/profile/ProfilePage.vue"),
       },

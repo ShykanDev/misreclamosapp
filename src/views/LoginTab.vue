@@ -112,7 +112,7 @@ const handleLogin = () => {
         console.log(userCredential)
         email.value = ''
         password.value = ''
-        router.navigate('/home','forward', 'push')
+        router.navigate('/tabs/home','forward', 'push')
       })
       .catch((error) => {
         const errorCode = error.code

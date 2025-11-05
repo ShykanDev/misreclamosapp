@@ -8,11 +8,28 @@
           <ion-label class="font-poppins">Ingresar</ion-label>
         </ion-tab-button>
 
-        <ion-tab-button tab="tab2" href="/tabs/register">
+        <ion-tab-button tab="register" href="/tabs/register">
           <ion-icon aria-hidden="true" :icon="personAddOutline" />
           <ion-label class="font-poppins">Registrarse</ion-label>
         </ion-tab-button>
+
+        <ion-tab-button tab="home" href="/tabs/home">
+          <ion-icon aria-hidden="true" :icon="personAddOutline" />
+          <ion-label class="font-poppins">Inicio</ion-label>
+        </ion-tab-button>
+
+        <ion-tab-button tab="create" href="/tabs/create">
+          <ion-icon aria-hidden="true" :icon="personAddOutline" />
+          <ion-label class="font-poppins">Crear</ion-label>
+        </ion-tab-button>
+
+        <ion-tab-button tab="profile" href="/tabs/profile">
+          <ion-icon aria-hidden="true" :icon="personAddOutline" />
+          <ion-label class="font-poppins">Mi cuenta</ion-label>
+        </ion-tab-button>
+
       </ion-tab-bar>
+      
     </ion-tabs>
   </ion-page>
 </template>

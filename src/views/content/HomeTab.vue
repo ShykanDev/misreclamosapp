@@ -49,7 +49,7 @@
           </ion-button>
         </ion-buttons>
         <ion-buttons slot="end">
-          <ion-button @click="setSelectedCategory(selectedCategory)" router-link="/create">
+          <ion-button @click="setSelectedCategory(selectedCategory)" router-link="/tabs/create">
             <v-icon name="md-postadd" class="text-red-600" scale="1.5"/>
           </ion-button>
         </ion-buttons>
@@ -99,9 +99,9 @@
           <h4 class="text-rose-800 font-poppins">!Aún no hay reclamos aquí!</h4>
           <DotLottieVue class="w-56" autoplay loop
             src="https://lottie.host/102e5586-f640-45d6-adad-13ed24c1d827/76XQjzn4Ry.lottie" />
-          <ion-button @click="setSelectedCategory(selectedCategory)" router-link="/create" class="complaint font-alexandria" style="text-transform: none;">Crear Nuevo
+          <ion-button @click="setSelectedCategory(selectedCategory)" router-link="/tabs/create" class="complaint font-alexandria" style="text-transform: none;">Crear Nuevo
             Reclamo</ion-button>
-          <ion-button @click="setSelectedCategory(selectedCategory)" router-link="/profile" class="complaint font-alexandria" style="text-transform: none;">
+          <ion-button @click="setSelectedCategory(selectedCategory)" router-link="/tabs/profile" class="complaint font-alexandria" style="text-transform: none;">
             Ir al perfil</ion-button>
         </article>
       </div>

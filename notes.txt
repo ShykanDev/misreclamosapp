@@ -33,38 +33,45 @@ Add UI Fixes to all the page [Not Done]
 // - Show a loading screen when uploading images [Not Done]
 // - Apply UI fixes across all related pages [Not Done]
 
-         <ion-list v-if="userComplaints.length > 0">
-              <ion-item-sliding>
-                <ion-item>
-                  <ion-label>Sliding Item with End Options</ion-label>
-                </ion-item>
+ <div class="flex fixed top-16 z-50 justify-end w-full ion-padding font-spline-sans">
+      <transition appear leave-active-class="animate__animated animate__backOutUp"
+        enter-active-class="animate__animated animate__bounceInDown">
+        <article v-if="notifStore.getShow" :key="notifStore.getTimer ?? Math.random()"
+          class="relative w-11/12 h-full bg-white rounded-md shadow-2xl">
+          <aside :class="{
+            'bg-green-400': notifStore.getType === 'success',
+            'bg-rose-400': notifStore.getType === 'error',
+            'bg-yellow-400': notifStore.getType === 'warning',
+            'bg-blue-400': notifStore.getType === 'info',
+          }" class="absolute left-0 w-3 h-full rounded-l-md"></aside>
 
-                <ion-item-options>
-                  <ion-item-option>Favorite</ion-item-option>
-                  <ion-item-option color="danger">Delete</ion-item-option>
-                </ion-item-options>
-              </ion-item-sliding>
-              <ion-item-sliding v-for="complaint in userComplaints" :key="complaint.id || complaint.title" class="mb-2">
+          <div class="flex gap-4 justify-start items-center py-2 ml-7 h-full">
+            <section>
+              <v-icon v-show="notifStore.getType === 'success'" name="bi-check-circle-fill" :class="{
+                'text-green-400': notifStore.getType === 'success',
+                'text-rose-400': notifStore.getType === 'error',
+                'text-yellow-400': notifStore.getType === 'warning',
+                'text-blue-400': notifStore.getType === 'info',
+              }" class="animate-jump animate-delay-[0.9s] animate-duration-[.6s]" scale="1.9" />
+              <v-icon v-show="notifStore.getType === 'error'" name="io-close-circle" :class="{
+                'text-green-400': notifStore.getType === 'success',
+                'text-rose-400': notifStore.getType === 'error',
+                'text-yellow-400': notifStore.getType === 'warning',
+                'text-blue-400': notifStore.getType === 'info',
+              }" class="animate-jump animate-delay-[0.9s] animate-duration-[.6s]" scale="1.9" />
+            </section>
 
+            <section class="flex flex-col justify-between h-full">
+              <p class="font-semibold text-gray-800">{{ notifStore.getTitle }}</p>
+              <p class="text-sm text-gray-500">{{ notifStore.getSubtitle }}</p>
+            </section>
+          </div>
 
-                <!-- ITEM PRINCIPAL -->
-                <ion-item>
-                  <div slot="start"
-                    class="flex justify-center items-center p-2 mr-1.5 w-16 h-full bg-rose-100 rounded-sm">
-                    <img v-if="complaint.image" :src="complaint.image" class="rounded-xs" alt="" />
-                    <v-icon v-else name="io-document-text" class="text-rose-700" scale="1.6"></v-icon>
-                  </div>
+          <section @click="notifStore.setShow(false)" class="absolute top-1 right-1">
+            <v-icon name="io-close" class="cursor-pointer text-slate-400" scale="1.2" />
+          </section>
+        </article>
+      </transition>
+    </div>
 
-                  <ion-label>
-                    <h3 class="text-base font-semibold text-rose-800">{{ complaint.title }}</h3>
-                  </ion-label>
-                </ion-item>
-
-                <!-- OPCIONES DERECHA -->
-                <ion-item-options side="end">
-                  <ion-item-option color="danger" expandable="true">
-                    <ion-icon :icon="trashBin" slot="icon-only"></ion-icon>
-                  </ion-item-option>
-                </ion-item-options>
-              </ion-item-sliding>
-            </ion-list>
+    

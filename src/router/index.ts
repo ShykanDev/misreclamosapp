@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory } from "@ionic/vue-router";
 import { RouteRecordRaw } from "vue-router";
 import LoginTabsPage from "../views/LoginTabsPage.vue";
-import ContentTabs from "@/views/content/ContentTabs.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -12,7 +11,7 @@ const routes: Array<RouteRecordRaw> = [
     path: "/tabs/",
     component: LoginTabsPage,
     children: [
-      //Array that contains the children tabs
+
       {
         // Default Redirection if route is ''
         path: "",

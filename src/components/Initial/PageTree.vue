@@ -34,7 +34,7 @@
       <DotLottieVue src="https://lottie.host/38821f7b-59b0-4b2c-8987-28e474517500/P1W1qaLltJ.lottie" autoplay loop></DotLottieVue>
     </div>
     <!-- Button Skip (CTA) -->
-    <ion-button router-link="/home" class="w-12/12 !mx-auto !p-3.5 font-semibold !rounded-sm skip"  fill="clear">Omitir por ahora</ion-button>
+    <ion-button router-link="/tabs/home" class="w-12/12 !mx-auto !p-3.5 font-semibold !rounded-sm skip"  fill="clear">Omitir por ahora</ion-button>
   </div>
 
   </ion-content>

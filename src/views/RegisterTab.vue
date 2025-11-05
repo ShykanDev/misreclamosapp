@@ -3,7 +3,7 @@
     <ion-header class="ion-no-border">
       <ion-toolbar >
         <ion-buttons slot="start">
-          <ion-back-button text="Volver" class="text-rose-700" defaultHref="/tabs/initial"></ion-back-button>
+          <ion-back-button text="Volver" style="text-transform: none;" class="text-rose-700" defaultHref="/tabs/initial"></ion-back-button>
         </ion-buttons>
         <ion-title class="absolute top-1/2 left-1/2 text-center text-rose-800 -translate-x-1/2 -translate-y-1/2">Registrarse</ion-title>
       </ion-toolbar>

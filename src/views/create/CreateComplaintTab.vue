@@ -3,7 +3,7 @@
 <ion-header class="ion-no-border">
   <ion-toolbar>
     <ion-buttons slot="start">
-<ion-back-button defaultHref="/tabs/home" class="text-red-700"></ion-back-button>
+<ion-back-button defaultHref="/tabs/home" text="Volver" style="text-transform: none;" class="text-red-700"></ion-back-button>
     </ion-buttons>
     <ion-title class="absolute inset-0 top-1/2 font-semibold text-center text-rose-700 transform -translate-y-1/2 font-poppins">Añadir Reclamo</ion-title>
   </ion-toolbar>
@@ -74,11 +74,13 @@
           class="mt-1.5"
           color="danger"
           v-model="complaintObject.category"
+          @ion-change="useCreateStore().setCategorySelected(complaintObject.category)"
         >
           <ion-select-option
             v-for="category in fullCategories"
             :key="category.name"
             :value="category.name"
+
           >
           {{ category.name }}
           <v-icon :name="category.icon" class="mr-2"></v-icon>

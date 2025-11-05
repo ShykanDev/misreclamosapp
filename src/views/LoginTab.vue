@@ -3,7 +3,7 @@
     <ion-header class="ion-no-border custom">
       <ion-toolbar class="">
         <ion-buttons slot="start">
-          <ion-back-button text="Volver" color="danger" defaultHref="/tabs/initial"></ion-back-button>
+          <ion-back-button text="Volver" style="text-transform: none;"  color="danger" defaultHref="/tabs/initial"></ion-back-button>
         </ion-buttons>
         <ion-title
           class="text-rose-700 font-poppins">Iniciar

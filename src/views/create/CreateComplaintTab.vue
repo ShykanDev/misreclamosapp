@@ -22,7 +22,7 @@
     <ion-text color="dark">
       <h2 class="mb-2 !text-4xl !font-bold text-left !text-rose-950">
         Añadir un nuevo reclamo para la categoría
-        <ion-text color="danger" class="flex gap-2 items-center">{{ useCreateStore().getCategorySelected ?? 'Undefined'}} <v-icon :name="fullCategories.find(e => e.name === storeHome.getCategorySelected)?.icon ?? 'ri-more-fill' " class="text-red-600" scale="1.9"></v-icon></ion-text>
+        <ion-text color="danger" class="flex gap-2 items-center">{{ useCreateStore().getCategorySelected ?? 'Undefined'}} <v-icon :name="fullCategories.find(e => e.name === useCreateStore().getCategorySelected)?.icon ?? 'ri-more-fill' " class="text-red-600" scale="1.9"></v-icon></ion-text>
       </h2>
     </ion-text>
 

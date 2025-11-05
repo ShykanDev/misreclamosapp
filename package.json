@@ -39,7 +39,7 @@
     "vue-router": "^4.2.0"
   },
   "devDependencies": {
-    "@capacitor/cli": "7.4.3",
+    "@capacitor/cli": "^7.4.4",
     "@tailwindcss/vite": "^4.1.14",
     "@vitejs/plugin-legacy": "^5.0.0",
     "@vitejs/plugin-vue": "^4.6.2",

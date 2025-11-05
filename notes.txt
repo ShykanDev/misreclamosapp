@@ -33,3 +33,38 @@ Add UI Fixes to all the page [Not Done]
 // - Show a loading screen when uploading images [Not Done]
 // - Apply UI fixes across all related pages [Not Done]
 
+         <ion-list v-if="userComplaints.length > 0">
+              <ion-item-sliding>
+                <ion-item>
+                  <ion-label>Sliding Item with End Options</ion-label>
+                </ion-item>
+
+                <ion-item-options>
+                  <ion-item-option>Favorite</ion-item-option>
+                  <ion-item-option color="danger">Delete</ion-item-option>
+                </ion-item-options>
+              </ion-item-sliding>
+              <ion-item-sliding v-for="complaint in userComplaints" :key="complaint.id || complaint.title" class="mb-2">
+
+
+                <!-- ITEM PRINCIPAL -->
+                <ion-item>
+                  <div slot="start"
+                    class="flex justify-center items-center p-2 mr-1.5 w-16 h-full bg-rose-100 rounded-sm">
+                    <img v-if="complaint.image" :src="complaint.image" class="rounded-xs" alt="" />
+                    <v-icon v-else name="io-document-text" class="text-rose-700" scale="1.6"></v-icon>
+                  </div>
+
+                  <ion-label>
+                    <h3 class="text-base font-semibold text-rose-800">{{ complaint.title }}</h3>
+                  </ion-label>
+                </ion-item>
+
+                <!-- OPCIONES DERECHA -->
+                <ion-item-options side="end">
+                  <ion-item-option color="danger" expandable="true">
+                    <ion-icon :icon="trashBin" slot="icon-only"></ion-icon>
+                  </ion-item-option>
+                </ion-item-options>
+              </ion-item-sliding>
+            </ion-list>

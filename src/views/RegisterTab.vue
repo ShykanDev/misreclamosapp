@@ -99,7 +99,8 @@
               'text-emerald-600': !passswordRequirements.length && form.password.length >= 9,
             }"
           >
-          <v-icon name="" class="mr-2"></v-icon>
+              <v-icon v-if="!passswordRequirements.length && form.password.length >= 9" name="bi-shield-check" class="mr-2"></v-icon>
+          <v-icon v-else name="hi-shield-exclamation" class="mr-2"></v-icon>
             Su contraseña debe tener mínimo 9 caracteres
           </p>
           <p
@@ -108,6 +109,8 @@
               'text-emerald-600': !passswordRequirements.uppercase && form.password.match(/[A-Z]/),
             }"
           >
+                  <v-icon v-if="!passswordRequirements.uppercase && form.password.match(/[A-Z]/)" name="bi-shield-check" class="mr-2"></v-icon>
+                  <v-icon v-else name="hi-shield-exclamation" class="mr-2"></v-icon>
           Su contraseña debe tener al menos una mayúscula
           </p>
           <p
@@ -116,6 +119,9 @@
               'text-emerald-600': form.password === form.confirmPassword && form.password.length >= 9,
             }"
           >
+          <v-icon v-if="form.password === form.confirmPassword && form.password.length >= 9" name="bi-shield-check" class="mr-2"></v-icon>
+          <v-icon v-else name="hi-shield-exclamation" class="mr-2"></v-icon>
+
               Su contraseña debe coincidir
           </p>
           <p class="text-gray-500">

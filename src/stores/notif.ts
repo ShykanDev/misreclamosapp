@@ -6,7 +6,7 @@ export const useNotif = defineStore("notif", {
     title: "Success",
     subtitle: "Your changes were saved successfully",
     type: "success",
-    timeout: 5000,
+    timeout: 4000,
     timer: null as number | null, // 👈 aquí guardamos el ID del timeout
   }),
 

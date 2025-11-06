@@ -94,7 +94,7 @@
 
           <!-- Claims Section -->
           <div class="mb-8">
-            <h3 class="text-lg font-inter  text-rose-800 mb-4 !font-black">
+            <h3 class="text-lg font-inter  text-rose-800 mb-4 !font-medium">
               Mis Reclamos Publicados
             </h3>
 
@@ -145,21 +145,22 @@
               </ion-item-sliding>
             </ion-list>
 
-
-
-
           </div>
+
+          <ResetPassword :isOpen="isOpen" @close="isOpen = false"></ResetPassword>
 
           <!-- Options Section -->
           <div class="flex flex-col border-t border-[#E5E7EB] pt-6 mb-20">
             <h3 class="text-lg font-semibold text-[#0A0A0A] mb-4">Opciones</h3>
 
             <div class="flex justify-between items-center py-3">
-              <p class="text-base text-[#0A0A0A]">Cambiar contraseña</p>
-              <i class="fa-solid fa-chevron-right text-[#0A0A0A] text-sm"></i>
+              <ion-button @click="isOpen = true" color="light" shape="round">
+                Cambiar Contraseña
+                <v-icon name="md-lockreset-round" class="ml-2" scale="1.6"/>
+              </ion-button>
             </div>
 
-            <ion-button @click="logOut" color="danger" shape="round">
+            <ion-button @click="logOut" color="danger"  class="mt-6 close">
               <ion-icon :icon="logOutOutline" class="mr-2" ></ion-icon>
                Cerrar Sesión
             </ion-button>
@@ -184,8 +185,10 @@ import { MdSnowshoeingOutlined } from 'oh-vue-icons/icons';
 import { auth } from '@/main';
 import { signOut } from 'firebase/auth';
 import { useNotif } from '@/stores/notif';
-import { useRouter } from 'vue-router';
 import { useLogginStore } from '@/stores/loggin';
+import ResetPassword from '../modal/create/ResetPassword.vue';
+
+
 
 const userStore = useUserStore();
 
@@ -217,7 +220,14 @@ const getUserComplaints = () => {
 
 onIonViewDidEnter(() => {
   console.log('Entered Profile')
-  getUserComplaints();
+  if (userStore.getUserID) {
+    getUserComplaints();
+  } else {
+    notifStore.error('Error', 'Por favor inicie sesión, será redirigido automaticamente en 5 segundos')
+    setTimeout(() => {
+      logOut();
+    }, 5000);
+  }
 })
 
 onIonViewDidLeave(() => {
@@ -272,7 +282,7 @@ const loginStore = useLogginStore();
 const authUser = auth;
 const logOut  = () => {
   signOut(authUser).then(() => {
-    notifStore.success('Sesión terminada', 'Su sesión ha sido cerrada correctamente');
+    notifStore.success('Sesión terminada', 'Su sesión ha sido cerrada');
     userStore.resetUser();
     loginStore.setUserLoggedIn(false);
     ionRouter.navigate('/tabs/login', 'root', 'replace');
@@ -281,6 +291,11 @@ const logOut  = () => {
     notifStore.error('Error', 'Error al cerrar sesión');
   })
 }
+
+
+//Modal reset password
+const isOpen = ref(false);
+const toggleModal = (mode:string):boolean => mode === 'open' ? isOpen.value = true : isOpen.value = false;
 </script>
 
 <style scoped>
@@ -317,5 +332,12 @@ ion-toolbar{
   ion-button.cancel{
     --background: #E6E7EB;
       --box-shadow: none;
+  }
+  ion-button.close{
+    --background: #0e2fb3;
+    --box-shadow: none;
+    --padding-top:5px;
+    --padding-bottom:5px;
+    --border-radius: 10px;
   }
 </style>

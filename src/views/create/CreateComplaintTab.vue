@@ -227,6 +227,7 @@ import { getAuth } from 'firebase/auth'
 import { useHomeStore } from '@/stores/home';
 import { cloudUploadOutline } from 'ionicons/icons';
 import { useCreateStore } from '@/stores/create';
+import { useNotif } from '@/stores/notif';
 
 //Ui Values
 const loading = ref(false)
@@ -543,18 +544,19 @@ const compressImage = async () => {
   }
 }
 
+const notifStore = useNotif();
 //Verify fields before sending to Firestore
 const verifyFields = () => {
   if (!complaintObject.category) {
-    notyf.error('Debe seleccionar una categoría')
+    notifStore.error('Error', 'Debe seleccionar una categoría')
     return false
   }
   if (!complaintObject.title) {
-    notyf.error('Debe ingresar un título')
+    notifStore.error('Error', 'Debe ingresar un título')
     return false
   }
   if (!complaintObject.content) {
-    notyf.error('Debe ingresar una descripción')
+    notifStore.error('Error', 'Debe ingresar una descripción')
     return false
   }
   return true

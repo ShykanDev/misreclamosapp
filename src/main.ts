@@ -95,7 +95,10 @@ MdRemoveredeyeRound,
 BiTrashFill,
 BiCheckCircleFill,
 IoClose,
-IoCloseCircle
+IoCloseCircle,
+MdLockresetRound,
+HiShieldExclamation,
+BiShieldCheck
 }from "oh-vue-icons/icons";
 
 addIcons(FaFlag, RiZhihuFill, OiDiffAdded,
@@ -162,7 +165,10 @@ addIcons(FaFlag, RiZhihuFill, OiDiffAdded,
   BiTrashFill,
   BiCheckCircleFill,
   IoClose,
-  IoCloseCircle
+  IoCloseCircle,
+  MdLockresetRound,
+  HiShieldExclamation,
+  BiShieldCheck
 );
 
 /**

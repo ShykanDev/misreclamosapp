@@ -17,10 +17,10 @@
         <article class="flex flex-col gap-4 p-2">
           <!--<input class="p-2 !py-3 rounded-lg border border-gray-50 outline-none bg-gray-200/50" type="text" placeholder="Correo electrónico"> -->
           <ion-input aria-label="Correo electrónico" color="danger" label="Correo electrónico" labelPlacement="floating"
-            fill="outline" placeholder="correo@ejemplo.com" class="custom" :counter="true" :maxlength="40"
+            fill="outline" placeholder="correo@ejemplo.com" class="custom" 
             v-model="email"></ion-input>
           <ion-input aria-label="contraseña" type="password" color="danger" label="Contraseña" labelPlacement="floating" fill="outline"
-            placeholder="*******" class="custom" :counter="true" :maxlength="20" v-model="password"></ion-input>
+            placeholder="*******" class="custom" v-model="password"></ion-input>
         </article>
         <!-- Button -->
         <ion-button @click="handleLogin" color="danger" class="font-semibold w-11/12 !mx-auto login" expand="block"
@@ -46,7 +46,7 @@
           <ion-content class="ion-padding">
 
             <ion-input label="Correo electrónico" label-placement="floating" ref="input" fill="outline" type="email"
-              color="danger" placeholder="Ingrese su correo electrónico" class="custom" :counter="true" :maxlength="40"
+              color="danger" placeholder="Ingrese su correo electrónico" class="custom"
               v-model="email" >
             </ion-input> 
 

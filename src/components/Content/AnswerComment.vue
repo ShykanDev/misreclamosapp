@@ -127,7 +127,7 @@
 
 <script lang="ts" setup>
 import type { IAnswer } from '@/interfaces/IComplaint'
-import { getAuth } from 'firebase/auth'
+import { auth as authMain } from '@/main'
 import { DotLottieVue } from '@lottiefiles/dotlottie-vue'
 import { getFirestore, Timestamp, doc, arrayUnion, updateDoc } from 'firebase/firestore'
 import { Notyf } from 'notyf'
@@ -240,7 +240,7 @@ const props = defineProps({
 
 
 //firebase
-const auth = getAuth()
+const auth = authMain;
 const db = getFirestore()
 
 //function to get answer data from props and answer value
@@ -265,6 +265,7 @@ const showLottieError = ref(false)
 //Pinia store for home
 const storeHome = useHomeStore();
 
+
 //function to answer comment and include image if selected
 const answerComment = async () => {
   console.log(`Answering to ${props.answeringToName} with uid ${props.answeringToUid} and docId ${props.docId} category ${props.category}`)
@@ -288,8 +289,11 @@ const answerComment = async () => {
     getAnswerData(compressedImageBase64.value).image = compressedImageBase64.value;
   }
   const docRef = doc(db, `complaints/${props.docId}`)
-  updateDoc(docRef, { answers: arrayUnion(getAnswerData(compressedImageBase64.value)) })
-    .then(() => {
+  updateDoc(docRef, {
+  [`answers.${auth.currentUser?.uid}`]: arrayUnion(
+    getAnswerData(compressedImageBase64.value)
+  )
+}).then(() => {
       notyf.success('Se ha enviado su respuesta')
       answer.value = '' // limpiar el input
       isLoading.value = false

@@ -36,3 +36,23 @@ Add UI Fixes to all the page [Not Done]
 // Add ion toast [X]
 // Add pinia login auth store [X]
     
+
+     updateDoc(docRef, { answers: arrayUnion(getAnswerData(compressedImageBase64.value)) })
+    .then(() => {
+      notyf.success('Se ha enviado su respuesta')
+      answer.value = '' // limpiar el input
+      isLoading.value = false
+      setTimeout(() => {
+        emit('callReload')
+        callReloadStageTwo()
+      }, 1000)
+      storeHome.setCategorySelected(props. category)
+    })
+    .catch((error) => {
+      console.error('Error al enviar la respuesta', error)
+      notyf.error(`Error al enviar la respuesta: ${error.message}`)
+      showLottieError.value = true
+    })
+    .finally(() => {
+      isLoading.value = false
+    })

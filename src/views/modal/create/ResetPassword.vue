@@ -16,22 +16,7 @@
           Actualice su contraseña para mantener su cuenta segura.
         </h1>
 
-        <!-- Contraseña actual -->
-        <div class="flex flex-wrap gap-4 items-end px-4 py-3">
-         
-            <ion-input
-              type="password"
-              placeholder="Introduzca su contraseña actual"
-              v-model="currentPassword"
-              class="h-14 text-[#181111]"
-              fill="outline"
-              label-placement="floating"
-              label="Contraseña actual"
-              shape="round"
-              color="danger"
-            />
-            
-        </div>
+  
 
         <!-- Nueva contraseña -->
         <div class="flex flex-wrap gap-4 items-end px-4 py-3">
@@ -103,6 +88,9 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { IonModal, IonContent, IonInput, IonButton } from "@ionic/vue";
+import { updatePassword } from "firebase/auth";
+import { auth } from "@/main";
+import { useNotif } from "@/stores/notif";
 
 const props = defineProps({
   isOpen: { type: Boolean, default: false },
@@ -117,12 +105,17 @@ const confirmPassword = ref("");
 const close = () => emit("close");
 
 const saveChanges = () => {
-  console.log("Guardar cambios", {
-    current: currentPassword.value,
-    newPass: newPassword.value,
-    confirm: confirmPassword.value,
+  if (newPassword.value !== confirmPassword.value) {
+    useNotif().error('Error', 'Las contraseñas no coinciden');
+    return;
+  }
+  updatePassword(auth.currentUser!, newPassword.value).then(() => {
+    close();
+    useNotif().success('Exito', 'Contraseña actualizada');
+  }).catch((error) => {
+    const e = error as Error;
+    useNotif().error('Error', e.message);
   });
-  close();
 };
 </script>
 

@@ -630,7 +630,7 @@ const selectedImage = ref<string[]>([])
     if(storeHome.getCategorySelected  != '' ){
       getSpecificComplaint(storeHome.getCategorySelected)
     } else {
-      getSpecificComplaint('Turismo')
+      getSpecificComplaint('Vinos o Vinaterías')
     }
   })
 

@@ -7,11 +7,11 @@
           <div class="flex gap-2 items-center mt-2">
             <v-icon name="fa-regular-user" class="text-orange-800" />
             <ion-card-subtitle class="author">{{ userName }}</ion-card-subtitle>
-          </div> 
+          </div>
         </div>
         <div class="header-right">
           <div class="tag-container">
-            <ion-badge class="bug-badge">{{ category }}</ion-badge>     
+            <ion-badge class="bug-badge">{{ category }}</ion-badge>
             <v-icon name="md-category-round" class="text-orange-800" />
           </div>
           <p class="time">{{ createdAtToString() }}</p>
@@ -26,14 +26,18 @@
           class="italic cursor-pointer text-slate-500">{{ isTruncated ? 'Ver más...' : 'Ver menos' }}</span>
       </p>
       <div v-if="image" class="flex justify-center p-4">
-        <img @click="callShowImageFromParent" :src="image" alt="Complaint screenshot" class="rounded-2xl cursor-pointer complaint-image w-xs md:w-sm" />
+        <img @click="callShowImageFromParent" :src="image" alt="Complaint screenshot"
+          class="rounded-2xl cursor-pointer complaint-image w-xs md:w-sm" />
       </div>
+
+
       <div class="mt-2.5">
         <!-- Answers (Mobile Adaptation) -->
-        <div v-if="props.answers && props.answers.length > 0"
+        <div v-if="props.answers"
           class="flex overflow-y-auto flex-col p-1 w-full max-h-96 rounded-2xl spacey bg-blue-50/20">
           <ion-card-title class="text-lg text-center underline font-poppins text-slate-700">Respuestas</ion-card-title>
-          <div v-for="(answer, index) in props.answers" :key="index"
+          <div   v-for="(answer, index) in Object.values(props.answers).flat()" 
+            :key="index"
             class="relative p-4 mb-3 w-full rounded-xl border-b shadow-sm transition-all duration-200 hover:shadow-md font-alexandria"
             :class="{
               'bg-blue-50/30 border-b-blue-500 border-b-2': answer.uidFrom == answer.uidTo,
@@ -64,7 +68,7 @@
                   day: 'numeric',
                   hour: '2-digit',
                   minute: '2-digit',
-                hour12: true,
+                  hour12: true,
                 }) }}
               </span>
             </div>
@@ -91,23 +95,24 @@
               class="overflow-hidden relative mt-3 max-w-full max-h-48 rounded-lg shadow-sm group">
               <img @click="callShowAnswerImageFromParent(answer.image)" :src="answer.image" alt="user image"
                 class="object-cover w-full h-40 transition-transform duration-300 group-hover:scale-[1.02] cursor-pointer" />
-     
+
             </div>
           </div>
         </div>
-              <!-- Action Button -->
-      <div class="pt-4 border-t border-gray-100">
-        <button @click="answerComment"
-          class="flex gap-2 justify-center items-center !px-4 !py-2.5 text-sm font-medium !rounded-lg !shadow-sm transition-all duration-700 ease-in-out cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2"
-          :class="{'bg-white border-2 border-dashed border-red-500 text-red-700': !showReplyCard, 'bg-rose-600 hover:bg-rose-500 text-white': showReplyCard}"
-          >
-          <v-icon v-show="!showReplyCard" name="bi-reply-all-fill" scale="1.2" />
-          <v-icon v-show="showReplyCard" name="io-close-circle-sharp" class="text-white" scale="1.2" />
-          {{ showReplyCard ? 'Cerrar' : 'Responder Comentario' }}
-        </button>
+        <!-- Action Button -->
+        <div class="pt-4 border-t border-gray-100">
+          <button @click="answerComment"
+            class="flex gap-2 justify-center items-center !px-4 !py-2.5 text-sm font-medium !rounded-lg !shadow-sm transition-all duration-700 ease-in-out cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2"
+            :class="{ 'bg-white border-2 border-dashed border-red-500 text-red-700': !showReplyCard, 'bg-rose-600 hover:bg-rose-500 text-white': showReplyCard }">
+            <v-icon v-show="!showReplyCard" name="bi-reply-all-fill" scale="1.2" />
+            <v-icon v-show="showReplyCard" name="io-close-circle-sharp" class="text-white" scale="1.2" />
+            {{ showReplyCard ? 'Cerrar' : 'Responder Comentario' }}
+          </button>
+        </div>
       </div>
-    </div>
-    <AnswerComment class="ion-margin-top" @callReloadStageTwo="callReloadStageOne" v-if="showReplyCard" @callShowImage="callShowImageFromParent"  @callClose="toggleReplyCard" :from-name="userName" :doc-id="docId" :answering-to-name="userName" :answering-to-uid="userUid" :category="category"/>
+      <AnswerComment class="ion-margin-top" @callReloadStageTwo="callReloadStageOne" v-if="showReplyCard"
+        @callShowImage="callShowImageFromParent" @callClose="toggleReplyCard" :from-name="userName" :doc-id="docId"
+        :answering-to-name="userName" :answering-to-uid="userUid" :category="category" />
     </ion-card-content>
   </ion-card>
 
@@ -115,9 +120,9 @@
 
 <script lang="ts" setup>
 import { IAnswer } from '@/interfaces/IComplaint';
-import { IonCard, IonCardHeader, IonCardContent, IonCardTitle, IonCardSubtitle, IonBadge } from '@ionic/vue';
+import { IonCard, IonCardHeader, IonCardContent, IonCardTitle, IonCardSubtitle, IonBadge, onIonViewDidEnter } from '@ionic/vue';
 import { Timestamp } from 'firebase/firestore';
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import AnswerComment from './AnswerComment.vue';
 
 const props = defineProps({
@@ -175,6 +180,7 @@ const initialValidation = () => {
     isTruncated.value = false;
   }
 }
+onIonViewDidEnter(() => initialValidation())
 onMounted(() => initialValidation())
 const truncateContent = (): void => {
   if (isTruncated.value) {
@@ -199,7 +205,7 @@ const createdAtToString = () => {
 const emits = defineEmits(['callShow', 'callReloadStageOne'])
 const callShowImageFromParent = () => emits('callShow', props.image);
 
-const callShowAnswerImageFromParent = (imageAnswer:string) => emits('callShow', imageAnswer);
+const callShowAnswerImageFromParent = (imageAnswer: string) => emits('callShow', imageAnswer);
 
 
 //Toggle the view of the comment
@@ -213,6 +219,11 @@ const showReplyCard = ref(false);
 const toggleReplyCard = () => showReplyCard.value = !showReplyCard.value;
 
 const callReloadStageOne = () => emits('callReloadStageOne');
+
+const answersUi = computed(() => (Object.values(props.answers)) );
+
+
+
 
 </script>
 

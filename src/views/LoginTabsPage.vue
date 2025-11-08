@@ -27,6 +27,10 @@
             <ion-icon aria-hidden="true" :icon="personCircleOutline" />
             <ion-label class="font-poppins">Mi cuenta</ion-label>
           </ion-tab-button>
+          <ion-tab-button v-if="router.currentRoute.value.path === '/tabs/terms'" tab="profile" href="/tabs/terms">
+            <ion-icon aria-hidden="true" :icon="document" />
+            <ion-label class="font-poppins">Términos y Condiciones</ion-label>
+          </ion-tab-button>
 
         </ion-tab-bar>
         
@@ -37,7 +41,7 @@
   <script setup lang="ts">
   import { useLogginStore } from '@/stores/loggin';
   import { IonTabBar, IonTabButton, IonTabs, IonLabel, IonIcon, IonPage, IonRouterOutlet, onIonViewDidEnter } from '@ionic/vue';
-  import { addCircleOutline,  homeOutline, logInOutline, personAddOutline, personCircleOutline} from 'ionicons/icons';
+  import { addCircleOutline,  document,  homeOutline, logInOutline, personAddOutline, personCircleOutline} from 'ionicons/icons';
   import { driver } from "driver.js";
   import { useRouter } from 'vue-router';
   import { watch } from 'vue';
@@ -46,7 +50,6 @@
   const loginStore = useLogginStore();
 
   const router = useRouter();
-
 
 
   let driverObj: any // 👈 ahora es global dentro del script setup

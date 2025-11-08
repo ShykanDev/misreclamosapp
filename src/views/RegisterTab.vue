@@ -127,7 +127,7 @@
           <p class="text-gray-500">
             Al registrarse, acepta nuestros
             <ion-text color="primary">
-              <a href="#">Términos y Condiciones</a>
+              <router-link to="/tabs/terms" class="font-medium text-rose-600 hover:text-rose-700">Términos y Condiciones</router-link>
             </ion-text>
           </p>
         </div>

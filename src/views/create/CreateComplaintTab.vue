@@ -165,9 +165,7 @@
     <strong class="font-bold text-gray-900">Importante:</strong>
     Al publicar un comentario, usted acepta que su contenido es de su exclusiva responsabilidad.
     Los comentarios son revisados por nuestro equipo para garantizar que cumplan con las
-    <a href="#terminos-y-condiciones" class="font-medium text-blue-600 hover:underline">
-      normas de la comunidad
-    </a>.
+    <router-link to="/tabs/terms" class="font-medium text-rose-600 hover:text-rose-700">Términos y Condiciones</router-link>.
     Evite lenguaje ofensivo, difamatorio o inapropiado.
   </p>
 </ion-card>

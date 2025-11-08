@@ -13,7 +13,7 @@
         
         </ion-buttons>
         <ion-title :key="isMenuOpen ? 'open' : 'closed'" class="text-center transform transition-all duration-300 ease-in-out text-red-500 font-poppins animate-fade-right  animate-duration-[.8s]">
-          Categorias
+          Categorias 
         </ion-title>
       </ion-toolbar>
     </ion-header>
@@ -28,8 +28,8 @@
       <ion-text v-show="fullCategories.length === 0" class="text-center text-rose-800 w-md animate-jump-in font-poppins">No se encontró esa categoría</ion-text>
         </div>
 
-        <article  :class="category.name === selectedCategory ? 'text-rose-700 font-bold border-b-rose-300' : 'none border-b-slate-300'" @click="getSpecificComplaint(category.name)" v-for="category in fullCategories" :key="category.name"
-           class="pb-1 border-b cursor-pointer font-poppins text-slate-600">
+        <article :class="category.name === selectedCategory ? 'text-rose-700 font-bold border-b-rose-300' : 'none border-b-slate-300'"  @click="getSpecificComplaint(category.name)" v-for="category in fullCategories" :key="category.name"
+           class="pb-1 border-b cursor-pointer font-poppins text-slate-600 categories-step">
           <v-icon :name="category.icon" class="mr-3" :class="category.name === selectedCategory ? 'text-rose-600' : 'text-red-400'" />
           <ion-text :class="category.name === selectedCategory ? 'text-rose-700 font-plus-jakarta-sans font-medium' : 'text-slate-600 font-plus-jakarta-sans'" >
             {{ category.name }}
@@ -45,17 +45,17 @@
       <ion-toolbar>
         <ion-buttons slot="start">
           <ion-button @click="openMenu()" fill="clear">
-            <v-icon name="oi-three-bars" class="text-red-600" />
+            <v-icon id="menu-icon" name="oi-three-bars" class="text-red-600 menu-step" />
           </ion-button>
         </ion-buttons>
         <ion-buttons slot="end">
           <ion-button @click="setSelectedCategory(selectedCategory)" router-link="/tabs/create">
-            <v-icon name="md-postadd" class="text-red-600" scale="1.5"/>
+            <v-icon name="md-postadd" class="text-red-600 addComment-step" scale="1.5"/>
           </ion-button>
         </ion-buttons>
         <div
           class="flex absolute inset-0 flex-col justify-center items-center w-full h-full text-rose-800 font-poppins">
-          <small>Categoria:</small>
+          <small @click="tutorialStore.setPageActive('HomeMenu')">Categoria {{ tutorialStore.getPageActive }}:</small>
           <article :key="selectedCategory" class="flex gap-2 items-center">
             <p class="animate-fade-left">{{ selectedCategory == '' ? 'Comentarios generales' : selectedCategory }}</p>
             <v-icon :name="fullCategories.find(e => e.name === selectedCategory)?.icon"
@@ -85,7 +85,7 @@
       <div v-if="loading" class="flex fixed top-0 right-0 bottom-0 left-0 justify-center items-center">
         <ion-spinner name="lines-sharp" />
       </div>
-      <div v-if="complaints.length > 0" class="flex flex-col gap-4">
+      <div v-if="complaints.length > 0" class="flex flex-col gap-4 answer-step">
         <ComplaintCard @callShow="callShowImageFromParent" @callReloadStageOne="getSpecificComplaint(selectedCategory)" v-for="complaint in complaints" :key="complaint.id" :title="complaint.title"
           :category="complaint.category" :content="complaint.content" :createdAt="complaint.createdAt"
           :image="complaint.image" :service="complaint.service" :userName="complaint.userName"
@@ -109,7 +109,7 @@
 
 <script lang="ts" setup>
 import { IonPage, IonContent, IonHeader, IonToolbar, IonButtons, IonSpinner, menuController, IonButton, IonTitle, onIonViewDidEnter, RefresherCustomEvent } from '@ionic/vue';
-import { nextTick, ref } from 'vue';
+import { nextTick, ref, watch } from 'vue';
 import { collection, getDocs, getFirestore, orderBy, query, where } from 'firebase/firestore'
 import ComplaintCard from '@/components/Content/ComplaintCard.vue';
 import 'animate.css';
@@ -118,9 +118,11 @@ import { IComplaint } from '@/interfaces/IComplaint';
  import { api as viewerApi } from 'v-viewer'
 import { useHomeStore } from '@/stores/home';     
 import { IonRefresher, IonRefresherContent, IonSearchbar } from '@ionic/vue';
-import { key } from 'ionicons/icons';
-import { useLogginStore } from '@/stores/loggin';
 import { useCreateStore } from '@/stores/create';
+import { driver } from "driver.js";
+import "driver.js/dist/driver.css";
+import router from '@/router';
+import { useTutorialStore } from '@/stores/tutorial';
 //Full categories info  
 const fullCategories = ref([
   {
@@ -672,6 +674,41 @@ const closeMenu = async() => {
 await nextTick();
 activateAnimationMenuList.value = false;
 }
+
+const tutorialStore = useTutorialStore();
+
+watch (() => tutorialStore.getPageActive, () => {
+  if (tutorialStore.getPageActive === 'HomeMenu') {
+    console.log('Store Home is triggered');
+    
+    showTourHomeMenu()
+  }
+})
+
+const showTourHomeMenu = ()=>{ 
+    const driverObjHome = driver({
+      animate: true,
+      showProgress: true,
+      showButtons: ['next', 'previous', 'close'],
+      nextBtnText: 'Siguiente →',
+      prevBtnText: '← Anterior',
+      doneBtnText: 'Finalizar',
+       steps: [
+    { element: '.menu-step', popover: { title: 'Botón de menú ', description: 'Este boton abre el menú lateral que contiene las categorías de los comentarios', side: "left", align: 'start' }},
+    { element: '.addComment-step', popover: { title: 'Agregar comentario', description: 'Este boton lo llevará a la pantalla de agregar comentario', side: "bottom", align: 'start' }},
+    { element: '.answer-step', popover: { title: 'Respuestas', description: 'Aquí aparecerán las respuestas de los usuarios', side: "top", align: 'center' }},
+  ],
+  onNextClick(e,step) {
+    console.log(step.popover?.progressText)
+    driverObjHome.moveNext();
+    if(step.popover?.progressText == '3 of 3') {
+      tutorialStore.setPageActive('Home')
+      tutorialStore.setTutorialCompleted(true)
+    }
+  },
+    })
+    driverObjHome.drive();
+  }
 </script>
 
 <style scoped>

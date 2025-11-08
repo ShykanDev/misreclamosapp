@@ -136,6 +136,7 @@ import { ref } from 'vue'
 import { IonTextarea, useIonRouter, IonLoading } from '@ionic/vue'
 import imageCompression from 'browser-image-compression'
 import { useHomeStore } from '@/stores/home'
+import { useNotif } from '@/stores/notif'
 
 //emmits
 const emit = defineEmits(['callReload', 'callShowImage', 'callReloadStageTwo']);
@@ -265,17 +266,18 @@ const showLottieError = ref(false)
 //Pinia store for home
 const storeHome = useHomeStore();
 
+const notif = useNotif();
 
 //function to answer comment and include image if selected
 const answerComment = async () => {
   console.log(`Answering to ${props.answeringToName} with uid ${props.answeringToUid} and docId ${props.docId} category ${props.category}`)
   if (!auth.currentUser) {
-    notyf.error('Debe iniciar sesión para responder')
+    notif.error('Error', 'Debe iniciar sesión para responder')
     return
   }
 
   if (!answer.value) {
-    notyf.error('Debe escribir una respuesta')
+    notif.error('Hay un error', 'Debe escribir una respuesta')
     return
   }
 
@@ -283,7 +285,7 @@ const answerComment = async () => {
   if (imageSelected.value) {
     const compressedImage = await compressImage()
     if (!compressedImage) {
-      notyf.error('Error al comprimir la imagen')
+      notif.error('Error', 'Error al comprimir la imagen')
       return
     }
     getAnswerData(compressedImageBase64.value).image = compressedImageBase64.value;
@@ -294,7 +296,7 @@ const answerComment = async () => {
     getAnswerData(compressedImageBase64.value)
   )
 }).then(() => {
-      notyf.success('Se ha enviado su respuesta')
+      notif.success('Exito', 'Se ha enviado su respuesta')
       answer.value = '' // limpiar el input
       isLoading.value = false
       setTimeout(() => {
@@ -305,7 +307,7 @@ const answerComment = async () => {
     })
     .catch((error) => {
       console.error('Error al enviar la respuesta', error)
-      notyf.error(`Error al enviar la respuesta: ${error.message}`)
+      notif.error('Error', `Error al enviar la respuesta: ${error.message}`)
       showLottieError.value = true
     })
     .finally(() => {

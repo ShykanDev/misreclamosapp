@@ -2,6 +2,7 @@
     <ion-page>
         <ion-header>
             <ion-toolbar>
+                <ion-back-button defaultHref="/tabs/register" :icon="arrowBack" text="Volver" slot="start" style="text-transform: none;" />
                 <ion-title class="text-center">Términos y Condiciones</ion-title>
             </ion-toolbar>
         </ion-header>
@@ -278,7 +279,8 @@
 </template>
 
 <script lang="ts" setup>
-import { IonContent, IonPage, IonText, IonHeader, IonToolbar, IonTitle } from '@ionic/vue';
+import { IonContent, IonPage, IonText, IonHeader, IonToolbar, IonTitle, IonBackButton } from '@ionic/vue';
+import { arrowBack } from 'ionicons/icons';
 </script>
 
 <style scoped></style>

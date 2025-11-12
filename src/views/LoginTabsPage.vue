@@ -27,10 +27,7 @@
             <ion-icon aria-hidden="true" :icon="personCircleOutline" />
             <ion-label class="font-poppins">Mi cuenta</ion-label>
           </ion-tab-button>
-          <ion-tab-button v-if="router.currentRoute.value.path === '/tabs/terms'" tab="profile" href="/tabs/terms">
-            <ion-icon aria-hidden="true" :icon="document" />
-            <ion-label class="font-poppins">Términos y Condiciones</ion-label>
-          </ion-tab-button>
+
 
         </ion-tab-bar>
         

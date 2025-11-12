@@ -16,11 +16,9 @@
           Actualice su contraseña para mantener su cuenta segura.
         </h1>
 
-
-
         <section>
           <!-- Loading Overlay -->
-          <ion-loading v-model="isLoading" message="Cargando..." spinner="circles"></ion-loading>
+          <ion-loading :is-open="isLoading" message="Cargando..." spinner="circles"></ion-loading>
 
           <!-- Contenedor principal -->
           <div class="flex justify-center min-h-screen">
@@ -30,18 +28,27 @@
 
               <!-- Formulario -->
               <div class="space-y-5 font-spline-sans">
-                <!-- Campo: Nombre -->
 
-                <!-- Campo: Contraseña -->
+                <!-- IMPORTANTE: Campo para Email Actual (Para Reautenticación) -->
+                <ion-input color="danger" v-model="currentEmail" name="currentEmail" type="email"
+                  placeholder="tucorreo@ejemplo.com" class="custom" label="Su Email Actual" fill="outline"
+                  :required="true"></ion-input>
 
+                <!-- IMPORTANTE: Campo para Contraseña Actual (Para Reautenticación) -->
+                <ion-input color="danger" v-model="currentPassword" name="currentPassword" type="password"
+                  placeholder="••••••••" class="custom" label="Su Contraseña Actual" fill="outline"
+                  :required="true"></ion-input>
+
+                <hr class="mt-6 mb-6 border-red-100">
+                
+                <!-- Campo: Nueva Contraseña -->
                 <ion-input color="danger" v-model="newPassword" name="password" type="password" placeholder="••••••••"
-                  @input="validatePasswordQuality()" class="custom" label="Contraseña" fill="outline"
+                  @input="validatePasswordQuality()" class="custom" label="Nueva Contraseña" fill="outline"
                   :required="true"></ion-input>
 
                 <!-- Campo: Confirmar Contraseña -->
-
                 <ion-input color="danger" v-model="confirmPassword" name="confirmPassword" type="password"
-                  placeholder="••••••••" class="custom" label="Confirmar contraseña" fill="outline"
+                  placeholder="••••••••" class="custom" label="Confirmar Nueva Contraseña" fill="outline"
                   :required="true"></ion-input>
 
                 <!-- Requisitos de contraseña -->
@@ -107,8 +114,8 @@
 <script setup lang="ts">
 import { reactive, ref } from "vue";
 import { IonModal, IonContent, IonInput, IonButton, IonLoading } from "@ionic/vue";
-import { updatePassword } from "firebase/auth";
-import { auth } from "@/main";
+import { updatePassword, reauthenticateWithCredential, EmailAuthProvider } from "firebase/auth";
+import { auth } from "@/main"; // Asume que 'auth' está exportado desde Su archivo main.ts
 import { useNotif } from "@/stores/notif";
 
 const props = defineProps({
@@ -117,11 +124,15 @@ const props = defineProps({
 
 const emit = defineEmits(["close"]);
 
+// Nuevos estados para la reautenticación
+const currentEmail = ref("");
+const currentPassword = ref("");
+
+// Estados para la nueva contraseña
 const newPassword = ref("");
 const confirmPassword = ref("");
 
 const close = () => emit("close");
-
 
 const passswordRequirements = reactive({
   length: false,
@@ -129,10 +140,6 @@ const passswordRequirements = reactive({
 })
 
 const isLoading = ref(false)
-
-
-const success = ref(false)
-
 
 const validatePasswordQuality = () => {
   if (newPassword.value.length < 9) {
@@ -149,18 +156,67 @@ const validatePasswordQuality = () => {
   }
   return true
 }
-const saveChanges = () => {
-  if (newPassword.value !== confirmPassword.value) {
-    useNotif().error('Error', 'Las contraseñas no coinciden');
+
+const saveChanges = async () => {
+  if (!auth.currentUser) {
+    useNotif().error('Error', 'No hay un usuario activo para actualizar.');
     return;
   }
-  updatePassword(auth.currentUser!, newPassword.value).then(() => {
+
+  if (newPassword.value !== confirmPassword.value) {
+    useNotif().error('Error', 'Las nuevas contraseñas no coinciden.');
+    return;
+  }
+  
+  if (!validatePasswordQuality()) {
+    useNotif().error('Error', 'La nueva contraseña no cumple con los requisitos.');
+    return;
+  }
+
+  // --- INICIO DE LÓGICA DE REAUTENTICACIÓN ---
+  isLoading.value = true;
+  
+  try {
+    // 1. Crear credencial con el email y contraseña actuales que ingresó el usuario
+    const credential = EmailAuthProvider.credential(
+      currentEmail.value, 
+      currentPassword.value
+    );
+
+    // 2. Reautenticar al usuario
+    await reauthenticateWithCredential(auth.currentUser, credential);
+    
+    // Si llegamos aquí, la reautenticación fue exitosa y la sesión es reciente
+    
+    // 3. Actualizar la contraseña
+    await updatePassword(auth.currentUser, newPassword.value);
+    
+    // Éxito
     close();
-    useNotif().success('Exito', 'Contraseña actualizada');
-  }).catch((error) => {
-    const e = error as Error;
-    useNotif().error('Error', e.message);
-  });
+    useNotif().success('Éxito', 'Contraseña actualizada correctamente.');
+
+  } catch (error) {
+    const e = error as Error & { code?: string };
+    
+    let errorMessage = 'Hubo un error desconocido al actualizar la contraseña.';
+
+    // Manejo de errores de reautenticación comunes
+    if (e.code === 'auth/wrong-password' || e.code === 'auth/invalid-credential') {
+      errorMessage = 'Email o Contraseña Actual incorrectos. Por favor, verifica tus credenciales.';
+    } else if (e.code === 'auth/user-mismatch') {
+      errorMessage = 'El email ingresado no coincide con el usuario actualmente logueado.';
+    } else if (e.code === 'auth/user-not-found') {
+      errorMessage = 'El usuario no fue encontrado.';
+    } else {
+      errorMessage = e.message || errorMessage;
+    }
+    
+    useNotif().error('Error', errorMessage);
+
+  } finally {
+    isLoading.value = false;
+  }
+  // --- FIN DE LÓGICA DE REAUTENTICACIÓN ---
 };
 </script>
 

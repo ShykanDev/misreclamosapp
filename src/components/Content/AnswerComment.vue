@@ -79,14 +79,11 @@
       </div>
 
       <div class="flex gap-2 items-center">
-        <CheckboxComponent
-          @callSetIsCompany="setIsCompany"
-          @click="setIsCompany(!isCompany)"
-          :checked="isCompany"
-        />
-        <label class="text-sm font-medium text-gray-700 cursor-pointer">
+        <ion-checkbox v-model="isCompany" 
+        helper-text="Solo marque si es usted la empresa o servicio que responde"
+        >
           ¿Es usted la empresa que responde?
-        </label>
+        </ion-checkbox>
       </div>
       <p v-if="isCompany" class="text-xs italic text-blue-600">
         Su comentario será marcado en representación de la empresa
@@ -133,7 +130,7 @@ import { getFirestore, Timestamp, doc, arrayUnion, updateDoc } from 'firebase/fi
 import { Notyf } from 'notyf'
 import 'notyf/notyf.min.css' // For React, Vue and Svelte
 import { ref } from 'vue'
-import { IonTextarea, useIonRouter, IonLoading } from '@ionic/vue'
+import { IonTextarea, IonLoading, IonCheckbox } from '@ionic/vue'
 import imageCompression from 'browser-image-compression'
 import { useHomeStore } from '@/stores/home'
 import { useNotif } from '@/stores/notif'
@@ -216,7 +213,7 @@ const answer = ref('')
 const isCompany = ref(false)
 
 //function to set isCompany value
-const setIsCompany = (value: boolean) => isCompany.value = value;
+const setIsCompany = ():boolean => isCompany.value = !isCompany.value ;
 const callShowImageFromParent = () => emit('callShowImage', props.image);
 //props
 const props = defineProps({

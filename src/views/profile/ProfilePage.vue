@@ -77,9 +77,11 @@
             <ion-button @click="showModal = false" size="large" expand="full" shape="round" style="text-transform: none;" class="font-medium text-slate-900 font-poppins cancel modal ion-margin-bottom">
               Cancelar
             </ion-button>
-            <ion-button @click="handleDeletion(complaint.docRef)" size="large" expand="full" shape="round" style="text-transform: none;" class="font-bold font-poppins delete modal">
-              Enviar Correo
-            </ion-button>
+            <article class="flex justify-center w-full">
+              <a href="mailto:informes@grupochimex.com" color="danger" class="w-full text-xl font-medium text-center !text-white !bg-red-700 rounded-lg border border-red-500 font-poppins">
+                Enviar Correo
+              </a>
+            </article>
           </div>
          </section>
         </ion-content>
@@ -105,12 +107,7 @@
             </div>
             <ion-list v-if="userComplaints.length > 0">
               <ion-item-sliding v-for="complaint in userComplaints" :key="complaint.id || complaint.title" class="mb-2">
-                <!-- OPCIONES IZQUIERDA -->
-                <ion-item-options side="start">
-                  <ion-item-option color="primary">
-                    <ion-icon :icon="eyeOutline" slot="icon-only"></ion-icon>
-                  </ion-item-option>
-                </ion-item-options>
+       
 
                 <!-- ITEM PRINCIPAL -->
                 <ion-item>
@@ -153,10 +150,18 @@
           <div class="flex flex-col border-t border-[#E5E7EB] pt-6 mb-20">
             <h3 class="text-lg font-semibold text-[#0A0A0A] mb-4">Opciones</h3>
 
-            <div class="flex justify-between items-center py-3">
+            <div class="flex flex-col gap-8 items-start py-3 font-poppins">
               <ion-button @click="isOpen = true" color="light" shape="round">
                 Cambiar Contraseña
                 <v-icon name="md-lockreset-round" class="ml-2" scale="1.6"/>
+              </ion-button>
+              <a href="https://misreclamos.com/#/privacy-policy" target="_blank" class="flex items-center !text-sm gap-2 !text-black !bg-[#F4F5F8] shadow-lg rounded-3xl border border-[#E5E7EB] px-4 py-2 uppercase font-medium font-poppins">
+                Politica de privacidad
+                <v-icon name="fa-user-lock" class="ml-2" scale="1.6"/>
+              </a>
+              <ion-button color="light" shape="round" router-link="/tabs/terms">
+                Términos y Condiciones
+                <v-icon name="la-file-signature-solid" class="ml-2" scale="1.6"/>
               </ion-button>
             </div>
 
@@ -164,6 +169,14 @@
               <ion-icon :icon="logOutOutline" class="mr-2" ></ion-icon>
                Cerrar Sesión
             </ion-button>
+
+            <ion-label>
+              <ion-text class="text-sm font-semibold text-slate-600">Si tiene alguna duda o sugerencia envienos un correo a <a href="mailto:informes@grupochimex.com">informes@grupochimex.com</a></ion-text>
+            </ion-label>
+
+            <ion-label>
+              <ion-text class="text-sm font-semibold text-[#0A0A0A]">Version: 1.0.0</ion-text>
+            </ion-label>
           </div>
         </div>
       </section>

@@ -50,7 +50,7 @@
               v-model="email" >
             </ion-input> 
 
-            <ion-button @click="handleResetPassword" class="font-semibold w-11/12 !mx-auto login" expand="block"
+            <ion-button @click="handleResetPassword" class="font-semibold w-11/12 !mx-auto login mt-9" expand="block"
               style="text-transform: none;">Enviar enlace de recuperación</ion-button> 
           </ion-content>
         </ion-modal>

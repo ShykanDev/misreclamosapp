@@ -31,7 +31,7 @@
     "notyf": "^3.10.0",
     "oh-vue-icons": "^1.0.0-rc3",
     "pinia": "^3.0.3",
-    "pinia-plugin-persistedstate": "^4.5.0",
+    "pinia-plugin-persistedstate": "^4.7.1",
     "swiper": "^12.0.2",
     "tailwindcss-animated": "^2.0.0",
     "v-viewer": "^3.0.22",

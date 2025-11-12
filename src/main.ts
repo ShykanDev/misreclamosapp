@@ -98,7 +98,12 @@ IoClose,
 IoCloseCircle,
 MdLockresetRound,
 HiShieldExclamation,
-BiShieldCheck
+BiShieldCheck,
+RiShieldUserFill,
+LaUserTieSolid,
+IoCloseCircleSharp,
+FaUserLock,
+LaFileSignatureSolid,
 }from "oh-vue-icons/icons";
 
 addIcons(FaFlag, RiZhihuFill, OiDiffAdded,
@@ -168,7 +173,13 @@ addIcons(FaFlag, RiZhihuFill, OiDiffAdded,
   IoCloseCircle,
   MdLockresetRound,
   HiShieldExclamation,
-  BiShieldCheck
+  BiShieldCheck,
+  RiShieldUserFill,
+  LaUserTieSolid,
+  BiReplyAllFill,
+  IoCloseCircleSharp,
+  FaUserLock,
+  LaFileSignatureSolid
 );
 
 /**

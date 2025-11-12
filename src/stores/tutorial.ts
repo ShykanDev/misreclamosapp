@@ -4,6 +4,7 @@ export const useTutorialStore = defineStore ('tutorial', {
     state: () => ({
         pageActive: '',
         tutorialCompleted: false,
+
     }),
     actions: {
         setPageActive(page: string) {
@@ -16,6 +17,7 @@ export const useTutorialStore = defineStore ('tutorial', {
     getters:{
         getPageActive: (state) => state.pageActive,
         getTutorialCompleted: (state) => state.tutorialCompleted
-    }
+    },
+    persist:true
 })
         

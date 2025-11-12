@@ -77,7 +77,6 @@
       steps: [ { element: '.login-step', popover: { title: 'Botón de inicio de sesión ', description: 'Este boton lo llevará a la pantalla de inicio de sesión, esto será necesario si usted quiere crear un reclamo o responder a uno', side: "top", align: 'center' }}, { element: '.register-step', popover: { title: 'Botón de registro', description: 'Este boton lo llevará a la pantalla de registro, aquí podrá crear su cuenta de manera gratuita, le servirá para crear y responder a reclamos', side: "bottom", align: 'center' }}, { element: '.home-step', popover: { title: 'Botón de inicio', description: 'Este boton lo llevará a la pantalla de inicio, aquí podrá ver todos los reclamos que existan para la categoría que usted seleccionó en el menú', side: "bottom", align: 'center' }}, { element: '.create-step', popover: { title: 'Botón de crear', description: 'Este boton lo llevará a la pantalla para crear un nuevo reclamo, aqui podrá crear un reclamo de distintas categorías ', side: "bottom", align: 'center' }}, ],
         onNextClick: (e,step) => {
           driverObj.moveNext()
-          console.log(step.popover?.progressText)
           if(step.popover?.progressText == '4 of 4') {
           tutorialStore.setPageActive('HomeMenu')
           }
@@ -88,7 +87,7 @@
         },
       })
       driverObj.drive()
-      }, 500)
+      }, 900)
     }
   })
 
